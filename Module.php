@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
 
-namespace humhub\modules\fhnw\gamecenter;
+namespace humhub\modules\gamecenter;
 
 use humhub\modules\content\components\ContentContainerActiveRecord;
 use humhub\modules\content\components\ContentContainerModule;
@@ -8,6 +9,12 @@ use humhub\modules\space\models\Space;
 use Yii;
 use yii\helpers\Url;
 
+/**
+ * Module
+ *
+ * @author  Christian Seiler
+ * @version 1.0
+ */
 class Module extends ContentContainerModule {
   /**
    * @inheritdoc
@@ -36,7 +43,7 @@ class Module extends ContentContainerModule {
   /**
    * @inheritdoc
    */
-  public function disableContentContainer(ContentContainerActiveRecord $container) {
+  public function disableContentContainer(ContentContainerActiveRecord $container): void {
     // Clean up space related data, don't remove the parent::disable()!!!
     parent::disableContentContainer($container);
   }
@@ -45,7 +52,7 @@ class Module extends ContentContainerModule {
    * @inheritdoc
    */
   public function getContentContainerName(ContentContainerActiveRecord $container): string {
-    return Yii::t('GamecenterModule.base', 'Game Center');
+    return Yii::t('GamecenterModule.base', 'GameCenter');
   }
 
   /**
