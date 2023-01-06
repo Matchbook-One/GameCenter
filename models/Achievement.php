@@ -9,10 +9,14 @@ use yii\db\ActiveRecord;
 /**
  * This is the model class for the table "achievement".
  *
+ * @author     Christian Seiler
+ * @version    1.0
+ * @package    GameCanter
  * @property int    $id
  * @property string $guid
  * @property string $name
- * @property Game   $game
+ * @property string $title
+ * @property int    $game_id
  * @property array  $requirements
  * @property string $created_at
  * @property int    $created_by

@@ -9,6 +9,9 @@ use humhub\modules\ui\widgets\BaseImage;
 /**
  * Return space image or acronym
  *
+ * @since   1.0
+ * @author  Christian Seiler
+ * @package GameCenter
  * @property $htmlOptions
  * @property $linkOptions
  */
@@ -20,7 +23,6 @@ class Image extends BaseImage {
    * @var int number of characters used in the acronym
    */
   public int $acronymCount = 2;
-
 
   /**
    * @inheritdoc

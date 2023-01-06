@@ -9,7 +9,9 @@ use fhnw\modules\gamecenter\widgets\Image as GameImage;
 /**
  * GameImageColumn
  *
- * @since 1.0
+ * @since   1.0
+ * @author  Christian Seiler
+ * @package GameCenter
  */
 class GameImageColumn extends GameBaseColumn {
 
@@ -29,4 +31,5 @@ class GameImageColumn extends GameBaseColumn {
   protected function renderDataCellContent($model, $key, $index): string {
     return GameImage::widget(['game' => $this->getGame($model), 'width' => 34, 'link' => true]);
   }
+
 }

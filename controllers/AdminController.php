@@ -9,7 +9,11 @@ use humhub\modules\admin\components\Controller;
 use Yii;
 
 /**
+ * Admin Controller
  *
+ * @author     Christian Seiler
+ * @version    1.0
+ * @package    GameCanter
  */
 class AdminController extends Controller {
 

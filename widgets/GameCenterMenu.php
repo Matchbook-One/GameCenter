@@ -10,6 +10,10 @@ use yii\helpers\Url;
 
 /**
  * GameCenter Administration Menu
+ *
+ * @since   1.0
+ * @author  Christian Seiler
+ * @package GameCenter
  */
 class GameCenterMenu extends TabMenu {
 

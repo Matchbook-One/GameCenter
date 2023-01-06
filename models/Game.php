@@ -16,18 +16,23 @@ use Yii;
 /**
  * This is the model class for table "game".
  *
- * @property int           $id
- * @property string        $guid
- * @property string        $name
- * @property string        $title
- * @property string        $description
- * @property Achievement[] $achievements
- * @property int           $status
- * @property int           $visibility
- * @property string        $created_at
- * @property int           $created_by
- * @property string        $updated_at
- * @property int           $updated_by
+ * @author     Christian Seiler
+ * @version    1.0
+ * @package    GameCanter
+ * @property int    $id
+ * @property string $guid
+ * @property string $name
+ * @property string $title
+ * @property string $description
+ * @property int    $genre_id
+ * @property int    $status
+ * @property int    $visibility
+ * @property string $created_at
+ * @property int    $created_by
+ * @property string $updated_at
+ * @property int    $updated_by
+ * @property int    $contentcontainer_id
+ * @mixin GUID
  */
 class Game extends ContentContainerActiveRecord implements Searchable {
 

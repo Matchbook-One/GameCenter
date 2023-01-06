@@ -8,6 +8,10 @@ use yii\web\View;
 
 /**
  * AssetsBundles are used to include assets as javascript or css files
+ *
+ * @author     Christian Seiler
+ * @version    1.0
+ * @package    GameCenter
  */
 class Assets extends AssetBundle {
   /**

@@ -7,9 +7,9 @@ use fhnw\modules\gamecenter\models\Game;
 use yii\grid\DataColumn;
 
 /**
- * @author Christian Seiler
- * @module gamecenter
- * @since  1.0
+ * @since   1.0
+ * @author  Christian Seiler
+ * @package GameCenter
  */
 class GameBaseColumn extends DataColumn {
 
@@ -31,6 +31,8 @@ class GameBaseColumn extends DataColumn {
     }
 
     $attributeName = $this->gameAttribute;
+
     return $record->$attributeName;
   }
+
 }

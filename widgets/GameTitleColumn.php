@@ -11,7 +11,9 @@ use yii\bootstrap\Html;
 /**
  * GameTitleColumn
  *
- * @since 1.0
+ * @since   1.0
+ * @author  Christian Seiler
+ * @package GameCenter
  * @property ?string $attribute
  * @property ?string $label
  */

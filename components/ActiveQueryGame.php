@@ -11,7 +11,11 @@ use Yii;
 use yii\db\ActiveQuery;
 
 /**
+ * ActiveQueryGame
  *
+ * @author     Christian Seiler
+ * @version    1.0
+ * @package    GameCenter
  */
 class ActiveQueryGame extends ActiveQuery {
   public const MAX_SEARCH_NEEDLES = 5;
@@ -54,7 +58,6 @@ class ActiveQueryGame extends ActiveQuery {
 
     return $this;
   }
-
 
   /**
    * Only returns games which are visible for this user

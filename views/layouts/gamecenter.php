@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 use fhnw\modules\gamecenter\widgets\GameCenterMenu;
 use humhub\modules\admin\widgets\AdminMenu;
-use humhub\modules\gamecenter\widgets\GameCenterMenu;
 
 AdminMenu::markAsActive(['/gamecenter/admin']);
 

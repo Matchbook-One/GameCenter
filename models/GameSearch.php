@@ -9,6 +9,10 @@ use yii\data\ActiveDataProvider;
 
 /**
  * Game Search for Administration
+ *
+ * @author     Christian Seiler
+ * @version    1.0
+ * @package    GameCanter
  */
 class GameSearch extends Game {
 

@@ -5,6 +5,13 @@ namespace fhnw\modules\gamecenter\controllers;
 
 use humhub\components\Controller;
 
+/**
+ * IndexController
+ *
+ * @author     Christian Seiler
+ * @version    1.0
+ * @package    GameCanter
+ */
 class IndexController extends Controller {
 
     public $subLayout = "@gamecenter/views/layouts/default";

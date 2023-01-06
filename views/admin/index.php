@@ -2,9 +2,11 @@
 declare(strict_types=1);
 
 use fhnw\modules\gamecenter\assets\Assets;
-use humhub\modules\gamecenter\widgets\GameGridView;
-use humhub\modules\gamecenter\widgets\GameImageColumn;
-use humhub\modules\gamecenter\widgets\GameTitleColumn;
+use fhnw\modules\gamecenter\models\GameSearch;
+use fhnw\modules\gamecenter\widgets\GameGridView;
+use fhnw\modules\gamecenter\widgets\GameImageColumn;
+use fhnw\modules\gamecenter\widgets\GameTitleColumn;
+use humhub\widgets\ModalButton;
 use yii\bootstrap\ActiveForm;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;

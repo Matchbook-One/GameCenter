@@ -6,7 +6,8 @@ namespace fhnw\modules\gamecenter\widgets;
 use humhub\widgets\GridView;
 
 /**
- * @module GameCenter
- * @author Christian Seiler
+ * @since   1.0
+ * @author  Christian Seiler
+ * @package GameCenter
  */
 class GameGridView extends GridView { }

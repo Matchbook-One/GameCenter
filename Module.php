@@ -12,8 +12,9 @@ use yii\helpers\Url;
 /**
  * Module
  *
- * @author  Christian Seiler
- * @version 1.0
+ * @author   Christian Seiler
+ * @version  1.0
+ * @package  GameCanter
  */
 class Module extends ContentContainerModule {
   /**
