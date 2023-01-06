@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace humhub\modules\gamecenter\widgets;
+namespace fhnw\modules\gamecenter\widgets;
 
-use humhub\modules\gamecenter\models\Game;
+use fhnw\modules\gamecenter\models\Game;
 use yii\grid\DataColumn;
 
 /**

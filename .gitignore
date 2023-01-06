@@ -1,6 +1,7 @@
 .htaccess
 nbproject
 .idea/*
+!.idea
 vendor/*
 .gitmodules
 /composer.lock

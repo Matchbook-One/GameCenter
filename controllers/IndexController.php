@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
 
-namespace humhub\modules\fhnw\gamecenter\controllers;
+namespace fhnw\modules\gamecenter\controllers;
 
 use humhub\components\Controller;
 
@@ -13,10 +14,8 @@ class IndexController extends Controller {
      *
      * @return string
      */
-    public function actionIndex(): string
-    {
+  public function actionIndex(): string {
         return $this->render('index');
     }
 
 }
-

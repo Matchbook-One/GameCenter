@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use humhub\modules\gamecenter\assets\Assets;
+use fhnw\modules\gamecenter\assets\Assets;
 use humhub\widgets\Button;
 
 // Register our module assets, this could also be done within the controller
@@ -15,7 +15,7 @@ $displayName = (Yii::$app->user->isGuest)
 $this->registerJsConfig('gamecenter', [
   'username' => (Yii::$app->user->isGuest) ? $displayName : Yii::$app->user->getIdentity()->username,
   'text'     => [
-    'hello' => Yii::t('GamecenterModule.base', 'Hi there {name}!', ["name" => $displayName])
+    'hello' => Yii::t('GamecenterModule.base', 'Hi there {name}!', ['name' => $displayName])
   ]
 ])
 

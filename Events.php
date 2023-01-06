@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace humhub\modules\gamecenter;
+namespace fhnw\modules\gamecenter;
 
 use Yii;
 use yii\helpers\Url;

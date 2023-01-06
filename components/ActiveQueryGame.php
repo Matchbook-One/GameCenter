@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
 
-namespace humhub\modules\gamecenter\components;
+namespace fhnw\modules\gamecenter\components;
 
+use fhnw\modules\gamecenter\models\Game;
 use humhub\events\ActiveQueryEvent;
-use humhub\modules\gamecenter\models\Game;
 use humhub\modules\user\models\User;
 use Throwable;
 use Yii;

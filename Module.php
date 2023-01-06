@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace humhub\modules\gamecenter;
+namespace fhnw\modules\gamecenter;
 
 use humhub\modules\content\components\ContentContainerActiveRecord;
 use humhub\modules\content\components\ContentContainerModule;

@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace humhub\modules\gamecenter\controllers;
+namespace fhnw\modules\gamecenter\controllers;
 
+use fhnw\modules\gamecenter\models\GameSearch;
+use fhnw\modules\gamecenter\permissions\ManageGameCenter;
 use humhub\modules\admin\components\Controller;
-use humhub\modules\gamecenter\models\GameSearch;
 use Yii;
 
 /**

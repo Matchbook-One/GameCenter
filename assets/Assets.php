@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace humhub\modules\gamecenter\assets;
+namespace fhnw\modules\gamecenter\assets;
 
-use yii\web\View;
 use yii\web\AssetBundle;
+use yii\web\View;
 
 /**
  * AssetsBundles are used to include assets as javascript or css files

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace humhub\modules\gamecenter\widgets;
+namespace fhnw\modules\gamecenter\widgets;
 
 use humhub\modules\ui\menu\MenuLink;
 use humhub\modules\ui\menu\widgets\TabMenu;

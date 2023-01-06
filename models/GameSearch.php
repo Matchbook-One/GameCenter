@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace humhub\modules\gamecenter\models;
+namespace fhnw\modules\gamecenter\models;
 
 use Yii;
 use yii\base\Model;

@@ -1,10 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace humhub\modules\gamecenter\widgets;
+namespace fhnw\modules\gamecenter\widgets;
 
 use humhub\widgets\GridView;
 
-class GameGridView extends GridView {
-
-}
+/**
+ * @module GameCenter
+ * @author Christian Seiler
+ */
+class GameGridView extends GridView { }

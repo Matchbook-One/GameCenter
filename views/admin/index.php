@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use humhub\modules\gamecenter\models\GameSearch;
+use fhnw\modules\gamecenter\assets\Assets;
 use humhub\modules\gamecenter\widgets\GameGridView;
 use humhub\modules\gamecenter\widgets\GameImageColumn;
 use humhub\modules\gamecenter\widgets\GameTitleColumn;

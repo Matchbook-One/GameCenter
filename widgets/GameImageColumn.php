@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace humhub\modules\gamecenter\widgets;
+namespace fhnw\modules\gamecenter\widgets;
 
 use Exception;
-use humhub\modules\gamecenter\widgets\Image as GameImage;
+use fhnw\modules\gamecenter\widgets\Image as GameImage;
 
 /**
  * GameImageColumn
