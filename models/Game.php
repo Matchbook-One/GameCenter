@@ -1,105 +1,122 @@
 <?php
-declare(strict_types=1);
+
+/**
+ * @author  Christian Seiler
+ * @package GameCenter
+ * @since   1.0
+ */
 
 namespace fhnw\modules\gamecenter\models;
 
+use fhnw\modules\gamecenter\components\ActiveQueryGame;
+use fhnw\modules\gamecenter\events\GameEvent;
+use fhnw\modules\gamecenter\Module;
+use humhub\components\ActiveRecord;
 use humhub\components\behaviors\GUID;
-use humhub\modules\content\components\ContentContainerActiveRecord;
 use humhub\modules\content\components\ContentContainerSettingsManager;
-use humhub\modules\gamecenter\components\ActiveQueryGame;
-use humhub\modules\gamecenter\events\GameEvent;
 use humhub\modules\search\events\SearchAddEvent;
 use humhub\modules\search\interfaces\Searchable;
 use humhub\modules\search\jobs\DeleteDocument;
+use humhub\modules\space\widgets\Wall;
+use Throwable;
 use Yii;
 
 /**
  * This is the model class for table "game".
  *
- * @author     Christian Seiler
- * @version    1.0
- * @package    GameCanter
  * @property int    $id
  * @property string $guid
- * @property string $name
+ * @property string $module
  * @property string $title
  * @property string $description
  * @property int    $genre_id
  * @property int    $status
- * @property int    $visibility
  * @property string $created_at
  * @property int    $created_by
  * @property string $updated_at
  * @property int    $updated_by
  * @property int    $contentcontainer_id
+ *
  * @mixin GUID
  */
-class Game extends ContentContainerActiveRecord implements Searchable {
+class Game extends ActiveRecord implements Searchable {
 
-  /** Game Status Flags */
+  /* Game Status Flags */
   public const STATUS_DISABLED = 0;
   public const STATUS_ENABLED = 1;
-  public const STATUS_NEED_APPROVAL = 2;
+  public const STATUS_ARCHIVED = 2;
   public const STATUS_SOFT_DELETED = 3;
 
-  /**
-   * Visibility Modes
-   */
-  public const VISIBILITY_REGISTERED_ONLY = 1; // Only for registered members
-  public const VISIBILITY_ALL = 2; // Visible for all (also guests)
-  public const VISIBILITY_HIDDEN = 3; // Invisible
-
-  /**
-   * @event Event an event that is triggered when the user visibility is checked via [[isVisible()]].
-   */
-  public const EVENT_CHECK_VISIBILITY = 'checkVisibility';
-
-
-  /**
-   * @event GameEvent an event that is triggered when the game is soft deleted (without contents) and also before complete deletion.
+  /** An event that is triggered when the game is soft deleted and also before complete deletion.
+   *
+   * @event
    */
   public const EVENT_BEFORE_SOFT_DELETE = 'beforeSoftDelete';
 
+  /**
+   * @inheritdoc
+   *
+   * @return ActiveQueryGame the newly created [[ActiveQuery]] instance.
+   *
+   * @noinspection PhpMissingParentCallCommonInspection
+   */
+  public static function find(): ActiveQueryGame {
+    return new ActiveQueryGame(static::class);
+  }
 
   /**
    * @inheritdoc
+   *
+   * @return string
+   *
+   * @noinspection PhpMissingParentCallCommonInspection
    */
   public static function tableName(): string {
     return 'game';
   }
 
   /**
-   * {@inheritdoc}
-   * @return ActiveQueryGame the newly created [[ActiveQuery]] instance.
+   * @return void
+   *
+   * @TODO Implementation
    */
-  public static function find(): ActiveQueryGame {
-    return new ActiveQueryGame(get_called_class());
+  public function addAchievement(): void {}
+
+  // /**
+  //  * @param string $title
+  //  * @param string $description
+  //  *
+  //  * @return void
+  //  */
+  // public function addGenre(string $title, string $description = ''): void {
+  //   $this->genre_id = Genre::make($title, $description)->id;
+  // }
+
+  /**
+   * Archive this Game
+   *
+   * @return void
+   */
+  public function archive(): void {
+    $this->status = self::STATUS_ARCHIVED;
+    $this->save();
   }
 
   /**
    * @inheritdoc
-   */
-  public function rules(): array {
-    return [
-      [['visibility', 'status'], 'integer'],
-      [['name'], 'required'],
-      [['description'], 'string'],
-      [['description'], 'string', 'max' => 100],
-      [['visibility'], 'in', 'range' => [0, 1, 2]],
-      [['visibility'], 'checkVisibility'],
-      [['guid', 'name'], 'string', 'max' => 45, 'min' => 2],
-    ];
-
-  }
-
-  /**
-   * @inheritdoc
+   *
+   * @return array
+   *
+   * @PhpMissingParentCallCommonInspection
    */
   public function attributeLabels(): array {
     return [
       'id'           => 'ID',
       'guid'         => 'Guid',
-      'name'         => Yii::t('GamecenterModule.base', 'Name'),
+      'module'       => Yii::t('GamecenterModule.base', 'Module'),
+      'title'        => Yii::t('GamecenterModule.base', 'Title'),
+      'description'  => Yii::t('GamecenterModule.base', 'Description'),
+      'genre'        => Yii::t('GamecenterModule.base', 'Genre'),
       'achievements' => Yii::t('GamecenterModule.base', 'Achievements'),
       'status'       => Yii::t('GamecenterModule.base', 'Status'),
       'visibility'   => Yii::t('GamecenterModule.base', 'Visibility'),
@@ -111,7 +128,98 @@ class Game extends ContentContainerActiveRecord implements Searchable {
   }
 
   /**
-   * Returns an array of informations used by search subsystem.
+   * Before Delete of a Game
+   *
+   * @return bool
+   */
+  public function beforeDelete(): bool {
+    $this->softDelete();
+
+    return parent::beforeDelete();
+  }
+
+  /**
+   * @return bool
+   */
+  public function softDelete(): bool {
+    $this->trigger(self::EVENT_BEFORE_SOFT_DELETE, new GameEvent(['user' => $this]));
+
+    $config = [
+      'activeRecordClass' => get_class($this),
+      'primaryKey'        => $this->id
+    ];
+    Yii::$app->queue->push(new DeleteDocument($config));
+
+    // Cleanup related tables
+    Achievement::deleteAll(['game_id' => 'id']);
+
+    $this->updateAttributes(['status' => self::STATUS_SOFT_DELETED]);
+
+    return true;
+  }
+
+  /**
+   * @inheritdoc
+   *
+   * @param bool $insert
+   *
+   * @return bool
+   */
+  public function beforeSave($insert): bool {
+    if (empty($this->status)) {
+      $this->status = self::STATUS_ENABLED;
+    }
+
+    return parent::beforeSave($insert);
+  }
+
+  /**
+   * @inheritdoc
+   *
+   * @return array
+   */
+  public function behaviors(): array {
+    return [
+      GUID::class
+    ];
+  }
+
+  /**
+   * @return Achievement[] List of Achievements
+   */
+  public function getAchievements(): array {
+    return $this->hasMany(Achievement::class, ['game_id' => 'id']);
+  }
+
+  /**
+   * getGameImage
+   *
+   * @return string
+   */
+  public function getGameImage(): string {
+    return '';
+  }
+
+  /**
+   * getGenre
+   *
+   * @return Genre
+   */
+  public function getGenre(): Genre {
+    return $this->hasOne(Genre::class, ['id' => 'genre_id']);
+  }
+
+  /**
+   * getId
+   *
+   * @return int
+   */
+  public function getId(): int {
+    return $this->id;
+  }
+
+  /**
+   * Returns an array of information used by search subsystem.
    * Function is defined in interface ISearchable
    *
    * @return array
@@ -128,12 +236,43 @@ class Game extends ContentContainerActiveRecord implements Searchable {
   }
 
   /**
-   * @inheritdoc
+   * getSettings
+   *
+   * @return ContentContainerSettingsManager
    */
-  public function behaviors(): array {
-    return [
-      GUID::class
-    ];
+  public function getSettings(): ContentContainerSettingsManager {
+    /** @var Module $module */
+    $module = Yii::$app->getModule('gamecenter');
+
+    return $module->settings->contentContainer($this);
+  }
+
+  /**
+   * getUrl
+   *
+   * @return string
+   */
+  public function getUrl(): string {
+    return '';
+  }
+
+  /**
+   * getWallOut
+   *
+   * @return string
+   * @throws Throwable
+   */
+  public function getWallOut(): string {
+    return Wall::widget(['game' => $this]);
+  }
+
+  /**
+   * Returns whether a Game is archived.
+   *
+   * @return bool
+   */
+  public function isArchived(): bool {
+    return $this->status === self::STATUS_ARCHIVED;
   }
 
   /**
@@ -143,9 +282,10 @@ class Game extends ContentContainerActiveRecord implements Searchable {
    */
   public function isVisible(): bool {
     $event = new GameEvent(['game' => $this, 'result' => ['isVisible' => true]]);
-    $this->trigger(self::EVENT_CHECK_VISIBILITY, $event);
 
-    return $event->result['isVisible'] && $this->isActive() && $this->visibility !== Game::VISIBILITY_HIDDEN;
+    // $this->trigger(self::EVENT_CHECK_VISIBILITY, $event);
+
+    return $event->result['isVisible'] && $this->isActive();
   }
 
   /**
@@ -156,93 +296,46 @@ class Game extends ContentContainerActiveRecord implements Searchable {
   }
 
   /**
-   * Before Delete of a Game
-   */
-  public function beforeDelete(): bool {
-    $this->softDelete();
-    return parent::beforeDelete();
-  }
-
-  /**
-   * @return bool
-   */
-  public function softDelete(): bool {
-    $this->trigger(self::EVENT_BEFORE_SOFT_DELETE, new GameEvent(['user' => $this]));
-
-    Yii::$app->queue->push(new DeleteDocument([
-                                                'activeRecordClass' => get_class($this),
-                                                'primaryKey'        => $this->id
-                                              ]));
-
-    // Cleanup related tables
-    /*
-    Invite::deleteAll(['user_originator_id' => $this->id]);
-    Invite::deleteAll(['email' => $this->email]);
-    Follow::deleteAll(['user_id' => $this->id]);
-    Follow::deleteAll(['object_model' => static::class, 'object_id' => $this->id]);
-    Password::deleteAll(['user_id' => $this->id]);
-    GroupUser::deleteAll(['user_id' => $this->id]);
-    Session::deleteAll(['user_id' => $this->id]);
-    Friendship::deleteAll(['user_id' => $this->id]);
-    Friendship::deleteAll(['friend_user_id' => $this->id]);
-    Auth::deleteAll(['user_id' => $this->id]);
-*/
-    $this->updateAttributes(['status' => self::STATUS_SOFT_DELETED]);
-
-    return true;
-  }
-
-  /**
-   * Before Save Addons
+   * @inheritdoc
    *
-   * @param bool $insert
+   * @return array
    *
-   * @return bool
+   * @noinspection PhpMissingParentCallCommonInspection
    */
-  public function beforeSave($insert): bool {
-    if ($insert) {
-      if ($this->status == '') {
-        $this->status = Game::STATUS_ENABLED;
-      }
-    }
-    return parent::beforeSave($insert);
+  public function rules(): array {
+    return [
+      [['status'], 'integer'],
+      [['module', 'title'], 'required'],
+      [['description'], 'string'],
+      [['description'], 'string', 'max' => 100],
+      [['status'], 'in', 'range' => [0, 1]],
+      [['guid', 'title'], 'string', 'max' => 45, 'min' => 2],
+    ];
   }
 
   /**
-   * @return int
+   * scenarios
+   *
+   * @inerhitdoc
+   *
+   * @return array
    */
-  public function getId(): int {
-    return $this->id;
-  }
-
-  public function scenarios() {
+  public function scenarios(): array {
     $scenarios = parent::scenarios();
-//    $scenarios[static::SCENARIO_EDIT] = ['name', 'color', 'description', 'about', 'tagsField', 'blockedUsersField', 'join_policy', 'visibility', 'default_content_visibility'];
-//    $scenarios[static::SCENARIO_CREATE] = ['name', 'color', 'description', 'join_policy', 'visibility'];
-//    $scenarios[static::SCENARIO_SECURITY_SETTINGS] = ['default_content_visibility', 'join_policy', 'visibility'];
+    //    $scenarios[static::SCENARIO_EDIT] = ['name', 'color', 'description', 'about', 'tagsField', 'blockedUsersField', 'join_policy', 'visibility', 'default_content_visibility'];
+    //    $scenarios[static::SCENARIO_CREATE] = ['name', 'color', 'description', 'join_policy', 'visibility'];
+    //    $scenarios[static::SCENARIO_SECURITY_SETTINGS] = ['default_content_visibility', 'join_policy', 'visibility'];
 
     return $scenarios;
   }
 
   /**
-   * @inheritdoc
+   * Unarchive this Game
+   *
+   * @return void
    */
-  public function getDisplayName(): string {
-    return $this->title;
-  }
-
-  /**
-   * @inheritdoc
-   */
-  public function getDisplayNameSub(): string {
-    return $this->description;
-  }
-
-  /**
-   * @return ContentContainerSettingsManager
-   */
-  public function getSettings(): ContentContainerSettingsManager {
-    $module = Yii::$app->getModule('gamecenter');
-    return $module->settings->contentContainer($this);
+  public function unarchive(): void {
+    $this->status = self::STATUS_ENABLED;
+    $this->save();
   }
 }

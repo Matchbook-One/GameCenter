@@ -1,19 +1,31 @@
 <?php
-declare(strict_types=1);
+
+/**
+ * @author  Christian Seiler
+ * @package GameCenter
+ * @since   1.0
+ */
 
 use fhnw\modules\gamecenter\Events;
+use fhnw\modules\gamecenter\Module;
+use humhub\components\ModuleManager;
 use humhub\modules\admin\widgets\AdminMenu;
+use yii\base\Widget;
 
 return [
   'id'        => 'gamecenter',
-  'class'     => 'fhnw\modules\gamecenter\Module',
+  'class'     => Module::class,
   'namespace' => 'fhnw\modules\gamecenter',
   'events'    => [
     [
-      'class'    => AdminMenu::class,
-      'event'    => AdminMenu::EVENT_INIT,
-      'callback' => [Events::class, 'onAdminMenuInit']
+      'class'    => ModuleManager::class,
+      'event'    => ModuleManager::EVENT_BEFORE_MODULE_ENABLE,
+      'callback' => [Events::class, 'onBeforeModuleEnabled']
     ],
-  ]
+    [
+      'class'    => AdminMenu::class,
+      'event'    => Widget::EVENT_INIT,
+      'callback' => [Events::class, 'onAdminMenuInit'],
+    ],
+  ],
 ];
- 

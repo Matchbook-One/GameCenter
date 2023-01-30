@@ -1,12 +1,17 @@
 humhub.module('gamecenter', function (module, require, $) {
-  module.export({
-    // uncomment the following line in order to call the init() function also for each pjax call
-    // initOnPjaxLoad: true,
-    init: () => {
+
+  const init = function () {
       console.log('gamecenter module activated')
-    },
-    hello: () => {
+  }
+
+  const hello = function () {
       alert(`${module.text('hello')} - ${module.config.username}`)
     }
+
+  module.export({
+    //uncomment the following line in order to call the init() function also for each pjax call
+    //initOnPjaxLoad: true,
+    init: init,
+    hello: hello
   })
 })

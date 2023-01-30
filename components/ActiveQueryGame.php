@@ -1,5 +1,10 @@
 <?php
-declare(strict_types=1);
+
+/**
+ * @author  Christian Seiler
+ * @package GameCenter
+ * @since   1.0
+ */
 
 namespace fhnw\modules\gamecenter\components;
 
@@ -9,13 +14,12 @@ use humhub\modules\user\models\User;
 use Throwable;
 use Yii;
 use yii\db\ActiveQuery;
+use function array_slice;
+use function is_array;
 
 /**
  * ActiveQueryGame
  *
- * @author     Christian Seiler
- * @version    1.0
- * @package    GameCenter
  */
 class ActiveQueryGame extends ActiveQuery {
   public const MAX_SEARCH_NEEDLES = 5;
@@ -36,7 +40,7 @@ class ActiveQueryGame extends ActiveQuery {
   public function search(array|string $keywords, array $columns = [
     'game.name',
     'game.title',
-    'game.description'
+    'game.description',
   ]): ActiveQueryGame {
     if (empty($keywords)) {
       return $this;
@@ -51,7 +55,11 @@ class ActiveQueryGame extends ActiveQuery {
     foreach (array_slice($keywords, 0, static::MAX_SEARCH_NEEDLES) as $keyword) {
       $conditions = [];
       foreach ($columns as $field) {
-        $conditions[] = ['LIKE', $field, $keyword];
+        $conditions[] = [
+          'LIKE',
+          $field,
+          $keyword,
+        ];
       }
       $this->andWhere(array_merge(['OR'], $conditions));
     }
@@ -72,24 +80,33 @@ class ActiveQueryGame extends ActiveQuery {
     if ($user === null && !Yii::$app->user->isGuest) {
       try {
         $user = Yii::$app->user->getIdentity();
-      } catch (Throwable $e) {
-        Yii::error($e, 'game');
+      } catch (Throwable $error) {
+        Yii::error($error, 'game');
       }
     }
 
     if ($user !== null) {
-      $this->andWhere([
-                        'OR',
-                        ['IN', 'game.visibility', [Game::VISIBILITY_ALL, Game::VISIBILITY_REGISTERED_ONLY]],
-                        /*[
-                          'AND',
-                          ['=', 'game.visibility', Game::VISIBILITY_NONE],
-                          ['IN', 'game.id', Membership::find()->select('game')->where(['user_id' => $user->id])]
-                        ]*/
-                      ]);
-    } /*else {
-       $this->andWhere(['!=', 'game.visibility', Game::VISIBILITY_NONE]);
-    }*/
+      $this->andWhere(
+        [
+          'OR',
+          [
+            'IN',
+            'game.visibility',
+            [
+              Game::VISIBILITY_ALL,
+              Game::VISIBILITY_REGISTERED_ONLY,
+            ],
+          ],
+          /*
+              [
+              'AND',
+              ['=', 'game.visibility', Game::VISIBILITY_NONE],
+              ['IN', 'game.id', Membership::find()->select('game')->where(['user_id' => $user->id])]
+          ]*/
+        ]
+      );
+    }
+    $this->andWhere(['!=', 'game.visibility', Game::VISIBILITY_HIDDEN]);
 
     return $this;
   }

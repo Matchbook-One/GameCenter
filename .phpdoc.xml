@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdocumentor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               configVersion="3"
+               xmlns="https://www.phpdoc.org"
+               xsi:schemaLocation="https://www.phpdoc.org https://raw.githubusercontent.com/phpDocumentor/phpDocumentor/master/data/xsd/phpdoc.xsd">
+  <title>GameCenter</title>
+
+  <paths>
+    <output>docs/gamecenter</output>
+    <cache>.build/cache</cache>
+  </paths>
+
+  <version number="1.0.0">
+    <api>
+      <source>
+        <path>.</path>
+      </source>
+      <ignore>
+        <path>docs</path>
+        <path>documentation</path>
+        <path>migration</path>
+        <path>resources</path>
+        <path>tests</path>
+      </ignore>
+    </api>
+  </version>
+
+  <template name="clean"/>
+
+</phpdocumentor>

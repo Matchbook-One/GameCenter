@@ -1,44 +1,30 @@
 <?php
-declare(strict_types=1);
+
+/**
+ * @author  Christian Seiler
+ * @package GameCenter
+ * @since   1.0
+ */
 
 namespace fhnw\modules\gamecenter;
 
+use fhnw\modules\gamecenter\components\GameCenter;
+use fhnw\modules\gamecenter\components\GameModule;
+use humhub\components\ModuleEvent;
 use Yii;
+use yii\base\Event;
 use yii\helpers\Url;
 
 /**
- * @Events
- * @module  GameCenter
- * @author  Christian Seiler
- * @version 1.0
+ * Events
  */
 class Events {
   /**
-   * Defines what to do when the top menu is initialized.
-   *
-   * @param $event
-   */
-  public static function onTopMenuInit($event): void {
-    $config = [
-      'label'     => 'GameCenter',
-      'icon'      => '<i class="fa fa-gamepad"></i>',
-      'url'       => Url::to(['/gamecenter/index']),
-      'sortOrder' => 99999,
-      'isActive'  => (
-        Yii::$app->controller->module &&
-        Yii::$app->controller->module->id == 'gamecenter' &&
-        Yii::$app->controller->id == 'index'
-      )
-    ];
-    $event->sender->addItem($config);
-  }
-
-  /**
    * Defines what to do if admin menu is initialized.
    *
-   * @param $event
+   * @param Event $event
    */
-  public static function onAdminMenuInit($event): void {
+  public static function onAdminMenuInit(Event $event): void {
     $config = [
       'label'     => 'GameCenter',
       'url'       => Url::to(['/gamecenter/admin']),
@@ -49,6 +35,45 @@ class Events {
         Yii::$app->controller->module &&
         Yii::$app->controller->module->id == 'gamecenter' &&
         Yii::$app->controller->id == 'admin'
+      )
+    ];
+    $event->sender->addItem($config);
+  }
+
+  /**
+   * Registers a new Module to the GameCenter
+   *
+   * This function is called just before a Module is enabled
+   *
+   * @param ModuleEvent $event
+   *
+   * @return void
+   */
+  public static function onBeforeModuleEnabled(ModuleEvent $event): void {
+    $module = $event->module;
+
+    if ($module instanceof GameModule) {
+      GameCenter::register($module->id, []);
+    }
+  }
+
+  /**
+   * Defines what to do when the top menu is initialized.
+   *
+   * @param Event $event
+   *
+   * @return void
+   */
+  public static function onTopMenuInit(Event $event): void {
+    $config = [
+      'icon'      => '<i class="fa fa-gamepad"></i>',
+      'label'     => Yii::t('GamecenterModule.base', 'GameCenter'),
+      'url'       => Url::to(['/gamecenter/index']),
+      'sortOrder' => 99999,
+      'isActive'  => (
+        Yii::$app->controller->module &&
+        Yii::$app->controller->module->id == 'gamecenter' &&
+        Yii::$app->controller->id == 'index'
       )
     ];
     $event->sender->addItem($config);

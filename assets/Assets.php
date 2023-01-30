@@ -1,5 +1,10 @@
 <?php
-declare(strict_types=1);
+
+/**
+ * @author  Christian Seiler
+ * @package GameCenter
+ * @since   1.0
+ */
 
 namespace fhnw\modules\gamecenter\assets;
 
@@ -8,14 +13,10 @@ use yii\web\View;
 
 /**
  * AssetsBundles are used to include assets as javascript or css files
- *
- * @author     Christian Seiler
- * @version    1.0
- * @package    GameCenter
  */
 class Assets extends AssetBundle {
   /**
-   * @var string defines the path of your module assets
+   * @var string defines the path of the module assets
    */
   public $sourcePath = '@gamecenter/resources';
 
@@ -36,5 +37,4 @@ class Assets extends AssetBundle {
   public $js = [
     'js/humhub.gamecenter.js'
   ];
-
 }

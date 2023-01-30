@@ -1,5 +1,10 @@
 <?php
-declare(strict_types=1);
+
+/**
+ * @author  Christian Seiler
+ * @package GameCenter
+ * @since   1.0
+ */
 
 namespace fhnw\modules\gamecenter\controllers;
 
@@ -10,20 +15,14 @@ use Yii;
 
 /**
  * Admin Controller
- *
- * @author     Christian Seiler
- * @version    1.0
- * @package    GameCanter
  */
 class AdminController extends Controller {
 
   /**
-   * @inheritdoc
+   * @return string
    */
-  public function init() {
-
-    $this->subLayout = '@gamecenter/views/layouts/gamecenter';
-    parent::init();
+  public function actionAchievements(): string {
+    return $this->render('achievements');
   }
 
   /**
@@ -35,11 +34,33 @@ class AdminController extends Controller {
     $searchModel = new GameSearch();
     $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-    return $this->render('index', [
-      'dataProvider' => $dataProvider,
-      'searchModel'  => $searchModel
-    ]);
+    return $this->render(
+      'index',
+      compact('dataProvider', 'searchModel')
+    );
   }
 
-}
+  /**
+   * @inheritdoc
+   *
+   * @return array
+   *
+   * @noinspection PhpOverridingMethodVisibilityInspection
+   * @noinspection PhpMissingParentCallCommonInspection
+   */
+  public function getAccessRules(): array {
+    return [
+      ['permissions' => [ManageGameCenter::class]],
+    ];
+  }
 
+  /**
+   * @inheritdoc
+   * @return void
+   */
+  public function init(): void {
+    $this->subLayout = '@gamecenter/views/layouts/gamecenter';
+    $this->appendPageTitle(Yii::t('GamecenterModule.base', 'GameCenter'));
+    parent::init();
+  }
+}

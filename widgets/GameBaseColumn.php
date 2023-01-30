@@ -1,16 +1,16 @@
 <?php
-declare(strict_types=1);
+
+/**
+ * @author  Christian Seiler
+ * @package GameCenter
+ * @since   1.0
+ */
 
 namespace fhnw\modules\gamecenter\widgets;
 
 use fhnw\modules\gamecenter\models\Game;
 use yii\grid\DataColumn;
 
-/**
- * @since   1.0
- * @author  Christian Seiler
- * @package GameCenter
- */
 class GameBaseColumn extends DataColumn {
 
   /**
@@ -34,5 +34,4 @@ class GameBaseColumn extends DataColumn {
 
     return $record->$attributeName;
   }
-
 }

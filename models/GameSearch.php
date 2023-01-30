@@ -1,5 +1,10 @@
 <?php
-declare(strict_types=1);
+
+/**
+ * @author  Christian Seiler
+ * @package GameCenter
+ * @since   1.0
+ */
 
 namespace fhnw\modules\gamecenter\models;
 
@@ -10,16 +15,15 @@ use yii\data\ActiveDataProvider;
 /**
  * Game Search for Administration
  *
- * @author     Christian Seiler
- * @version    1.0
- * @package    GameCanter
  */
 class GameSearch extends Game {
 
   public string $freeText = '';
+  public int $achievementCount;
 
   /**
    * @inheritdoc
+   * @return string
    */
   public static function className(): string {
     return Game::class;
@@ -34,7 +38,6 @@ class GameSearch extends Game {
                        ->orWhere(['visibility' => self::VISIBILITY_REGISTERED_ONLY])
                        ->count();
 
-
     return [
       Game::VISIBILITY_REGISTERED_ONLY => Yii::t('GamecenterModule.base', 'Public') . ' (' . $countPublic . ')',
     ];
@@ -42,6 +45,7 @@ class GameSearch extends Game {
 
   /**
    * @inheritdoc
+   * @return array
    */
   public function rules(): array {
     return [
@@ -52,6 +56,7 @@ class GameSearch extends Game {
 
   /**
    * @inheritdoc
+   * @return array
    */
   public function scenarios(): array {
     return Model::scenarios();
@@ -68,12 +73,13 @@ class GameSearch extends Game {
     $achievementCount = Achievement::find()
                                    ->select('COUNT(*) as counter')
                                    ->where('game_id=game.id');
-    $query = self::find();
-    $query->addSelect(['game.*', 'achievementCount' => $achievementCount]);
+
+    $query = self::find()
+                 ->addSelect(['game.*', 'achievementCount' => $achievementCount]);
 
     $providerOptions = [
       'query'      => $query,
-      'pagination' => ['pageSize' => 50],
+      'pagination' => ['pageSize' => 20],
     ];
     $dataProvider = new ActiveDataProvider($providerOptions);
 
@@ -81,15 +87,12 @@ class GameSearch extends Game {
       'attributes' => [
         'id',
         'title',
-        'visibility'
+        'achievementCount'
       ]
     ];
     $dataProvider->setSort($sort);
-//    $dataProvider->sort->attributes['ownerUser.profile.lastname'] = [
-//      'asc'  => ['profile.lastname' => SORT_ASC],
-//      'desc' => ['profile.lastname' => SORT_DESC],
-//    ];
 
+//    Yii::debug($dataProvider->query, 'fhnw\modules\gamecenter\models\GameSearch::search');
 
     // default visibility
     $this->visibility = Game::VISIBILITY_ALL;
@@ -98,26 +101,31 @@ class GameSearch extends Game {
 
     if (!$this->validate()) {
       $query->emulateExecution();
+
       return $dataProvider;
     }
 
-
     // Freetext filters
     if (!empty($this->freeText)) {
-      $query->andWhere([
-                         'OR',
-                         ['like', 'game.name', $this->freeText],
-                         ['like', 'game.title', $this->freeText],
-                         ['like', 'game.description', $this->freeText]
-                       ]);
+      $query->andWhere(
+        [
+          'OR',
+          ['like', 'game.name', $this->freeText],
+          ['like', 'game.title', $this->freeText],
+          ['like', 'game.description', $this->freeText]
+        ]
+      );
     }
 
-    $query->andWhere([
-                       'OR',
-                       ['game.visibility' => self::VISIBILITY_REGISTERED_ONLY],
-                       ['game.visibility' => self::VISIBILITY_ALL]
-                     ]);
+    $query->andWhere(
+      [
+        'OR',
+        ['game.visibility' => self::VISIBILITY_REGISTERED_ONLY],
+        ['game.visibility' => self::VISIBILITY_ALL]
+      ]
+    );
 
     return $dataProvider;
   }
+
 }

@@ -1,7 +1,6 @@
-
 {
   "esversion": 11,
-  "browser":true,
+  "browser": true,
   "devel": true,
   "asi": true,
   "freeze": true,

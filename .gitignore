@@ -5,3 +5,4 @@ nbproject
 vendor/*
 .gitmodules
 /composer.lock
+.build/

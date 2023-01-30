@@ -1,5 +1,10 @@
 <?php
-declare(strict_types=1);
+
+/**
+ * @author  Christian Seiler
+ * @package GameCenter
+ * @since   1.0
+ */
 
 namespace fhnw\modules\gamecenter\widgets;
 
@@ -11,14 +16,13 @@ use yii\bootstrap\Html;
 /**
  * GameTitleColumn
  *
- * @since   1.0
  * @author  Christian Seiler
  * @package GameCenter
+ * @since   1.0
  * @property ?string $attribute
  * @property ?string $label
  */
 class GameTitleColumn extends GameBaseColumn {
-
 
   /**
    * @inheritdoc
@@ -27,7 +31,7 @@ class GameTitleColumn extends GameBaseColumn {
     parent::init();
 
     if ($this->attribute === null) {
-      $this->attribute = 'name';
+      $this->attribute = 'title';
     }
 
     if ($this->label === null) {
@@ -46,11 +50,12 @@ class GameTitleColumn extends GameBaseColumn {
     $game = $this->getGame($model);
 
     $badge = '';
+
     /*if ($game->status == Game::STATUS_ARCHIVED) {
       $badge = '&nbsp;<span class="badge">' . Yii::t('SpaceModule.base', 'Archived') . '</span>';
     }*/
 
-    return '<div>' . Html::encode($game->name) . $badge . '<br> ' .
+    return '<div>' . Html::encode($game->title) . $badge . '<br> ' .
       '<small>' . Html::encode(Helpers::trimText($game->description, 100)) . '</small></div>';
   }
 

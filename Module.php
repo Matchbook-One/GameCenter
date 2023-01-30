@@ -1,5 +1,10 @@
 <?php
-declare(strict_types=1);
+
+/**
+ * @author  Christian Seiler
+ * @package GameCenter
+ * @since   1.0
+ */
 
 namespace fhnw\modules\gamecenter;
 
@@ -10,24 +15,19 @@ use Yii;
 use yii\helpers\Url;
 
 /**
- * Module
- *
- * @author   Christian Seiler
- * @version  1.0
- * @package  GameCanter
+ * The GameCenter Module
  */
 class Module extends ContentContainerModule {
-  /**
-   * @inheritdoc
-   */
-  public function getContentContainerTypes(): array {
-    return [
-      Space::class
-    ];
-  }
+
+  /** @var string */
+  public $controllerNamespace = 'fhnw\modules\gamecenter\controllers';
 
   /**
    * @inheritdoc
+   *
+   * @return string
+   *
+   * @noinspection PhpMissingParentCallCommonInspection
    */
   public function getConfigUrl(): string {
     return Url::to(['/gamecenter/admin']);
@@ -35,22 +35,25 @@ class Module extends ContentContainerModule {
 
   /**
    * @inheritdoc
+   *
+   * @param ContentContainerActiveRecord $container unused
+   *
+   * @return  string
+   *
+   * @noinspection PhpMissingParentCallCommonInspection
    */
-  public function disable(): void {
-    // Cleanup all module data, don't remove the parent::disable()!!!
-    parent::disable();
+  public function getContentContainerDescription(ContentContainerActiveRecord $container): string {
+    return Yii::t('GamecenterModule.base', 'Short description of the modules purpose.');
   }
 
   /**
    * @inheritdoc
-   */
-  public function disableContentContainer(ContentContainerActiveRecord $container): void {
-    // Clean up space related data, don't remove the parent::disable()!!!
-    parent::disableContentContainer($container);
-  }
-
-  /**
-   * @inheritdoc
+   *
+   * @param ContentContainerActiveRecord $container unused
+   *
+   * @return string
+   *
+   * @noinspection PhpMissingParentCallCommonInspection
    */
   public function getContentContainerName(ContentContainerActiveRecord $container): string {
     return Yii::t('GamecenterModule.base', 'GameCenter');
@@ -58,8 +61,13 @@ class Module extends ContentContainerModule {
 
   /**
    * @inheritdoc
+   *
+   * @return array
+   *
+   * @noinspection PhpMissingParentCallCommonInspection
    */
-  public function getContentContainerDescription(ContentContainerActiveRecord $container): string {
-    return Yii::t('GamecenterModule.base', 'Short description of the modules purpose.');
+  public function getContentContainerTypes(): array {
+    return [Space::class];
   }
+
 }
