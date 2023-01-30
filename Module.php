@@ -1,9 +1,9 @@
 <?php
 
 /**
+ * @since   1.0
  * @author  Christian Seiler
  * @package GameCenter
- * @since   1.0
  */
 
 namespace fhnw\modules\gamecenter;
@@ -24,9 +24,7 @@ class Module extends ContentContainerModule {
 
   /**
    * @inheritdoc
-   *
    * @return string
-   *
    * @noinspection PhpMissingParentCallCommonInspection
    */
   public function getConfigUrl(): string {
@@ -39,7 +37,6 @@ class Module extends ContentContainerModule {
    * @param ContentContainerActiveRecord $container unused
    *
    * @return  string
-   *
    * @noinspection PhpMissingParentCallCommonInspection
    */
   public function getContentContainerDescription(ContentContainerActiveRecord $container): string {
@@ -52,7 +49,6 @@ class Module extends ContentContainerModule {
    * @param ContentContainerActiveRecord $container unused
    *
    * @return string
-   *
    * @noinspection PhpMissingParentCallCommonInspection
    */
   public function getContentContainerName(ContentContainerActiveRecord $container): string {
@@ -61,13 +57,10 @@ class Module extends ContentContainerModule {
 
   /**
    * @inheritdoc
-   *
    * @return array
-   *
    * @noinspection PhpMissingParentCallCommonInspection
    */
   public function getContentContainerTypes(): array {
     return [Space::class];
   }
-
 }

@@ -1,9 +1,9 @@
 <?php
 
 /**
+ * @since   1.0
  * @author  Christian Seiler
  * @package GameCenter
- * @since   1.0
  */
 
 namespace fhnw\modules\gamecenter;
@@ -42,7 +42,6 @@ class Events {
 
   /**
    * Registers a new Module to the GameCenter
-   *
    * This function is called just before a Module is enabled
    *
    * @param ModuleEvent $event
@@ -53,7 +52,10 @@ class Events {
     $module = $event->module;
 
     if ($module instanceof GameModule) {
-      GameCenter::register($module->id, []);
+      GameCenter::register(
+        $module->id,
+        $module->getGameCenterConfig()
+      );
     }
   }
 
