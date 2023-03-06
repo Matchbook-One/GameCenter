@@ -6,3 +6,4 @@ vendor/*
 .gitmodules
 /composer.lock
 .build/
+.cache/
