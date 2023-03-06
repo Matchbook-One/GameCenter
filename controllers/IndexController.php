@@ -1,9 +1,17 @@
 <?php
+declare(strict_types=1);
 
-namespace humhub\modules\fhnw\gamecenter\controllers;
+namespace fhnw\modules\gamecenter\controllers;
 
 use humhub\components\Controller;
 
+/**
+ * IndexController
+ *
+ * @author     Christian Seiler
+ * @version    1.0
+ * @package    GameCanter
+ */
 class IndexController extends Controller {
 
     public $subLayout = "@gamecenter/views/layouts/default";
@@ -13,10 +21,8 @@ class IndexController extends Controller {
      *
      * @return string
      */
-    public function actionIndex(): string
-    {
+  public function actionIndex(): string {
         return $this->render('index');
     }
 
 }
-
