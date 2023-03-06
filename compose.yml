@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+
+  phpdoc:
+    container_name: GameCenter_PHPDoc
+    image: phpdoc/phpdoc:latest
+    volumes:
+      - type: volume
+        source: .
+        target: /data
+
+
+volumes:
+  .:
+    driver_opts:
+      type: volume
+      name: module
