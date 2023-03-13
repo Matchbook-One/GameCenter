@@ -1,14 +1,19 @@
 <?php
 
 /**
- * @author  Christian Seiler
  * @package GameCenter
- * @since   1.0
+ * @author  Christian Seiler <christian@christianseiler.ch>
+ * @since   1.0.0
  */
 
 namespace fhnw\modules\gamecenter\widgets;
 
 use humhub\widgets\GridView;
 
-class GameGridView extends GridView {
+/**
+ * @inheritdoc
+ */
+class GameGridView extends GridView
+{
+
 }

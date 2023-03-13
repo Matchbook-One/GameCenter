@@ -139,7 +139,7 @@ class GameCenterModule extends ContentContainerModule
      */
     private function registerTranslations(): void
     {
-        Yii::$app->i18n->translations['gamecenter/*'] = [
+        Yii::$app->i18n->translations['gamecenter*'] = [
             'class'          => 'yii\i18n\PhpMessageSource',
             'sourceLanguage' => 'en',
             'basePath'       => '@gamecenter/messages'

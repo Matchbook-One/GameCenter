@@ -1,11 +1,12 @@
 <?php
 
 /**
- * @author  Christian Seiler
  * @package GameCenter
- * @since   1.0
+ * @author  Christian Seiler <christian@christianseiler.ch>
+ * @since   1.0.0
  */
 
+use fhnw\modules\gamecenter\GameCenterModule;
 use fhnw\modules\gamecenter\widgets\GameCenterMenu;
 use humhub\modules\admin\widgets\AdminMenu;
 
@@ -14,14 +15,15 @@ AdminMenu::markAsActive(['/gamecenter/admin']);
 /** @var string $content */
 ?>
 
-<?php $this->beginContent('@admin/views/layouts/main.php'); ?>
+<?php
+$this->beginContent('@admin/views/layouts/main.php'); ?>
     <div class="panel panel-default">
         <div class="panel-heading">
-          <?= Yii::t('GamecenterModule.base', '<strong>Manage</strong> Games'); ?>
+            <?= GameCenterModule::t('base', '<strong>Manage</strong> Games'); ?>
         </div>
-      <?= GameCenterMenu::widget(); ?>
+        <?= GameCenterMenu::widget(); ?>
         <div class="panel-body">
-          <?= $content ?>
+            <?= $content ?>
         </div>
     </div>
 

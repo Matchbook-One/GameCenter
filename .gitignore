@@ -8,3 +8,4 @@ vendor/*
 .build/
 .cache/
 node_modules/
+.sass-cache/

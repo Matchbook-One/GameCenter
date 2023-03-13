@@ -1,0 +1,24 @@
+{
+  "name": "gamecenter",
+  "scripts": {
+    "scss": "scss resources/scss:resources/css",
+    "scss:watch": "scss --watch resources/scss:resources/css",
+    "lint:js": "eslint resources/js",
+    "lint": "npm run lint:js && npm run lint:css"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.1",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "sass": "^1.59.2",
+    "@types/jquery": "^3.5.16"
+  },
+  "version": "1.0.0",
+  "author": {
+    "name": "Christian Seiler",
+    "email": "christian@christianseiler.ch>"
+  },
+  "license": "MIT"
+}

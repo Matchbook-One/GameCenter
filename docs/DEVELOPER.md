@@ -4,7 +4,7 @@
 
 ### Achievement
 
-| Attribut       | Type | Description |
+| Attribute      | Type | Description |
 |----------------|------|-------------|
 | `id`           |||
 | `guid`         |||
@@ -23,7 +23,7 @@
 
 ### Game
 
-| Attribut       | Type           | Description                   |
+| Attribute      | Type           | Description                   |
 |----------------|----------------|-------------------------------|
 | `id`           | int            |                               |
 | `guid`         | GUID           |                               |
@@ -49,8 +49,7 @@
 
 ## Migrations
 
-The following command executed in the `protected` directory will create a new migration into the
-`protected/humhub/migrations` folder:
+The following command executed in the `protected` directory will create a new migration into the `protected/humhub/migrations` folder:
 
 ```shell
 php yii migrate/create gamecenter_initial
@@ -64,10 +63,16 @@ php yii migrate/create gamecenter_initial
 php yii message/extract-module gamecenter
 ```
 
-## Te3sting
+## Testing
 
-````shell
+```shell
 cd protected/humhub/tests/codeception/bin
 php yii migrate/up --includeModuleMigrations=1 --interactive=0
 php yii migrate/up --includeModuleMigrations=1 --interactive=0 -p '@gamecenter/migrations'
-````
+```
+
+## API-Documentation
+
+```shell
+docker run --rm -v "$(pwd):/data" phpdoc/phpdoc --force --validate
+```

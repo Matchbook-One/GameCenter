@@ -14,9 +14,9 @@
  */
 return [
     'color'            => true,
-    'languages'        => ['de', 'en',],
+    'languages'        => ['de', 'en-UK',],
     'messagePath'      => '@gamecenter/messages',
-    'sourceLanguage'   => 'en',
+    'sourceLanguage'   => 'en-UK',
     'sourcePath'       => '@gamecenter',
     'translator'       => ['GameCenterModule::t'],
     'overwrite'        => true,

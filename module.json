@@ -4,9 +4,16 @@
   "name": "GameCenter",
   "description": "An automatically generated HumHub module to help you get started quickly.",
   "keywords": [],
-  "version": "0.1",
+  "version": "1.0.0",
   "humhub": {
-    "minVersion": "1.2"
+    "minVersion": "1.13.0"
   },
+  "authors": [
+    {
+      "name": "Christian Seiler",
+      "homepage": "https://www.christianseiler.ch",
+      "role": "Developer"
+    }
+  ],
   "screenshots": []
 }

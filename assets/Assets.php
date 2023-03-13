@@ -1,40 +1,43 @@
 <?php
 
 /**
- * @author  Christian Seiler
  * @package GameCenter
- * @since   1.0
+ * @author  Christian Seiler <christian@christianseiler.ch>
+ * @since   1.0.0
  */
 
 namespace fhnw\modules\gamecenter\assets;
 
-use yii\web\AssetBundle;
-use yii\web\View;
+use humhub\components\assets\AssetBundle;
+use humhub\modules\ui\view\components\View;
 
 /**
- * AssetsBundles are used to include assets as javascript or css files
+ * AssetsBundles are used to include assets as javascript or css files.
  */
-class Assets extends AssetBundle {
-  /**
-   * @var string defines the path of the module assets
-   */
-  public $sourcePath = '@gamecenter/resources';
+class Assets extends AssetBundle
+{
 
-  /**
-   * @var array defines where the js files are included into the page, note your custom js files should be included
-   *      after the core files (which are included in head)
-   */
-  public $jsOptions = ['position' => View::POS_END];
+    /**
+     * @var string[] $js
+     * @inheritdoc
+     */
+    public $js = ['js/gamecenter.js'];
 
-  /**
-   * @var array change forceCopy to true when testing your js in order to rebuild this assets on every request
-   *      (otherwise they will be cached)
-   */
-  public $publishOptions = [
-    'forceCopy' => false
-  ];
+    /**
+     * @var array{position: int} $jsOptions
+     * @inheritdoc
+     */
+    public $jsOptions = ['position' => View::POS_END];
 
-  public $js = [
-    'js/humhub.gamecenter.js'
-  ];
+    /**
+     * @var array{forceCopy: bool} $publishOptions
+     * @inheritdoc
+     */
+    public $publishOptions = ['forceCopy' => true];
+
+    /**
+     * @var string $sourcePath
+     * @inheritdoc
+     */
+    public $sourcePath = '@gamecenter/resources';
 }

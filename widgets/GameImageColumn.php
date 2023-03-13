@@ -1,5 +1,10 @@
 <?php
-declare(strict_types=1);
+
+/**
+ * @package GameCenter
+ * @author  Christian Seiler <christian@christianseiler.ch>
+ * @since   1.0.0
+ */
 
 namespace fhnw\modules\gamecenter\widgets;
 
@@ -9,27 +14,35 @@ use fhnw\modules\gamecenter\widgets\Image as GameImage;
 /**
  * GameImageColumn
  *
- * @since   1.0
- * @author  Christian Seiler
  * @package GameCenter
+ * @since   1.0.0
+ * @author  Christian Seiler <christian@christianseiler.ch>
  */
-class GameImageColumn extends GameBaseColumn {
+class GameImageColumn extends GameBaseColumn
+{
+    /**
+     * @inerhitdoc
+     * @return void
+     */
+    public function init(): void
+    {
+        parent::init();
 
-  /**
-   * @inerhitdoc
-   */
-  public function init() {
-    parent::init();
+        $this->options['style'] = 'width:38px';
+    }
 
-    $this->options['style'] = 'width:38px';
-  }
-
-  /**
-   * @inheritdoc
-   * @throws Exception
-   */
-  protected function renderDataCellContent($model, $key, $index): string {
-    return GameImage::widget(['game' => $this->getGame($model), 'width' => 34, 'link' => true]);
-  }
-
+    /**
+     * @inheritdoc
+     *
+     * @param     $model
+     * @param     $key
+     * @param int $index
+     *
+     * @return string
+     * @throws Exception
+     */
+    protected function renderDataCellContent($model, $key, $index): string
+    {
+        return GameImage::widget(['game' => $this->getGame($model), 'width' => 34, 'link' => true]);
+    }
 }
