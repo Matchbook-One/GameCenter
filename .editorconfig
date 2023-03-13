@@ -18,3 +18,12 @@ indent_size = 2
 
 [*.json]
 indent_size = 2
+
+[*.js]
+ij_javascript_indent_size = 2
+
+[*.scss]
+indent_size = 2
+ij_scss_hex_color_long_format = true
+ij_scss_indent_size = 2
+ij_scss_blank_lines_around_nested_selector = 1
