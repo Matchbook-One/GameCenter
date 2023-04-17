@@ -8,6 +8,7 @@
 
 namespace fhnw\modules\gamecenter\components;
 
+use fhnw\modules\gamecenter\models\Game;
 use humhub\modules\content\components\ContentContainerModule;
 
 /**
@@ -21,18 +22,26 @@ use humhub\modules\content\components\ContentContainerModule;
  */
 abstract class GameModule extends ContentContainerModule
 {
-    /**
-     * @return AchievementConfig[]
-     */
-    abstract public function getAchievementConfig();
+  /**
+   * @return AchievementConfig[]
+   */
+  abstract public function getAchievementConfig();
 
-    /**
-     * @return GameConfig
-     */
-    abstract public function getGameConfig();
+  /**
+   * @return GameConfig
+   */
+  abstract public function getGameConfig();
 
-    /**
-     * @phpstan-return LeaderboardConfig[]
-     */
-    //abstract public function getLeaderboardConfig(): array;
+  /**
+   * @phpstan-return LeaderboardConfig[]
+   */
+  //abstract public function getLeaderboardConfig(): array;
+
+  /**
+   * @return \fhnw\modules\gamecenter\models\Game
+   */
+  public function getGame(): Game
+  {
+    return Game::findOne(['module' => $this->id]);
+  }
 }

@@ -10,11 +10,11 @@ namespace fhnw\modules\gamecenter\models;
 
 use fhnw\modules\gamecenter\components\GameModule;
 use fhnw\modules\gamecenter\GameCenterModule;
+use humhub\components\ActiveRecord;
 use humhub\components\behaviors\GUID;
 use humhub\modules\search\jobs\DeleteDocument;
 use Yii;
 use yii\db\ActiveQuery;
-use yii\db\ActiveRecord;
 
 use function get_class;
 
@@ -39,125 +39,125 @@ use function get_class;
  */
 class AchievementDescription extends ActiveRecord
 {
-    public const EVENT_BEFORE_SOFT_DELETE = 'beforeSoftDelete';
+  public const EVENT_BEFORE_SOFT_DELETE = 'beforeSoftDelete';
 
-    public const STATUS_ACTIVE = 0;
+  public const STATUS_ACTIVE = 0;
 
-    public const STATUS_SOFT_DELETED = 1;
+  public const STATUS_SOFT_DELETED = 1;
 
-    /**
-     * @param string $module the module id
-     *
-     * @return AchievementDescription[]
-     */
-    public static function loadAchievements(string $module): array
-    {
-        /** @var AchievementDescription[] $result */
-        $result = AchievementDescription::find()->where(['game_id' => $module])->all();
+  /**
+   * @param string $module the module id
+   *
+   * @return AchievementDescription[]
+   */
+  public static function loadAchievements(string $module): array
+  {
+    /** @var AchievementDescription[] $result */
+    $result = AchievementDescription::find()->where(['game_id' => $module])->all();
 
-        return $result;
-    }
+    return $result;
+  }
 
-    /**
-     * @inheritdoc
-     * @static
-     * @return string
-     * @noinspection PhpMissingParentCallCommonInspection
-     */
-    public static function tableName(): string
-    {
-        return 'achievement';
-    }
+  /**
+   * @inheritdoc
+   * @static
+   * @return string
+   * @noinspection PhpMissingParentCallCommonInspection
+   */
+  public static function tableName(): string
+  {
+    return 'gc_achievement';
+  }
 
-    /**
-     * @inheritdoc
-     * @return array<string, string>
-     * @noinspection PhpMissingParentCallCommonInspection
-     */
-    public function attributeLabels(): array
-    {
-        return [
-            'id'          => 'ID',
-            'guid'        => 'GUID',
-            'name'        => GameCenterModule::t('base', 'Name'),
-            'title'       => GameCenterModule::t('base', 'Title'),
-            'description' => GameCenterModule::t('base', 'Description'),
-            'game_id'     => GameCenterModule::t('base', 'Game'),
-            'created_at'  => GameCenterModule::t('base', 'Created at'),
-            'created_by'  => GameCenterModule::t('base', 'Created by'),
-            'updated_at'  => GameCenterModule::t('base', 'Updated at'),
-            'updated_by'  => GameCenterModule::t('base', 'Updated by')
-        ];
-    }
+  /**
+   * @inheritdoc
+   * @return array<string, string>
+   * @noinspection PhpMissingParentCallCommonInspection
+   */
+  public function attributeLabels(): array
+  {
+    return [
+      'id'          => 'ID',
+      'guid'        => 'GUID',
+      'name'        => GameCenterModule::t('base', 'Name'),
+      'title'       => GameCenterModule::t('base', 'Title'),
+      'description' => GameCenterModule::t('base', 'Description'),
+      'game_id'     => GameCenterModule::t('base', 'Game'),
+      'created_at'  => GameCenterModule::t('base', 'Created at'),
+      'created_by'  => GameCenterModule::t('base', 'Created by'),
+      'updated_at'  => GameCenterModule::t('base', 'Updated at'),
+      'updated_by'  => GameCenterModule::t('base', 'Updated by')
+    ];
+  }
 
-    /**
-     * Before Delete of a Achievement
-     *
-     * @return bool
-     */
-    public function beforeDelete(): bool
-    {
-        $this->softDelete();
+  /**
+   * Before Delete of a Achievement
+   *
+   * @return bool
+   */
+  public function beforeDelete(): bool
+  {
+    $this->softDelete();
 
-        return parent::beforeDelete();
-    }
+    return parent::beforeDelete();
+  }
 
-    /**
-     * @inheritdoc
-     * @return string[]
-     * @phpstan-return array<class-string>
-     * @noinspection PhpMissingParentCallCommonInspection
-     */
-    public function behaviors(): array
-    {
-        return [
-            GUID::class
-        ];
-    }
+  /**
+   * @inheritdoc
+   * @return string[]
+   * @phpstan-return array<class-string>
+   * @noinspection PhpMissingParentCallCommonInspection
+   */
+  public function behaviors(): array
+  {
+    return [
+      GUID::class
+    ];
+  }
 
-    /**
-     * @return ActiveQuery
-     */
-    public function getAchievements(): ActiveQuery
-    {
-        return $this->hasMany(Achievement::class, ['description_id' => 'id']);
-    }
+  /**
+   * @return ActiveQuery
+   */
+  public function getAchievements(): ActiveQuery
+  {
+    return $this->hasMany(Achievement::class, ['description_id' => 'id']);
+  }
 
-    /**
-     * getGame
-     *
-     * @return ActiveQuery
-     */
-    public function getGame(): ActiveQuery
-    {
-        return $this->hasOne(Game::class, ['id' => 'game_id']);
-    }
+  /**
+   * getGame
+   *
+   * @return ActiveQuery
+   */
+  public function getGame(): ActiveQuery
+  {
+    return $this->hasOne(Game::class, ['id' => 'game_id']);
+  }
 
-    /**
-     * @inheritdoc
-     * @return mixed[]
-     * @noinspection PhpMissingParentCallCommonInspection
-     */
-    public function rules(): array
-    {
-        return [];
-    }
+  /**
+   * @inheritdoc
+   * @return mixed[]
+   * @noinspection PhpMissingParentCallCommonInspection
+   */
+  public function rules(): array
+  {
+    return [];
+  }
 
-    /**
-     * @return bool
-     */
-    public function softDelete(): bool
-    {
-        $this->trigger(self::EVENT_BEFORE_SOFT_DELETE);
+  /**
+   * @return bool
+   */
+  public function softDelete(): bool
+  {
+    $this->trigger(self::EVENT_BEFORE_SOFT_DELETE);
 
-        $config = [
-            'activeRecordClass' => get_class($this),
-            'primaryKey'        => $this->id
-        ];
-        Yii::$app->queue->push(new DeleteDocument($config));
+    $config = [
+      'activeRecordClass' => get_class($this),
+      'primaryKey'        => $this->id
+    ];
+    Yii::$app->queue->push(new DeleteDocument($config));
 
-        $this->updateAttributes(['status' => self::STATUS_SOFT_DELETED]);
+    $this->updateAttributes(['status' => self::STATUS_SOFT_DELETED]);
 
-        return true;
-    }
+    return true;
+  }
 }

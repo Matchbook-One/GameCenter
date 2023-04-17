@@ -1,11 +1,11 @@
 .htaccess
-nbproject
 .idea/*
 !.idea
-vendor/*
 .gitmodules
-/composer.lock
 .build/
 .cache/
-node_modules/
 .sass-cache/
+nbproject
+vendor/*
+composer.lock
+node_modules/

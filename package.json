@@ -6,14 +6,14 @@
     "lint:js": "eslint resources/js",
     "lint": "npm run lint:js && npm run lint:css"
   },
+  "type": "module",
   "devDependencies": {
-    "eslint": "^8.0.1",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.25.2",
-    "eslint-plugin-n": "^15.0.0",
-    "eslint-plugin-promise": "^6.0.0",
-    "sass": "^1.59.2",
-    "@types/jquery": "^3.5.16"
+    "@types/eslint": "^8.37.0",
+    "@types/jquery": "^3.5.16",
+    "@types/web": "^0.0.99",
+    "@eslint/js": "^8.38.0",
+    "eslint": "^8.38.0",
+    "sass": "^1.59.2"
   },
   "version": "1.0.0",
   "author": {

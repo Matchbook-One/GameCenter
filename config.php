@@ -16,21 +16,21 @@ use yii\base\Widget;
  * @phpstan-type ModuleConfig array{ id: string, class: class-string, namespace: string, events: array<EventConfig> }
  */
 $config = [
-    'id'        => 'gamecenter',
-    'class'     => GameCenterModule::class,
-    'namespace' => 'fhnw\modules\gamecenter',
-    'events'    => [
-        [
-            'class'    => ModuleManager::class,
-            'event'    => ModuleManager::EVENT_BEFORE_MODULE_ENABLE,
-            'callback' => [Events::class, 'onBeforeModuleEnabled']
-        ],
-        [
-            'class'    => AdminMenu::class,
-            'event'    => Widget::EVENT_INIT,
-            'callback' => [Events::class, 'onAdminMenuInit'],
-        ]
+  'id'        => 'gamecenter',
+  'class'     => GameCenterModule::class,
+  'namespace' => 'fhnw\modules\gamecenter',
+  'events'    => [
+    [
+      'class'    => ModuleManager::class,
+      'event'    => ModuleManager::EVENT_BEFORE_MODULE_ENABLE,
+      'callback' => [Events::class, 'onBeforeModuleEnabled']
+    ],
+    [
+      'class'    => AdminMenu::class,
+      'event'    => Widget::EVENT_INIT,
+      'callback' => [Events::class, 'onAdminMenuInit'],
     ]
+  ]
 ];
 
 return $config;

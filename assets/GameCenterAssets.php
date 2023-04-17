@@ -9,12 +9,12 @@
 namespace fhnw\modules\gamecenter\assets;
 
 use humhub\components\assets\AssetBundle;
-use humhub\modules\ui\view\components\View;
+use yii\web\View;
 
 /**
  * AssetsBundles are used to include assets as javascript or css files.
  */
-class Assets extends AssetBundle
+class GameCenterAssets extends AssetBundle
 {
 
     /**

@@ -21,89 +21,90 @@ use yii\base\Component;
 class GameCenter extends Component
 {
 
-    /** @var GameCenter $instance */
-    private static $instance;
+  /** @var GameCenter $instance */
+  private static $instance;
 
-    /**
-     * @return GameCenter
-     * @static
-     */
-    public static function getInstance(): GameCenter
-    {
-        if (self::$instance === null) {
-            self::$instance = new GameCenter();
-        }
-
-        return self::$instance;
+  /**
+   * @return GameCenter
+   * @static
+   */
+  public static function getInstance(): GameCenter
+  {
+    if (self::$instance === null) {
+      self::$instance = new GameCenter();
     }
 
-    /**
-     * @param string     $moduleID the Module ID
-     * @param GameModule $module   the module
-     *
-     * @return boolean
-     */
-    public function register(string $moduleID, GameModule $module): bool
-    {
-        Yii::debug("Register module $moduleID", __METHOD__);
-        $gameConfig   = $module->getGameConfig();
-        $game         = self::registerGame($moduleID, $gameConfig);
-        $achievements = $module->getAchievementConfig();
-        $this->registerAchievements($game, $achievements);
+    return self::$instance;
+  }
 
-        return true;
+  /**
+   * @param string     $moduleID the Module ID
+   * @param GameModule $module   the module
+   *
+   * @return boolean
+   */
+  public function register(string $moduleID, GameModule $module): bool
+  {
+    Yii::debug("Register module $moduleID", __METHOD__);
+    $gameConfig = $module->getGameConfig();
+    $game = self::registerGame($moduleID, $gameConfig);
+    $achievements = $module->getAchievementConfig();
+    $this->registerAchievements($game, $achievements);
+
+    return true;
+  }
+
+  /**
+   * unregister
+   *
+   * @param string $module the Module ID
+   *
+   * @return bool
+   */
+  public function unregister(string $module): bool
+  {
+    $game = Game::findOne(['module' => $module]);
+    if ($game) {
+      $game->status = Game::STATUS_DISABLED;
+
+      return $game->save();
     }
 
-    /**
-     * unregister
-     *
-     * @param string $module the Module ID
-     *
-     * @return bool
-     */
-    public function unregister(string $module): bool
-    {
-        $game = Game::findOne(['module' => $module]);
-        if ($game) {
-            $game->status = Game::STATUS_DISABLED;
+    return false;
+  }
 
-            return $game->save();
-        }
+  /**
+   * @param Game                $game         the Game id
+   * @param AchievementConfig[] $achievements The Configs
+   *
+   * @return void
+   */
+  private function registerAchievements(Game $game, $achievements): void
+  {
+    foreach ($achievements as $config) {
+      /** @var AchievementConfig $config */
+      $achievement = new AchievementDescription($config);
+      $achievement->link('game', $game);
+      $achievement->save();
+    }
+  }
 
-        return false;
+  /**
+   * @param string     $module
+   * @param GameConfig $config
+   *
+   * @return Game
+   */
+  private function registerGame(string $module, $config): Game
+  {
+    $game = Game::findOne(['module' => $module]);
+    if (!$game) {
+      $game = new Game($config);
+      $game->module = $module;
+      $game->save();
     }
 
-    /**
-     * @param Game                $game         the Game id
-     * @param AchievementConfig[] $achievements The Configs
-     *
-     * @return void
-     */
-    private function registerAchievements(Game $game, $achievements): void
-    {
-        foreach ($achievements as $config) {
-            /** @var AchievementConfig $config */
-            $achievement = new AchievementDescription($config);
-            $achievement->link('game', $game);
-            $achievement->save();
-        }
-    }
+    return $game;
+  }
 
-    /**
-     * @param string     $module
-     * @param GameConfig $config
-     *
-     * @return Game
-     */
-    private function registerGame(string $module, $config): Game
-    {
-        $game = Game::findOne(['module' => $module]);
-        if (!$game) {
-            $game         = new Game($config);
-            $game->module = $module;
-            $game->save();
-        }
-
-        return $game;
-    }
 }
