@@ -271,16 +271,16 @@ class Game extends ActiveRecord implements Searchable
   }
 
   /**
-   * @param \fhnw\modules\gamecenter\models\User $user
+   * @param ?\fhnw\modules\gamecenter\models\User $user
    *
    * @return Score
    */
-  public function getHighscore(User $user = null): Score
+  public function getHighscore(User $user = null)
   {
     if ($user == null) {
       $user = Yii::$app->user;
     }
-    /** @var Score $score */
+    /** @var Score|null $score */
     $score = $this->getScores()->where(['player_id' => $user->id])->orderBy(['score' => SORT_ASC])->one();
 
     return $score;
