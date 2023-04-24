@@ -19,49 +19,49 @@ use humhub\widgets\JsWidget;
 class GameFilter extends JsWidget
 {
 
-    /**
-     * @var boolean $init
-     * @inheritdocs
-     */
-    public $init = true;
+  /**
+   * @var boolean $init
+   * @inheritdocs
+   */
+  public $init = true;
 
-    /**
-     * @var string $jsWidget
-     * @inheritdocs
-     */
-    public $jsWidget = 'gamecenter.GameFilter';
+  /**
+   * @var string $jsWidget
+   * @inheritdocs
+   */
+  public $jsWidget = 'gamecenter.GameFilter';
 
-    /**
-     * @inheritdocs
-     * @return string
-     */
-    public function run(): string
-    {
-        GameFilterAssets::register($this->view);
+  /**
+   * @inheritdocs
+   * @return string
+   */
+  public function run(): string
+  {
+    GameFilterAssets::register($this->view);
 
-        return Html::dropDownList('', [], ['all' => GameCenterModule::t('base', 'All')], $this->getOptions());
-    }
+    return Html::dropDownList('', [], ['all' => GameCenterModule::t('base', 'All')], $this->getOptions());
+  }
 
-    /**
-     * getAttributes
-     *
-     * @return Attributes
-     */
-    protected function getAttributes(): array
-    {
-        return [
-            'class' => 'form-control pull-right visible-md visible-lg',
-            'style' => 'width:150px; margin-right:20px',
-        ];
-    }
+  /**
+   * getAttributes
+   *
+   * @return Attributes
+   */
+  protected function getAttributes(): array
+  {
+    return [
+      'class' => 'form-control pull-right visible-md visible-lg',
+      'style' => 'width:150px; margin-right:20px',
+    ];
+  }
 
-    /**
-     * getData
-     *
-     * @return string[]
-     */
-    protected function getData(): array
-    {
-        return ['action-change' => 'change'];
-    }
+  /**
+   * getData
+   *
+   * @return string[]
+   */
+  protected function getData(): array
+  {
+    return ['action-change' => 'change'];
+  }
 }

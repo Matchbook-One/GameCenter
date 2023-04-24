@@ -17,27 +17,27 @@ use yii\web\View;
 class GameCenterAssets extends AssetBundle
 {
 
-    /**
-     * @var string[] $js
-     * @inheritdoc
-     */
-    public $js = ['js/gamecenter.js'];
+  /**
+   * @var string[] $js
+   * @inheritdoc
+   */
+  public $js = ['js/gamecenter.js'];
 
-    /**
-     * @var array{position: int} $jsOptions
-     * @inheritdoc
-     */
-    public $jsOptions = ['position' => View::POS_END];
+  /**
+   * @var array{position: int} $jsOptions
+   * @inheritdoc
+   */
+  public $jsOptions = ['position' => View::POS_END];
 
-    /**
-     * @var array{forceCopy: bool} $publishOptions
-     * @inheritdoc
-     */
-    public $publishOptions = ['forceCopy' => true];
+  /**
+   * @var array{forceCopy: bool} $publishOptions
+   * @inheritdoc
+   */
+  public $publishOptions = ['forceCopy' => true];
 
-    /**
-     * @var string $sourcePath
-     * @inheritdoc
-     */
-    public $sourcePath = '@gamecenter/resources';
+  /**
+   * @var string $sourcePath
+   * @inheritdoc
+   */
+  public $sourcePath = '@gamecenter/resources';
 }

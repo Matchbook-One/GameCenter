@@ -14,13 +14,13 @@ use yii\db\ActiveQuery;
 /**
  * This is the model class for table "Score".
  *
- * @property int         $id
- * @property int         $player_id
- * @property int         $game_id
- * @property int         $score
- * @property-read string $timestamp
- * @property-read Game   $game
- * @property-read User   $player
+ * @property int                                         $id
+ * @property int                                         $player_id
+ * @property int                                         $game_id
+ * @property int                                         $score
+ * @property-read string                                 $timestamp
+ * @property-read \fhnw\modules\gamecenter\models\Game   $game
+ * @property-read \fhnw\modules\gamecenter\models\Player $player
  */
 class Score extends ActiveRecord
 {
@@ -28,7 +28,7 @@ class Score extends ActiveRecord
   /** @returns string */
   public static function tableName(): string
   {
-    return 'gc_score';
+    return 'score';
   }
 
   /**
@@ -45,5 +45,16 @@ class Score extends ActiveRecord
   public function getPlayer(): ActiveQuery
   {
     return $this->hasOne(User::class, ['id' => 'player_id']);
+  }
+
+  public function getDefinition()
+  {
+    $result = [
+      'id'        => $this->id,
+      'score'     => $this->score,
+      'timestamp' => $this->timestamp
+    ];
+
+    return $result;
   }
 }

@@ -14,16 +14,11 @@ const config = [
     ],
     languageOptions: {
       ecmaVersion: 'latest',
-      sourceType: 'commonjs',
+      sourceType: 'module',
       globals: {
         console: 'readonly',
-        createjs: 'readonly',
         document: 'readonly',
-        humhub: 'readonly',
-        localStorage: 'readonly',
-        location: 'readonly',
-        ndgmr: 'readonly',
-        window: 'readonly'
+        humhub: 'readonly'
       }
     },
     rules: {

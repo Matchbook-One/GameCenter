@@ -66,7 +66,7 @@ class AchievementDescription extends ActiveRecord
    */
   public static function tableName(): string
   {
-    return 'gc_achievement';
+    return 'achievement';
   }
 
   /**

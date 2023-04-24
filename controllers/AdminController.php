@@ -18,35 +18,37 @@ use Yii;
  */
 class AdminController extends Controller
 {
-    /**
-     * @inheritdoc
-     * @return     void
-     */
-    public function init(): void
-    {
-        $this->subLayout = '@gamecenter/views/layouts/gamecenter';
-        $this->appendPageTitle(GameCenterModule::t('config', 'GameCenter'));
-        parent::init();
-    }
 
-    /**
-     * @return string
-     */
-    public function actionAchievements(): string
-    {
-        return $this->render('achievements');
-    }
+  public $subLayout = '@gamecenter/views/layouts/gamecenter';
 
-    /**
-     * Render admin only page
-     *
-     * @return string
-     */
-    public function actionIndex(): string
-    {
-        $searchModel  = new GameSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+  /**
+   * @inheritdoc
+   * @return     void
+   */
+  public function init(): void
+  {
+    $this->appendPageTitle(GameCenterModule::t('config', 'GameCenter'));
+    parent::init();
+  }
 
-        return $this->render('index', compact('dataProvider', 'searchModel'));
-    }
+  /**
+   * @return string
+   */
+  public function actionAchievements(): string
+  {
+    return $this->render('achievements');
+  }
+
+  /**
+   * Render admin only page
+   *
+   * @return string
+   */
+  public function actionIndex(): string
+  {
+    $searchModel = new GameSearch();
+    $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+    return $this->render('index', compact('dataProvider', 'searchModel'));
+  }
 }

@@ -11,14 +11,13 @@ namespace fhnw\modules\gamecenter\models;
 use fhnw\modules\gamecenter\DateTime;
 use fhnw\modules\gamecenter\GameCenterModule;
 use humhub\components\ActiveRecord;
-use humhub\modules\user\models\User;
 use Yii;
 use yii\db\ActiveQuery;
 
 /**
  * This is the model class for the table "player_achievement".
  *
- * @property int                         $achievement_id
+ * @property int                         $id
  * @property int                         $progress
  * @property float                       $percent_completed A percentage value that states how far the player has progressed on the
  *           achievement.
@@ -26,7 +25,7 @@ use yii\db\ActiveQuery;
  * @property int                         $created_by
  * @property string                      $updated_at
  * @property int                         $updated_by
- * @property-read User                   $player
+ * @property-read Player                 $player
  * @property-read AchievementDescription $achievementDescription
  * @property-read Game                   $game
  */
@@ -47,7 +46,7 @@ class Achievement extends ActiveRecord
    */
   public static function tableName(): string
   {
-    return 'gc_player_achievement';
+    return 'player_achievement';
   }
 
   /**
@@ -88,14 +87,11 @@ class Achievement extends ActiveRecord
   }
 
   /**
-   * @return AchievementDescription
+   * @returns ActiveQuery
    */
-  public function getAchievementDescription(): AchievementDescription
+  public function getAchievementDescription(): ActiveQuery
   {
-    /** @var AchievementDescription $description */
-    $description = $this->hasOne(AchievementDescription::class, ['id' => 'description_id']);
-
-    return $description;
+    return $this->hasOne(AchievementDescription::class, ['id' => 'description_id']);
   }
 
   /**
@@ -105,7 +101,7 @@ class Achievement extends ActiveRecord
    */
   public function getGame(): ActiveQuery
   {
-    return $this->getAchievementDescription()->getGame();
+    return $this->hasOne(Game::class, ['id' => 'game_id'])->via('achievement');
   }
 
   /**
@@ -115,7 +111,7 @@ class Achievement extends ActiveRecord
    */
   public function getPlayer(): ActiveQuery
   {
-    return $this->hasOne(User::class, ['id' => 'player_id']);
+    return $this->hasOne(Player::class, ['id' => 'player_id']);
   }
 
   /**
@@ -125,7 +121,7 @@ class Achievement extends ActiveRecord
    */
   public function isCompleted(): bool
   {
-    return $this->percent_completed === 100.0;
+    return $this->percent_completed == 100.0;
   }
 
   /**
@@ -136,15 +132,6 @@ class Achievement extends ActiveRecord
   public function lastReportedDate(): \DateTime
   {
     return DateTime::date($this->updated_at);
-  }
-
-  /**
-   * @param Achievement[] $achievements The Achievements to be reported
-   *
-   * @return void
-   */
-  public function report(array $achievements): void
-  {
   }
 
   /**

@@ -8,7 +8,6 @@
 
 namespace fhnw\modules\gamecenter\models;
 
-use fhnw\modules\gamecenter\components\ActiveQueryGame;
 use fhnw\modules\gamecenter\events\GameEvent;
 use fhnw\modules\gamecenter\GameCenterModule;
 use humhub\components\ActiveRecord;
@@ -17,7 +16,6 @@ use humhub\modules\search\events\SearchAddEvent;
 use humhub\modules\search\interfaces\Searchable;
 use humhub\modules\search\jobs\DeleteDocument;
 use humhub\modules\space\widgets\Wall;
-use Throwable;
 use Yii;
 use Yii\db\ActiveQuery;
 
@@ -44,28 +42,20 @@ use const SORT_ASC;
 class Game extends ActiveRecord implements Searchable
 {
 
+  /** @var int */
   public const STATUS_DISABLED = 0;
 
+  /** @var int */
   public const STATUS_ENABLED = 1;
 
+  /** @var int */
   public const STATUS_ARCHIVED = 2;
 
+  /** @var int */
   public const STATUS_SOFT_DELETED = 3;
 
-  /**
-   * @event An event that is triggered when the game is soft deleted and also before complete deletion.
-   */
+  /** @event An event that is triggered when the game is soft deleted and also before complete deletion. */
   public const EVENT_BEFORE_SOFT_DELETE = 'beforeSoftDelete';
-
-  /**
-   * @inheritdoc
-   * @return       ActiveQueryGame the newly created [[ActiveQueryGame]] instance.
-   * @noinspection PhpMissingParentCallCommonInspection
-   */
-  public static function find(): ActiveQueryGame
-  {
-    return new ActiveQueryGame(static::class);
-  }
 
   /**
    * @inheritdoc
@@ -74,7 +64,7 @@ class Game extends ActiveRecord implements Searchable
    */
   public static function tableName(): string
   {
-    return 'gc_game';
+    return 'game';
   }
 
   /**
@@ -182,7 +172,6 @@ class Game extends ActiveRecord implements Searchable
    * getWallOut
    *
    * @return string
-   * @throws Throwable
    */
   public function getWallOut(): string
   {
@@ -284,21 +273,5 @@ class Game extends ActiveRecord implements Searchable
     $score = $this->getScores()->where(['player_id' => $user->id])->orderBy(['score' => SORT_ASC])->one();
 
     return $score;
-  }
-
-  /**
-   * @param int $score
-   *
-   * @return bool
-   * @static
-   */
-  public function saveScore(int $score): bool
-  {
-    $newScore = new Score();
-    $newScore->score = $score;
-    $newScore->game_id = $this->id;
-    $newScore->player_id = Yii::$app->user->id;
-
-    return $newScore->save();
   }
 }
