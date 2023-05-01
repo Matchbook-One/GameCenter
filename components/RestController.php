@@ -6,9 +6,12 @@ use Yii;
 use yii\data\Pagination;
 use yii\db\ActiveQuery;
 
+/**
+ * @package GameCenter/Components
+ */
 abstract class RestController extends Controller
 {
-  /** @var string moduleId */
+  /** @var string $moduleId */
   public static $moduleId = '';
 
   /**
@@ -32,6 +35,7 @@ abstract class RestController extends Controller
 
   /**
    * @return class-string returns the class name of the active record
+   * @abstract
    */
   abstract public function getContentActiveRecordClass();
 

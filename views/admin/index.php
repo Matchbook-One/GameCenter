@@ -1,7 +1,6 @@
 <?php
 
 /**
- * @package GameCenter/views
  * @author  Christian Seiler <christian@christianseiler.ch>
  * @since   1.0.0
  */
@@ -31,7 +30,7 @@ use yii\helpers\Url;
 
 <br/>
 <?php
-$form = ActiveForm::begin(['method' => 'get', 'action' => Url::to(['/gamecenter/admin/index'])]); ?>
+$form = ActiveForm::begin(['method' => 'get', 'action' => Url::to(['/gamecenter/admin/gamecenter'])]); ?>
 <div class="row">
   <div class="col-md-8">
     <div class="input-group">

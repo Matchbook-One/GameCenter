@@ -6,15 +6,14 @@
  * @since   1.0.0
  */
 
-use fhnw\modules\gamecenter\{Events, GameCenterModule};
+use fhnw\modules\gamecenter\Events;
+use fhnw\modules\gamecenter\GameCenterModule;
 use humhub\components\ModuleManager;
 use humhub\modules\admin\widgets\AdminMenu;
+use humhub\widgets\TopMenu;
 use yii\base\Widget;
 
-/**
- * @phpstan-type EventConfig  array{ class: class-string, event: string, callback: array<class-string, callable-string> }
- * @phpstan-type ModuleConfig array{ id: string, class: class-string, namespace: string, events: array<EventConfig> }
- */
+/** @var \fhnw\humhub\stubs\ModuleConfig $config */
 $config = [
   'id'        => 'gamecenter',
   'class'     => GameCenterModule::class,
@@ -29,6 +28,11 @@ $config = [
       'class'    => AdminMenu::class,
       'event'    => Widget::EVENT_INIT,
       'callback' => [Events::class, 'onAdminMenuInit'],
+    ],
+    [
+      'class'    => TopMenu::class,
+      'event'    => Widget::EVENT_INIT,
+      'callback' => [Events::class, 'onTopMenuInit']
     ]
   ]
 ];

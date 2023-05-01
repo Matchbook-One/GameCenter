@@ -1,7 +1,15 @@
 <?php
 
-/** @noinspection PhpMissingParentCallCommonInspection */
+/**
+ * @noinspection PhpIllegalPsrClassPathInspection
+ * @noinspection PhpMissingParentCallCommonInspection
+ */
 
+use fhnw\modules\gamecenter\models\Achievement;
+use fhnw\modules\gamecenter\models\AchievementDescription;
+use fhnw\modules\gamecenter\models\Game;
+use fhnw\modules\gamecenter\models\Play;
+use fhnw\modules\gamecenter\models\Score;
 use yii\db\Migration;
 
 /**
@@ -9,21 +17,21 @@ use yii\db\Migration;
  */
 class m230103_171019_gamecenter_initial extends Migration
 {
-  const ACHIEVEMENT = 'achievement';
+  public const ACHIEVEMENT = 'achievement';
 
-  const PLAYER_ACHIEVEMENT = 'player_achievement';
+  public const PLAYER_ACHIEVEMENT = 'player_achievement';
 
-  const GAME = 'game';
+  public const GAME = 'game';
 
-  const SCORE = 'score';
+  public const SCORE = 'score';
 
-  const GAME_TAG = 'game_tag';
+  public const GAME_TAG = 'game_tag';
 
-  const LEADERBOARD = 'leaderboard';
+  public const LEADERBOARD = 'leaderboard';
 
-  const USER = 'user';
+  public const USER = 'user';
 
-  const GAME_REPORT = 'game_report';
+  public const GAME_REPORT = 'game_report';
 
   /**
    * {@inheritdoc}
@@ -31,9 +39,9 @@ class m230103_171019_gamecenter_initial extends Migration
    */
   public function safeDown(): bool
   {
-    $this->dropForeignKey('fk_achievement_game', self::ACHIEVEMENT);
-    $this->dropForeignKey('fk_pa_achievement', self::PLAYER_ACHIEVEMENT);
-    $this->dropForeignKey('fk_pa_player', self::PLAYER_ACHIEVEMENT);
+    $this->dropForeignKey('fk_achievement_game', AchievementDescription::TABLE);
+    $this->dropForeignKey('fk_pa_achievement', Achievement::TABLE);
+    $this->dropForeignKey('fk_pa_player', Achievement::TABLE);
 
     $this->dropTable(self::PLAYER_ACHIEVEMENT);
     $this->dropTable(self::GAME);
@@ -50,77 +58,140 @@ class m230103_171019_gamecenter_initial extends Migration
   {
     $columns = [
       'id'          => $this->primaryKey(),
-      'guid'        => $this->string()->notNull()->unique(),
-      'module'      => $this->string()->notNull()->unique(),
-      'title'       => $this->string()->notNull(),
-      'description' => $this->string()->defaultValue('')->notNull(),
-      'status'      => $this->tinyInteger()->notNull(),
-      'created_at'  => $this->dateTime()->notNull(),
-      'created_by'  => $this->integer()->notNull(),
-      'updated_at'  => $this->dateTime()->notNull(),
-      'updated_by'  => $this->integer()->notNull()
+      'guid'        => $this->string()
+                            ->notNull()
+                            ->unique(),
+      'module'      => $this->string()
+                            ->notNull()
+                            ->unique(),
+      'title'       => $this->string()
+                            ->notNull(),
+      'description' => $this->string()
+                            ->defaultValue('')
+                            ->notNull(),
+      'status'      => $this->tinyInteger()
+                            ->notNull(),
+      'created_at'  => $this->dateTime()
+                            ->notNull(),
+      'created_by'  => $this->integer()
+                            ->notNull(),
+      'updated_at'  => $this->dateTime()
+                            ->notNull(),
+      'updated_by'  => $this->integer()
+                            ->notNull()
     ];
-    $this->createTable(self::GAME, $columns);
+    $this->createTable(Game::TABLE, $columns);
 
     $columns = [
       'id'          => $this->primaryKey(),
-      'guid'        => $this->string()->notNull()->unique(),
-      'name'        => $this->string()->notNull(),
-      'title'       => $this->string()->notNull(),
-      'description' => $this->string()->notNull(),
-      'image'       => $this->string()->notNull(),
-      'game_id'     => $this->integer()->notNull(),
-      'created_at'  => $this->dateTime()->notNull(),
-      'created_by'  => $this->integer()->notNull(),
-      'updated_at'  => $this->dateTime()->notNull(),
-      'updated_by'  => $this->integer()->notNull()
+      'guid'        => $this->string()
+                            ->notNull()
+                            ->unique(),
+      'name'        => $this->string()
+                            ->notNull(),
+      'title'       => $this->string()
+                            ->notNull(),
+      'description' => $this->string()
+                            ->notNull(),
+      'image'       => $this->string()
+                            ->notNull(),
+      'game_id'     => $this->integer()
+                            ->notNull(),
+      'created_at'  => $this->dateTime()
+                            ->notNull(),
+      'created_by'  => $this->integer()
+                            ->notNull(),
+      'updated_at'  => $this->dateTime()
+                            ->notNull(),
+      'updated_by'  => $this->integer()
+                            ->notNull()
     ];
-    $this->createTable(self::ACHIEVEMENT, $columns);
+    $this->createTable(AchievementDescription::TABLE, $columns);
 
     $columns = [
-      'player_id'         => $this->integer()->notNull(),
-      'achievement_id'    => $this->integer()->notNull(),
-      'percent_completed' => $this->integer()->defaultValue(0),
-      'created_at'        => $this->dateTime()->notNull(),
-      'created_by'        => $this->integer()->notNull(),
-      'updated_at'        => $this->dateTime()->notNull(),
-      'updated_by'        => $this->integer()->notNull(),
+      'player_id'         => $this->integer()
+                                  ->notNull(),
+      'achievement_id'    => $this->integer()
+                                  ->notNull(),
+      'percent_completed' => $this->integer()
+                                  ->defaultValue(0),
+      'created_at'        => $this->dateTime()
+                                  ->notNull(),
+      'created_by'        => $this->integer()
+                                  ->notNull(),
+      'updated_at'        => $this->dateTime()
+                                  ->notNull(),
+      'updated_by'        => $this->integer()
+                                  ->notNull(),
       'PRIMARY KEY(player_id, achievement_id)'
     ];
-    $this->createTable(self::PLAYER_ACHIEVEMENT, $columns);
+    $this->createTable(Achievement::TABLE, $columns);
 
     $columns = [
       'id'        => $this->primaryKey(),
-      'game_id'   => $this->integer()->notNull(),
-      'player_id' => $this->integer()->notNull(),
-      'score' => $this->integer()->notNull(),
-      'timestamp' => $this->dateTime()->notNull()
+      'game_id'   => $this->integer()
+                          ->notNull(),
+      'player_id' => $this->integer()
+                          ->notNull(),
+      'score'     => $this->integer()
+                          ->notNull(),
+      'timestamp' => $this->dateTime()
+                          ->notNull()
     ];
-    $this->createTable(self::SCORE, $columns);
+    $this->createTable(Score::TABLE, $columns);
 
     $columns = [
-      'game_id' => $this->integer()->notNull(),
-      'tag'     => $this->string()->notNull(),
+      'game_id' => $this->integer()
+                        ->notNull(),
+      'tag'     => $this->string()
+                        ->notNull(),
       'PRIMARY KEY(game_id, tag)'
     ];
     $this->createTable(self::GAME_TAG, $columns);
 
     $columns = [
       'id'        => $this->primaryKey(),
-      'game_id'   => $this->integer()->notNull(),
-      'player_id' => $this->integer()->notNull(),
-      'option'    => $this->string()->notNull(),
-      'value'     => $this->string()->notNull(),
-      'timestamp' => $this->dateTime()->notNull()
+      'game_id'   => $this->integer()
+                          ->notNull(),
+      'player_id' => $this->integer()
+                          ->notNull(),
+      'option'    => $this->string()
+                          ->notNull(),
+      'value'     => $this->string()
+                          ->notNull(),
+      'timestamp' => $this->dateTime()
+                          ->notNull()
     ];
     $this->createTable(self::GAME_REPORT, $columns);
 
     $columns = [
       'id'      => $this->primaryKey(),
-      'game_id' => $this->integer()->notNull(),
-      'type'    => $this->integer()->notNull()
+      'game_id' => $this->integer()
+                        ->notNull(),
+      'type'    => $this->integer()
+                        ->notNull()
     ];
     $this->createTable(self::LEADERBOARD, $columns);
+
+    $columns = [
+      'id'          => $this->primaryKey(),
+      'game_id'     => $this->integer()
+                            ->notNull(),
+      'player_id'   => $this->integer()
+                            ->notNull(),
+      'last_played' => $this->dateTime()
+                            ->notNull(),
+      'created_at'  => $this->dateTime()
+                            ->notNull(),
+      'created_by'  => $this->integer()
+                            ->notNull(),
+      'updated_at'  => $this->dateTime()
+                            ->notNull(),
+      'updated_by'  => $this->integer()
+                            ->notNull(),
+
+    ];
+    $this->createTable(Play::TABLE, $columns);
 
     $this->addForeignKey('achievement_game_id_fk', self::ACHIEVEMENT, 'game_id', self::GAME, 'id');
     $this->addForeignKey('playerachievement_user_id_fk', self::PLAYER_ACHIEVEMENT, 'player_id', self::USER, 'id');
@@ -130,5 +201,7 @@ class m230103_171019_gamecenter_initial extends Migration
     $this->addForeignKey('score_user_id_fk', self::SCORE, 'player_id', self::USER, 'id');
     $this->addForeignKey('report_game_id_fk', self::GAME_REPORT, 'game_id', self::GAME, 'id');
     $this->addForeignKey('report_user_id_fk', self::GAME_REPORT, 'player_id', self::USER, 'id');
+    $this->addForeignKey('play_user_id_fk', Play::TABLE, 'player_id', 'user', 'id');
+    $this->addForeignKey('play_game_id_fk', Play::TABLE, 'game_id', 'game', 'id');
   }
 }

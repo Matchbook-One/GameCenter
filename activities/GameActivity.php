@@ -1,13 +1,21 @@
 <?php
-
+/**
+ * @author Christian Seiler <christian@christianseiler.ch>
+ * @since  1.0.0
+ */
 namespace fhnw\modules\gamecenter\activities;
 
-class GameActivity extends \humhub\modules\activity\components\BaseActivity
-{
-    // View Name for activity
-    public $viewName = "somethingHappend";
+use humhub\modules\activity\components\BaseActivity;
 
-    // Module Id (required)
-    public $moduleId = "example";
+/**
+ * @package GameCenter/Activities
+ */
+class GameActivity extends BaseActivity
+{
+
+  /** @var string view name used for rendering the activity */
+  public $viewName = 'somethingHappend';
+  /** @var string the module id which this activity belongs to (required) */
+  public $moduleId = 'example';
 
 }

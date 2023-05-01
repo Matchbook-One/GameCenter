@@ -17,6 +17,8 @@ use yii\base\Component;
  * The Class GameCenter
  * @phpstan-import-type GameConfig from GameModule
  * @phpstan-import-type AchievementConfig from GameModule
+ *
+ * @package GameCenter/Components
  */
 class GameCenter extends Component
 {

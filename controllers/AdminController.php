@@ -1,7 +1,6 @@
 <?php
 
 /**
- * @package GameCenter
  * @author  Christian Seiler <christian@christianseiler.ch>
  * @since   1.0.0
  */
@@ -10,16 +9,26 @@ namespace fhnw\modules\gamecenter\controllers;
 
 use fhnw\modules\gamecenter\GameCenterModule;
 use fhnw\modules\gamecenter\models\GameSearch;
-use humhub\modules\admin\components\Controller;
+use humhub\components\Controller;
+use humhub\modules\ui\view\components\View;
 use Yii;
 
 /**
  * Admin Controller
+ *
+ * @package GameCenter/Controllers
+ * @property ?string $subLayout
+ * @property string $pageTitle
+ * @property array $actionTitlesMap
+ * @property bool $prependActionTitles
+ * @property class-string $access
+ * @property View $view
  */
 class AdminController extends Controller
 {
 
-  public $subLayout = '@gamecenter/views/layouts/gamecenter';
+  /** @inheritdoc */
+  public $subLayout = '@gamecenter/views/admin/layout';
 
   /**
    * @inheritdoc
@@ -27,7 +36,8 @@ class AdminController extends Controller
    */
   public function init(): void
   {
-    $this->appendPageTitle(GameCenterModule::t('config', 'GameCenter'));
+    $this->appendPageTitle(GameCenterModule::t('base', 'GameCenter'));
+
     parent::init();
   }
 

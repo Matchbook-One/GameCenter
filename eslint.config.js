@@ -18,7 +18,8 @@ const config = [
       globals: {
         console: 'readonly',
         document: 'readonly',
-        humhub: 'readonly'
+        humhub: 'readonly',
+        setTimeout: 'readonly'
       }
     },
     rules: {

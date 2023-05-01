@@ -25,14 +25,184 @@ declare namespace humhub {
 
   interface GameCenterModule extends Module {
     config: {}
-    export: (exports: object) => void
     id: 'humhub.modules.gamecenter'
     initOnPjaxLoad: false
     isModule: true
     log: Logger
     require: Require
-    submitScore: () => Promise<unknown>
-    text: (key: string) => string
+
+    export(exports: object): void
+
+    submitScore(): Promise<unknown>
+
+    text(key: string): string
+  }
+
+  interface UiModule extends Module {
+    widget: {
+      Widget: Widget
+      init(): void
+      sortOrder: number
+    }
+  }
+
+  class Widget {
+    componentData: string
+    widget: string
+
+    loader(show): void
+
+    reload(options): unknown
+
+    getReloadOptions(): unknown[]
+
+    replace(dom): void
+
+    initWidgetEvents(): void
+
+    fire(event: unknown, args: unknown, triggerDom: unknown): void
+
+    getDefaultOptions(): void
+
+    validate(): boolean
+
+    isVisible(): boolean
+
+    init(): void
+
+    initOptions(options: unknown): void
+
+    statusError(title: string): void
+
+    statusInfo(title: string): void
+
+    show(): void
+
+    hide(): void
+
+    fadeOut(): Promise<unknown>
+
+    fadeIn(): Promise<unknown>
+
+    exists(ns: string): boolean
+
+  }
+
+  interface UiViewModule extends Module {
+    sortOrder: number
+
+    getContentTop(): number
+
+    getHeight(): number
+
+    getState(): JQueryStatic
+
+    getTitle(): string
+
+    getViewContext(): unknown
+
+    getWidth(): number
+
+    init(pjax: boolean): void
+
+    isActiveScroll(): boolean
+
+    isLarge(): boolean
+
+    isMedium(): boolean
+
+    /** @deprecated */
+    isNormal(): boolean
+
+    isSmall(): boolean
+
+    preventSwipe(prev): void
+
+    setState(moduleId: string, controlerId: string, action): void
+
+    setViewContext(vctx: unknown): void
+
+    unload(): void
+  }
+
+  interface UtilModule extends Module {
+    object: {
+      chain(thisObj): unknown,
+      debounce(func, wait, immediate): unknown,
+      defaultValue(obj: unknown, defaultValue: unknown): unknown,
+      extendable(options): unknown,
+      inherits(Sub, Parent, options): unknown,
+      isArray(obj: unknown): boolean,
+      isBoolean(obj: unknown): boolean,
+      isDefined(obj: object): unknown,
+      isEmpty(obj: unknown): boolean,
+      isFunction(obj: unknown): boolean,
+      isJQuery(obj: unknown): boolean,
+      isNumber(n: unknown): boolean,
+      isObject(obj: unknown): boolean,
+      isString(obj: unknown): boolean,
+      resolve(obj: unknown, ns: string, init: unknown): unknown,
+      sort(arr, field): unknown,
+      swap(json): unknown
+    },
+    string: {
+      capitalize(text: string): string,
+      capitalizeFirstLetter(s: string): string,
+      cutPrefix(text: string, prefix: string): string,
+      cutSuffix(val: string, suffix: string): string,
+      decode(value: string): unknown,
+      encode(value: string): unknown,
+      endsWith(val, suffix): boolean,
+      escaleHtml(text: string, simple): string,
+      htmlDecode(value: string): unknown,
+      htmlEncode(value: string): unknown,
+      lowerCaseFirstLetter(s: string): unknown,
+      startsWith(val: string, prefix: string): boolean,
+      template(tmpl: string, config: object): unknown
+    },
+    array: { move(array: Array<unknown>, oldIndex: number, newIndex: number): Array<unknown> },
+    url: { getUrlParameter(search: string): string | undefined }
+  }
+
+  interface ClientPjaxModule extends Module {
+    sortOrder: number
+
+    init(): void,
+
+    post(event: unknown): void,
+
+    redirect(url: string): void,
+
+    reload(): void,
+
+    isActive(): boolean,
+
+    installLoader(): void,
+  }
+
+  interface UiAdditionsModule extends Module {
+    sortOrder: number,
+
+    apply(element: HTMLElement | JQueryStatic, id: string, selector: string): void,
+
+    applyTo(element: HTMLElement | JQueryStatic, options): void,
+
+    extend(id, handler, options): void,
+
+    highlight(node: HTMLElement): void,
+
+    init(): void,
+
+    observe(node, options): JQueryStatic,
+
+    register(id: number, selector: Function, handler, options: object): void,
+
+    switchButtons(outButton, inButton, cfg): void,
+
+    unload(): void
+  }
+
+  interface UserModule extends Module {
   }
 
   interface EventModule extends Module {
@@ -40,9 +210,12 @@ declare namespace humhub {
     off: EventFunction
     on: EventDataFunction
     one: EventDataFunction
-    sub: (target: unknown) => unknown
-    trigger: (eventType: unknown, extraParameters: unknown) => unknown
-    triggerCondition: (target: unknown, event: unknown, extraParameters: unknown) => unknown
+
+    sub(target: unknown): unknown
+
+    trigger(eventType: unknown, extraParameters: unknown): unknown
+
+    triggerCondition(target: unknown, event: unknown, extraParameters: unknown): unknown
   }
 
   class Response {
@@ -62,25 +235,15 @@ declare namespace humhub {
   }
 
   interface ClientModule extends Module {
-    actionPost: (evt: unknown) => unknown
-    ajax: (url: string, cfg: object, originalEvent?: unknown) => Promise<Response>
-    back: () => unknown
     config: {
       baseUrl: string,
       reloadableScripts: string[],
       text: object
     }
-    export: (exports: object) => unknown
-    get: (url: string, cfg, originalEvent) => Promise<Response>
-    html: (url: string, cfg, originalEvent) => Promise<Response>
     id: string
-    init: (isPjax: boolean) => unknown
     initOnPjaxLoad: boolean
     isModule: boolean
-    json: (url: string, cfg: object, originalEvent: Event) => unknown
     log: Logger
-    offBeforeLoad: () => unknown
-    onBeforeLoad: (form, msg, msgModal) => unknown
     pjax: {
       require: Require,
       initOnPjaxLoad: boolean,
@@ -88,14 +251,40 @@ declare namespace humhub {
       id: string
       config: object
     }
-    post: (url: string, cfg: object, originalEvent?) => Promise<unknown>
-    redirect: (url) => unknown
-    reload: (preventPjax) => unknown
     require: Require
     sortOrder: number
-    submit: ($form, cfg, originalEvent) => unknown
-    text: (key: string) => string
-    unloadForm: ($form, msg) => unknown
+
+    actionPost(evt: unknown): unknown
+
+    ajax(url: string, cfg: object, originalEvent?: unknown): Promise<Response>
+
+    back(): unknown
+
+    export(exports: object): unknown
+
+    get(url: string, cfg, originalEvent): Promise<Response>
+
+    html(url: string, cfg, originalEvent): Promise<Response>
+
+    init(isPjax: boolean): unknown
+
+    json(url: string, cfg: object, originalEvent: Event): unknown
+
+    offBeforeLoad(): unknown
+
+    onBeforeLoad(form, msg, msgModal): unknown
+
+    post(url: string, cfg: object, originalEvent?): Promise<unknown>
+
+    redirect(url): unknown
+
+    reload(preventPjax): unknown
+
+    submit($form, cfg, originalEvent): unknown
+
+    text(key: string): string
+
+    unloadForm($form, msg): unknown
   }
 
   interface Module {
@@ -104,9 +293,11 @@ declare namespace humhub {
     isModule: boolean
     id: string
     config: Record<string, any>
-    text: (key: string) => string
-    export: (exports: Record<string, Function>) => void,
     log: Logger
+
+    text(key: string): string
+
+    export(exports: Record<string, Function>): void,
   }
 
   interface Logger {
@@ -126,8 +317,14 @@ declare namespace humhub {
    */
   type Require = {
     (moduleNS: string, lazy?: boolean): Module,
-    (moduleNS: 'client', lazy?: boolean): ClientModule
     (moduleNS: 'event', lazy?: boolean): EventModule
+    (moduleNS: 'client', lazy?: boolean): ClientModule
+    (moduleNS: 'client.pjax', lazy?: boolean): ClientPjaxModule,
+    (moduleNS: 'ui', lazy?: boolean): UiModule,
+    (moduleNS: 'ui.additions', lazy?: boolean): UiAdditionsModule,
+    (moduleNS: 'ui.view', lazy?: boolean): UiViewModule,
+    (moduleNS: 'user', lazy?: boolean): UserModule,
+    (moduleNS: 'util', lazy?: boolean): UtilModule,
     (moduleNS: 'gamecenter', lazy?: boolean): GameCenterModule
   }
 

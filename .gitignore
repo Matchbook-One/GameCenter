@@ -1,6 +1,4 @@
 .htaccess
-.idea/*
-!.idea
 .gitmodules
 .build/
 .cache/
@@ -9,3 +7,4 @@ nbproject
 vendor/*
 composer.lock
 node_modules/
+.idea

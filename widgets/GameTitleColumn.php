@@ -40,7 +40,7 @@ class GameTitleColumn extends GameBaseColumn
    *
    * @param ActiveRecord $model the data model
    * @param string       $key   the key associated with the data model
-   * @param int          $index the zero-based index of the data model among the models array returned by [[GridView::dataProvider]].
+   * @param int          $index the zero-based games of the data model among the models array returned by [[GridView::dataProvider]].
    *
    * @return string
    */

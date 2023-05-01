@@ -8,14 +8,16 @@
 
 namespace fhnw\modules\gamecenter\models;
 
+use fhnw\modules\gamecenter\components\ActiveQueryGame;
 use fhnw\modules\gamecenter\events\GameEvent;
 use fhnw\modules\gamecenter\GameCenterModule;
-use humhub\components\ActiveRecord;
 use humhub\components\behaviors\GUID;
+use humhub\modules\content\components\{ContentContainerActiveRecord, ContentContainerPermissionManager, ContentContainerSettingsManager};
 use humhub\modules\search\events\SearchAddEvent;
 use humhub\modules\search\interfaces\Searchable;
 use humhub\modules\search\jobs\DeleteDocument;
 use humhub\modules\space\widgets\Wall;
+use humhub\modules\user\models\User;
 use Yii;
 use Yii\db\ActiveQuery;
 
@@ -24,48 +26,62 @@ use const SORT_ASC;
 /**
  * This is the model class for table "game".
  *
- * @property int                           $id
- * @property string                        $guid
- * @property string                        $module
- * @property string                        $title
- * @property string                        $description
- * @property string[]                      tags
- * @property int                           $status
- * @property string                        $created_at
- * @property int                           $created_by
- * @property string                        $updated_at
- * @property int                           $updated_by
- * @property-read Score[]                  $scores
+ * @property int $id
+ * @property string $guid
+ * @property string $module
+ * @property string $title
+ * @property string $description
+ * @property string[] $tags
+ * @property int $status
+ * @property string $created_at
+ * @property int $created_by
+ * @property \humhub\modules\user\models\User $createdBy
+ * @property \humhub\modules\user\models\User $updatedBy
+ * @property-read Score[] $scores
  * @property-read AchievementDescription[] $achievementDescriptions
+ * @property int $contentcontainer_id
+ * @property ContentContainerPermissionManager $permissionManager
+ * @property ContentContainerSettingsManager $settings
+ * @method ActiveQuery hasMany($class, array $link) See [[BaseActiveRecord::hasMany()]] for more info.
+ * @method ActiveQuery hasOne($class, array $link) See [[BaseActiveRecord::hasOne()]] for more info.
  * @mixin    GUID
+ * @package GameCenter/Models
  */
-class Game extends ActiveRecord implements Searchable
+class Game extends ContentContainerActiveRecord implements Searchable
 {
 
-  /** @var int */
+  /** @var int STATUS_DISABLED */
   public const STATUS_DISABLED = 0;
 
-  /** @var int */
+  /** @var int STATUS_ENABLED */
   public const STATUS_ENABLED = 1;
 
-  /** @var int */
+  /** @var int  STATUS_ARCHIVED */
   public const STATUS_ARCHIVED = 2;
 
-  /** @var int */
+  /** @var int STATUS_SOFT_DELETED */
   public const STATUS_SOFT_DELETED = 3;
 
-  /** @event An event that is triggered when the game is soft deleted and also before complete deletion. */
+  /**
+   * @event An event that is triggered when the game is soft deleted and also before complete deletion.
+   * @var string EVENT_BEFORE_SOFT_DELETE
+   */
   public const EVENT_BEFORE_SOFT_DELETE = 'beforeSoftDelete';
+
+  public const TABLE = 'game';
+
+  /**
+   * @return ActiveQueryGame
+   * @static
+   */
+  public static function find(): ActiveQueryGame { return new ActiveQueryGame(get_called_class()); }
 
   /**
    * @inheritdoc
    * @return       string
    * @noinspection PhpMissingParentCallCommonInspection
    */
-  public static function tableName(): string
-  {
-    return 'game';
-  }
+  public static function tableName(): string { return self::TABLE; }
 
   /**
    * Archive this Game
@@ -87,7 +103,6 @@ class Game extends ActiveRecord implements Searchable
   {
     return [
       'id'          => 'ID',
-      'guid'        => 'GUID',
       'module'      => GameCenterModule::t('base', 'Module'),
       'title'       => GameCenterModule::t('base', 'Title'),
       'description' => GameCenterModule::t('base', 'Description'),
@@ -96,7 +111,7 @@ class Game extends ActiveRecord implements Searchable
       'created_at'  => GameCenterModule::t('base', 'Created at'),
       'created_by'  => GameCenterModule::t('base', 'Created by'),
       'updated_at'  => GameCenterModule::t('base', 'Updated at'),
-      'updated_by'  => GameCenterModule::t('base', 'Updated by'),
+      'updated_by'  => GameCenterModule::t('base', 'Updated by')
     ];
   }
 
@@ -139,6 +154,36 @@ class Game extends ActiveRecord implements Searchable
   }
 
   /**
+   * @param string $attribute
+   * @param string $params
+   *
+   * @return void
+   */
+  public function checkVisibility($attribute, $params)
+  {
+  }
+
+  /**
+   * @return \Yii\db\ActiveQuery
+   */
+  public function getAchievementDescriptions(): ActiveQuery
+  {
+    return $this->hasMany(AchievementDescription::class, ['game_id' => 'id']);
+  }
+
+  /** @return string */
+  public function getDisplayName(): string
+  {
+    return $this->title;
+  }
+
+  /** @return string */
+  public function getDisplayNameSub(): string
+  {
+    return $this->description;
+  }
+
+  /**
    * getGameImage
    *
    * @TODO
@@ -147,6 +192,43 @@ class Game extends ActiveRecord implements Searchable
   public function getGameImage(): string
   {
     return '';
+  }
+
+  /**
+   * @param ?\fhnw\modules\gamecenter\models\User $user
+   *
+   * @return Score
+   */
+  public function getHighscore(User $user = null)
+  {
+    if ($user == null) {
+      $user = Yii::$app->user;
+    }
+    /** @var Score|null $score */
+    $score = $this->getScores()
+                  ->where(['player_id' => $user->id])
+                  ->orderBy(['score' => SORT_ASC])
+                  ->one();
+
+    return $score;
+  }
+
+  /**
+   * @return \yii\db\ActiveQuery
+   */
+  public function getPlayers(): ActiveQuery
+  {
+    $query = $this->hasMany(Play::class, ['game_id' => 'id']);
+
+    return $query;
+  }
+
+  /**
+   * @return \Yii\db\ActiveQuery
+   */
+  public function getScores(): ActiveQuery
+  {
+    return $this->hasMany(Score::class, ['game_id' => 'id']);
   }
 
   /**
@@ -169,13 +251,22 @@ class Game extends ActiveRecord implements Searchable
   }
 
   /**
+   * @return \humhub\modules\content\components\ContentContainerSettingsManager
+   */
+  public function getSettings(): ContentContainerSettingsManager
+  {
+    return GameCenterModule::$settings->contentContainer($this);
+  }
+
+  /**
    * getWallOut
    *
    * @return string
+   * @throws \Throwable
    */
   public function getWallOut(): string
   {
-    return Wall::widget();
+    return Wall::widget(['game' => $this]);
   }
 
   /**
@@ -241,37 +332,5 @@ class Game extends ActiveRecord implements Searchable
   {
     $this->status = self::STATUS_ENABLED;
     $this->save();
-  }
-
-  /**
-   * @return \Yii\db\ActiveQuery
-   */
-  public function getScores(): ActiveQuery
-  {
-    return $this->hasMany(Score::class, ['game_id' => 'id']);
-  }
-
-  /**
-   * @return \Yii\db\ActiveQuery
-   */
-  public function getAchievementDescriptions(): ActiveQuery
-  {
-    return $this->hasMany(AchievementDescriptions::class, ['game_id' => 'id']);
-  }
-
-  /**
-   * @param ?\fhnw\modules\gamecenter\models\User $user
-   *
-   * @return Score
-   */
-  public function getHighscore(User $user = null)
-  {
-    if ($user == null) {
-      $user = Yii::$app->user;
-    }
-    /** @var Score|null $score */
-    $score = $this->getScores()->where(['player_id' => $user->id])->orderBy(['score' => SORT_ASC])->one();
-
-    return $score;
   }
 }

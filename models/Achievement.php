@@ -17,20 +17,21 @@ use yii\db\ActiveQuery;
 /**
  * This is the model class for the table "player_achievement".
  *
- * @property int                         $id
- * @property int                         $progress
- * @property float                       $percent_completed A percentage value that states how far the player has progressed on the
+ * @property int $id
+ * @property int $progress
+ * @property float $percent_completed A percentage value that states how far the player has progressed on the
  *           achievement.
- * @property string                      $created_at
- * @property int                         $created_by
- * @property string                      $updated_at
- * @property int                         $updated_by
- * @property-read Player                 $player
+ * @property string $created_at
+ * @property int $created_by
+ * @property string $updated_at
+ * @property int $updated_by
+ * @property-read Player $player
  * @property-read AchievementDescription $achievementDescription
- * @property-read Game                   $game
+ * @property-read Game $game
  */
 class Achievement extends ActiveRecord
 {
+  public const TABLE = 'player_achievement';
 
   /** @var string $description_id The identifier for the Achievement Description. */
   private string $description_id;
@@ -46,7 +47,7 @@ class Achievement extends ActiveRecord
    */
   public static function tableName(): string
   {
-    return 'player_achievement';
+    return self::TABLE;
   }
 
   /**
@@ -101,7 +102,8 @@ class Achievement extends ActiveRecord
    */
   public function getGame(): ActiveQuery
   {
-    return $this->hasOne(Game::class, ['id' => 'game_id'])->via('achievement');
+    return $this->hasOne(Game::class, ['id' => 'game_id'])
+                ->via('achievement');
   }
 
   /**

@@ -1,6 +1,7 @@
 <?php
-
 /**
+ * GameCenterAssets.php
+ *
  * @package GameCenter
  * @author  Christian Seiler <christian@christianseiler.ch>
  * @since   1.0.0
@@ -13,6 +14,9 @@ use yii\web\View;
 
 /**
  * AssetsBundles are used to include assets as javascript or css files.
+ *
+ * @package GameCenter/Assets
+ * @author  Christian Seiler <christian@christianseiler.ch>
  */
 class GameCenterAssets extends AssetBundle
 {
@@ -40,4 +44,5 @@ class GameCenterAssets extends AssetBundle
    * @inheritdoc
    */
   public $sourcePath = '@gamecenter/resources';
+
 }

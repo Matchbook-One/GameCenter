@@ -14,47 +14,44 @@ use yii\db\ActiveQuery;
 /**
  * This is the model class for table "Score".
  *
- * @property int                                         $id
- * @property int                                         $player_id
- * @property int                                         $game_id
- * @property int                                         $score
- * @property-read string                                 $timestamp
- * @property-read \fhnw\modules\gamecenter\models\Game   $game
+ * @property int $id
+ * @property int $player_id
+ * @property int $game_id
+ * @property int $score
+ * @property-read string $timestamp
+ * @property-read \fhnw\modules\gamecenter\models\Game $game
  * @property-read \fhnw\modules\gamecenter\models\Player $player
+ * @package GameCenter/Models
  */
 class Score extends ActiveRecord
 {
 
+  public const TABLE = 'score';
+
   /** @returns string */
-  public static function tableName(): string
-  {
-    return 'score';
-  }
+  public static function tableName(): string { return self::TABLE; }
 
   /**
-   * @return \yii\db\ActiveQuery
+   * @return array
    */
+  public function getDefinition(): array
+  {
+    return [
+      'id'        => $this->id,
+      'score'     => $this->score,
+      'timestamp' => $this->timestamp
+    ];
+  }
+
+  /** @return \yii\db\ActiveQuery */
   public function getGame(): ActiveQuery
   {
     return $this->hasOne(Game::class, ['id' => 'game_id']);
   }
 
-  /**
-   * @return \yii\db\ActiveQuery
-   */
+  /** @return \yii\db\ActiveQuery */
   public function getPlayer(): ActiveQuery
   {
-    return $this->hasOne(User::class, ['id' => 'player_id']);
-  }
-
-  public function getDefinition()
-  {
-    $result = [
-      'id'        => $this->id,
-      'score'     => $this->score,
-      'timestamp' => $this->timestamp
-    ];
-
-    return $result;
+    return $this->hasOne(Player::class, ['id' => 'player_id']);
   }
 }

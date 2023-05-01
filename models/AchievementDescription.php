@@ -21,24 +21,26 @@ use function get_class;
 /**
  * This is the model class for the table "achievement".
  *
- * @property int                $id
- * @property string             $guid
- * @property string             $name
- * @property string             $title
- * @property string             $description
- * @property ?string            $image
- * @property int                $game_id
- * @property string             $created_at
- * @property int                $created_by
- * @property string             $updated_at
- * @property int                $updated_by
+ * @property int $id
+ * @property string $guid
+ * @property string $name
+ * @property string $title
+ * @property string $description
+ * @property ?string $image
+ * @property int $game_id
+ * @property string $created_at
+ * @property int $created_by
+ * @property string $updated_at
+ * @property int $updated_by
  * @property-read Achievement[] $achievements
- * @property-read Game          $game
+ * @property-read Game $game
  * @mixin    GUID
  * @phpstan-import-type AchievementConfig from GameModule
  */
 class AchievementDescription extends ActiveRecord
 {
+  public const TABLE = 'achievement';
+
   public const EVENT_BEFORE_SOFT_DELETE = 'beforeSoftDelete';
 
   public const STATUS_ACTIVE = 0;
@@ -53,7 +55,9 @@ class AchievementDescription extends ActiveRecord
   public static function loadAchievements(string $module): array
   {
     /** @var AchievementDescription[] $result */
-    $result = AchievementDescription::find()->where(['game_id' => $module])->all();
+    $result = AchievementDescription::find()
+                                    ->where(['game_id' => $module])
+                                    ->all();
 
     return $result;
   }
@@ -64,10 +68,7 @@ class AchievementDescription extends ActiveRecord
    * @return string
    * @noinspection PhpMissingParentCallCommonInspection
    */
-  public static function tableName(): string
-  {
-    return 'achievement';
-  }
+  public static function tableName(): string { return self::TABLE; }
 
   /**
    * @inheritdoc

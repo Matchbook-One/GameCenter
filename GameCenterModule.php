@@ -1,33 +1,44 @@
 <?php
 
 /**
- * @package GameCenter
  * @author  Christian Seiler <christian@christianseiler.ch>
  * @since   1.0.0
  */
 
 namespace fhnw\modules\gamecenter;
 
-use humhub\modules\content\components\{ContentContainerActiveRecord, ContentContainerModule};
-use humhub\modules\space\models\Space;
+use fhnw\modules\gamecenter\notifications\AchievementUnlocked;
+use humhub\components\Module;
 use Yii;
 use yii\helpers\Url;
 
 /**
  * The GameCenter Module
  *
- * @property-read string   $configUrl
- * @property-read string[] $contentContainerTypes
+ * @package GameCenter
+ * @property-read string $configUrl
+ * @property-read string $name
+ * @property-read string $description
+ * @property-read bool   $isActivated
+ * @property-write array $aliases        List of path aliases to be defined.
+ * @property string      $basePath       The root directory of the module.
+ * @property string      $controllerPath The directory that contains the controller classes.
+ * @property string      $layoutPath     The root directory of layout files. Defaults to '[[viewPath]]/layouts'.
+ * @property array       $modules        The modules (indexed by their IDs).
+ * @property-read string $uniqueId       The unique ID of the module.
+ * @property string      $version        The version of this module.
+ * @property string      $viewPath       The root directory of view files. Defaults to '[[basePath]]/views'.
  */
-class GameCenterModule extends ContentContainerModule
+class GameCenterModule extends Module
 {
 
+  /**
+   * @var string $icon defines the icon
+   * @static
+   */
+  public static string $icon = 'gamepad';
   /** @var string $controllerNamespace */
   public $controllerNamespace = 'fhnw\modules\gamecenter\controllers';
-
-  /** @var string $icon defines the icon */
-  public $icon = 'gamepad';
-
   /** @var string $resourcesPath defines path for resources, including the screenshots path for the marketplace */
   public $resourcesPath = 'resources';
 
@@ -40,25 +51,11 @@ class GameCenterModule extends ContentContainerModule
 
   /**
    * Translates a message to the specified language.
-   * This is a shortcut method of [[\yii\i18n\I18N::translate()]].
-   * The translation will be conducted according to the message category and the target language will be used.
-   * You can add parameters to a translation message that will be substituted with the corresponding value after translation.
-   * The format for this is to use curly brackets around the parameter name as you can see in the following example:
-   * ```php
-   * $username = 'Alexander';
-   * echo \GameCenterModule::t('app', 'Hello, {username}!', ['username' => $username]);
-   * ```
-   * Further formatting of message parameters is supported using the [PHP intl extensions](https://www.php.net/manual/en/intro.intl.php)
-   * message formatter.
-   * See [[\yii\i18n\I18N::translate()]] for more details.
    *
    * @param string   $category the message category.
    * @param string   $message  the message to be translated.
    * @param string[] $params   the parameters that will be used to replace the corresponding placeholders in the message.
    * @param ?string  $language the language code (e.g. `en-US`, `en`).
-   *                           If this is null, the current
-   *                           [[\yii\base\Application::language|application
-   *                           language]] will be used.
    *
    * @return string the translated message.
    */
@@ -78,50 +75,13 @@ class GameCenterModule extends ContentContainerModule
   }
 
   /**
-   * @inheritdoc
-   *
-   * @param ContentContainerActiveRecord $container unused
-   *
-   * @return  string
-   * @noinspection PhpMissingParentCallCommonInspection
-   */
-  public function getContentContainerDescription(ContentContainerActiveRecord $container): string
-  {
-    return $this->getDescription();
-  }
-
-  /**
-   * @inheritdoc
-   *
-   * @param ContentContainerActiveRecord $container unused
-   *
-   * @return string
-   * @noinspection PhpMissingParentCallCommonInspection
-   */
-  public function getContentContainerName(ContentContainerActiveRecord $container): string
-  {
-    return $this->getName();
-  }
-
-  /**
-   * @inheritdoc
-   * @phpstan-return array<class-string>
-   * @return string[]
-   * @noinspection PhpMissingParentCallCommonInspection
-   */
-  public function getContentContainerTypes(): array
-  {
-    return [Space::class];
-  }
-
-  /**
    * Returns modules description provided by module.json file
    *
-   * @return string Description
+   * @return string
    */
   public function getDescription(): string
   {
-    return self::t('config', 'Manage Games');
+    return GameCenterModule::t('base', 'Manage Games');
   }
 
   /**
@@ -131,7 +91,15 @@ class GameCenterModule extends ContentContainerModule
    */
   public function getName(): string
   {
-    return self::t('config', 'GameCenter');
+    return GameCenterModule::t('base', 'GameCenter');
+  }
+
+  /** @return array<class-string> */
+  public function getNotifications(): array
+  {
+    return [
+      AchievementUnlocked::class
+    ];
   }
 
   /**

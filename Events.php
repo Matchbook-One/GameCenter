@@ -3,7 +3,6 @@
 /**
  * Events.php
  *
- * @package GameCenter
  * @author  Christian Seiler <christian@christianseiler.ch>
  * @since   1.0.0
  */
@@ -12,40 +11,37 @@ namespace fhnw\modules\gamecenter;
 
 use fhnw\modules\gamecenter\components\{GameCenter, GameModule};
 use humhub\components\ModuleEvent;
-use humhub\modules\admin\widgets\AdminMenu;
 use humhub\modules\ui\menu\MenuLink;
-use Yii;
 use yii\base\Event;
-use yii\helpers\Url;
 
 /**
  * Events
- * @phpstan-type    HtmlOptions    array{ class?: array<string, string>, style?: array<string, string> }
- * @phpstan-type    MenuLinkConfig array{ id?: string, label: string, icon: string, url: string, sortOrder: int, isActive: bool,
- *                  isVisible?: bool, htmlOptions?: HtmlOptions }
+ *
+ * @package GameCenter
  */
 class Events
 {
   /**
    * Defines what to do if admin menu is initialized.
    *
-   * @param Event $event The Event
+   * @param \yii\base\Event $event
    *
    * @return void
    */
   public static function onAdminMenuInit(Event $event): void
   {
-    /** @var AdminMenu $sender */
+    /** @var \humhub\modules\admin\widgets\AdminMenu $sender */
     $sender = $event->sender;
-    /** @var MenuLinkConfig $config */
+    /** @var \fhnw\humhub\stubs\MenuLinkConfig $config */
     $config = [
-      'label'     => 'GameCenter',
-      'url'       => Url::to(['/gamecenter/admin']),
+      'id'        => 'admin',
       'icon'      => 'gamepad',
-      'sortOrder' => 99999,
-      'isActive'  => (Yii::$app->controller->module->id === 'gamecenter' && Yii::$app->controller->id == 'admin'),
+      'label'     => GameCenterModule::t('base', 'GameCenter'),
+      'url'       => ['/gamecenter/admin'],
+      'sortOrder' => 450,
+      'isActive'  => MenuLink::isActiveState('gamecenter', 'admin')
     ];
-    $sender->addEntry(new MenuLink($config));
+    //$sender->addEntry(new MenuLink($config));
   }
 
   /**
@@ -68,23 +64,22 @@ class Events
   /**
    * Defines what to do when the top menu is initialized.
    *
-   * @param Event $event The Event
+   * @param \yii\base\Event $event The Event
    *
    * @return void
    */
   public static function onTopMenuInit(Event $event): void
   {
-    /** @var AdminMenu $sender */
+    /** @var \humhub\widgets\TopMenu $sender */
     $sender = $event->sender;
-    /** @var MenuLinkConfig $config */
+    /** @var \fhnw\humhub\stubs\MenuLinkConfig $config */
     $config = [
+      'id'        => 'games',
       'icon'      => 'gamepad',
-      'label'     => GameCenterModule::t('base', 'GameCenter'),
-      'url'       => Url::to(['/gamecenter/index']),
-      'sortOrder' => 99999,
-      'isActive'  => (Yii::$app->controller->module &&
-                      Yii::$app->controller->module->id == 'gamecenter' &&
-                      Yii::$app->controller->id == 'index')
+      'label'     => 'Games',//GameCenterModule::t('base', 'Games'),
+      'url'       => ['/gamecenter/games'],
+      'sortOrder' => 500,
+      'isActive'  => MenuLink::isActiveState('gamecenter', 'games')
     ];
     $sender->addEntry(new MenuLink($config));
   }

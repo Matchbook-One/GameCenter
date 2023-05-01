@@ -22,6 +22,15 @@ ij_php_comma_after_last_array_element = false
 ij_php_comma_after_last_closure_use_var = false
 ij_php_comma_after_last_match_arm = false
 ij_php_comma_after_last_parameter = false
+ij_php_align_multiline_chained_methods = true
+ij_php_method_call_chain_wrap = on_every_item
+ij_php_multiline_chained_calls_semicolon_on_new_line = false
+ij_php_blank_lines_before_return_statement = 1
+ij_php_indent_size = 2
+ij_php_continuation_indent_size = 4
+ij_php_indent_code_in_php_tags = false
+ij_php_force_empty_methods_in_one_line = true
+ij_php_force_short_declaration_array_style = true
 
 [*.js]
 ij_javascript_spaces_within_object_literal_braces = true
