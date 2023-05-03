@@ -1,0 +1,72 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "baseBranches": [
+    "main"
+  ],
+  "extends": [
+    "config:js-lib",
+    "npm:unpublishSafe",
+    "schedule:weekly",
+    "schedule:automergeDaily",
+    ":combinePatchMinorReleases",
+    ":enableVulnerabilityAlertsWithLabel(vulnerability)",
+    ":gitSignOff",
+    ":semanticCommits",
+    ":preserveSemverRanges",
+    ":automergeTypes"
+  ],
+  "assignees": [
+    "Christian-Seiler"
+  ],
+  "automergeStrategy": "squash",
+  "commitBodyTable": true,
+  "configMigration": true,
+  "stabilityDays": 3,
+  "labels": [
+    "dependencies"
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "matchPackagePrefixes": [
+        "@angular-eslint/",
+        "@typescript-eslint/"
+      ],
+      "groupName": "eslint dependencies"
+    },
+    {
+      "matchPackageNames": [
+        "typescript",
+        "tslib"
+      ],
+      "groupName": "typescript dependencies"
+    },
+    {
+      "matchPackagePrefixes": [
+        "@babel/"
+      ],
+      "groupName": "babel dependencies"
+    },
+    {
+      "matchPackageNames": [
+        "nx"
+      ],
+      "matchPackagePrefixes":[
+        "@nrwl/"
+      ],
+      "enabled": false
+    },
+    {
+    "matchPackageNames":[
+      "typedoc"
+    ],
+    "matchPackagePrefixes":["typedoc-"],
+    "groupName": "typedoc dependencies"
+    }
+  ]
+}
