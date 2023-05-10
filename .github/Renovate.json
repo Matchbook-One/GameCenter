@@ -1,72 +1,44 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "baseBranches": [
-    "main"
-  ],
+  "baseBranches": ["main"],
   "extends": [
-    "config:js-lib",
+    "config:base",
+    
     "npm:unpublishSafe",
-    "schedule:weekly",
-    "schedule:automergeDaily",
-    ":combinePatchMinorReleases",
+    
+    "schedule:daily",
+    "schedule:automergeNonOfficeHours",
+
+    ":automergeLinters",
+    ":automergePatch",
+    ":automergeTypes",
     ":enableVulnerabilityAlertsWithLabel(vulnerability)",
     ":gitSignOff",
-    ":semanticCommits",
+    ":label(dependencies)",
+    ":maintainLockFilesWeekly",
+    ":prHourlyLimit4",
+    ":prNotPending",
     ":preserveSemverRanges",
-    ":automergeTypes"
+    ":respectLatest",
+    ":reviewer(Christian-Seiler)",
+    ":semanticCommits",
+    ":separateMultipleMajorReleases",
+    ":separatePatchReleases",
+    ":updateNotScheduled"
   ],
-  "assignees": [
-    "Christian-Seiler"
-  ],
-  "automergeStrategy": "squash",
+  "automergeStrategy": "squash", 
   "commitBodyTable": true,
   "configMigration": true,
-  "stabilityDays": 3,
-  "labels": [
-    "dependencies"
-  ],
+  "dependencyDashboardAutoclose": true,
+  "internalChecksFilter":"strict",
+  "minimumReleaseAge":"3 days",
+  "osvVulnerabilityAlerts":true,
+  "rangeStrategy": "bump",
+  "stopUpdatingLabel": "take-a-break-renovate",
   "packageRules": [
     {
-      "matchUpdateTypes": [
-        "major"
-      ],
+      "matchUpdateTypes": ["major"],
       "dependencyDashboardApproval": true
-    },
-    {
-      "matchPackagePrefixes": [
-        "@angular-eslint/",
-        "@typescript-eslint/"
-      ],
-      "groupName": "eslint dependencies"
-    },
-    {
-      "matchPackageNames": [
-        "typescript",
-        "tslib"
-      ],
-      "groupName": "typescript dependencies"
-    },
-    {
-      "matchPackagePrefixes": [
-        "@babel/"
-      ],
-      "groupName": "babel dependencies"
-    },
-    {
-      "matchPackageNames": [
-        "nx"
-      ],
-      "matchPackagePrefixes":[
-        "@nrwl/"
-      ],
-      "enabled": false
-    },
-    {
-    "matchPackageNames":[
-      "typedoc"
-    ],
-    "matchPackagePrefixes":["typedoc-"],
-    "groupName": "typedoc dependencies"
     }
   ]
 }
