@@ -1,27 +1,54 @@
 <?php
 
 /**
- * @author  Christian Seiler
  * @package GameCenter
- * @since   1.0
+ */
+/**
+ * @author  Christian Seiler <christian@christianseiler.ch>
+ * @since   1.0.0
  */
 
 namespace fhnw\modules\gamecenter\controllers;
 
+use fhnw\modules\gamecenter\GameCenterModule;
 use fhnw\modules\gamecenter\models\GameSearch;
-use fhnw\modules\gamecenter\permissions\ManageGameCenter;
-use humhub\modules\admin\components\Controller;
+use humhub\components\Controller;
+use humhub\modules\ui\view\components\View;
 use Yii;
 
 /**
  * Admin Controller
+ *
+ * @package GameCenter/Controllers
+ * @property ?string $subLayout
+ * @property string $pageTitle
+ * @property array $actionTitlesMap
+ * @property bool $prependActionTitles
+ * @property class-string $access
+ * @property View $view
  */
-class AdminController extends Controller {
+class AdminController extends Controller
+{
+
+  /** @inheritdoc */
+  public $subLayout = '@gamecenter/views/admin/layout';
+
+  /**
+   * @inheritdoc
+   * @return     void
+   */
+  public function init(): void
+  {
+    $this->appendPageTitle(GameCenterModule::t('base', 'GameCenter'));
+
+    parent::init();
+  }
 
   /**
    * @return string
    */
-  public function actionAchievements(): string {
+  public function actionAchievements(): string
+  {
     return $this->render('achievements');
   }
 
@@ -30,37 +57,11 @@ class AdminController extends Controller {
    *
    * @return string
    */
-  public function actionIndex(): string {
+  public function actionIndex(): string
+  {
     $searchModel = new GameSearch();
     $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-    return $this->render(
-      'index',
-      compact('dataProvider', 'searchModel')
-    );
-  }
-
-  /**
-   * @inheritdoc
-   *
-   * @return array
-   *
-   * @noinspection PhpOverridingMethodVisibilityInspection
-   * @noinspection PhpMissingParentCallCommonInspection
-   */
-  public function getAccessRules(): array {
-    return [
-      ['permissions' => [ManageGameCenter::class]],
-    ];
-  }
-
-  /**
-   * @inheritdoc
-   * @return void
-   */
-  public function init(): void {
-    $this->subLayout = '@gamecenter/views/layouts/gamecenter';
-    $this->appendPageTitle(Yii::t('GamecenterModule.base', 'GameCenter'));
-    parent::init();
+    return $this->render('index', compact('dataProvider', 'searchModel'));
   }
 }

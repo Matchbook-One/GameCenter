@@ -1,20 +1,22 @@
 <?php
 
 /**
- * @author  Christian Seiler
  * @package GameCenter
- * @since   1.0
+ * @author  Christian Seiler <christian@christianseiler.ch>
+ * @since   1.0.0
  */
 
 use fhnw\modules\gamecenter\Events;
-use fhnw\modules\gamecenter\Module;
+use fhnw\modules\gamecenter\GameCenterModule;
 use humhub\components\ModuleManager;
 use humhub\modules\admin\widgets\AdminMenu;
+use humhub\widgets\TopMenu;
 use yii\base\Widget;
 
-return [
+/** @var \fhnw\humhub\stubs\ModuleConfig $config */
+$config = [
   'id'        => 'gamecenter',
-  'class'     => Module::class,
+  'class'     => GameCenterModule::class,
   'namespace' => 'fhnw\modules\gamecenter',
   'events'    => [
     [
@@ -27,5 +29,12 @@ return [
       'event'    => Widget::EVENT_INIT,
       'callback' => [Events::class, 'onAdminMenuInit'],
     ],
-  ],
+    [
+      'class'    => TopMenu::class,
+      'event'    => Widget::EVENT_INIT,
+      'callback' => [Events::class, 'onTopMenuInit']
+    ]
+  ]
 ];
+
+return $config;

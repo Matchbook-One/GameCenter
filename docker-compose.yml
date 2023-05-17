@@ -1,0 +1,9 @@
+name: gamecenter
+
+services:
+
+  phpdoc:
+    container_name: GameCenter_PHPDoc
+    image: phpdoc/phpdoc:latest
+    volumes:
+      - .:/data

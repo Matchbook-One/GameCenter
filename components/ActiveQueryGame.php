@@ -1,113 +1,109 @@
 <?php
 
 /**
- * @author  Christian Seiler
  * @package GameCenter
- * @since   1.0
+ * @author  Christian Seiler <christian@christianseiler.ch>
+ * @since   1.0.0
  */
 
 namespace fhnw\modules\gamecenter\components;
 
 use fhnw\modules\gamecenter\models\Game;
 use humhub\events\ActiveQueryEvent;
+use humhub\modules\content\components\AbstractActiveQueryContentContainer;
 use humhub\modules\user\models\User;
 use Throwable;
 use Yii;
 use yii\db\ActiveQuery;
-use function array_slice;
-use function is_array;
+
+use const SORT_ASC;
 
 /**
  * ActiveQueryGame
  *
+ * @package GameCenter/Components
  */
-class ActiveQueryGame extends ActiveQuery {
-  public const MAX_SEARCH_NEEDLES = 5;
+class ActiveQueryGame extends AbstractActiveQueryContentContainer
+{
 
   /**
-   * @event Event an event that is triggered when only visible games are requested via [[visible()]].
+   * @var string EVENT_CHECK_VISIBILITY
+   * @event Event an event that is triggered when only visible users are requested via [[visible()]].
    */
   public const EVENT_CHECK_VISIBILITY = 'checkVisibility';
 
   /**
-   * Performs a game full text search
-   *
-   * @param array|string $keywords
-   * @param array        $columns
-   *
-   * @return ActiveQueryGame the query
+   * @var string EVENT_CHECK_ACTIVE
+   * @event Event an event that is triggered when only active users are requested via [[active()]].
    */
-  public function search(array|string $keywords, array $columns = [
-    'game.name',
-    'game.title',
-    'game.description',
-  ]): ActiveQueryGame {
-    if (empty($keywords)) {
-      return $this;
-    }
+  public const EVENT_CHECK_ACTIVE = 'checkActive';
 
-    $this->joinWith('contentContainerRecord');
+  /**
+   * Limit to active games only
+   *
+   * @return ActiveQueryGame
+   */
+  public function active(): ActiveQueryGame
+  {
+    $this->trigger(self::EVENT_CHECK_ACTIVE, new ActiveQueryEvent(['query' => $this]));
 
-    if (!is_array($keywords)) {
-      $keywords = explode(' ', $keywords);
-    }
+    return $this->andWhere(['game.status' => Game::STATUS_ENABLED]);
+  }
 
-    foreach (array_slice($keywords, 0, static::MAX_SEARCH_NEEDLES) as $keyword) {
-      $conditions = [];
-      foreach ($columns as $field) {
-        $conditions[] = [
-          'LIKE',
-          $field,
-          $keyword,
-        ];
-      }
-      $this->andWhere(array_merge(['OR'], $conditions));
-    }
+  /**
+   * Adds default game order
+   *
+   * @return ActiveQueryGame
+   */
+  public function defaultOrder(): ActiveQueryGame
+  {
+    $this->addOrderBy(['title' => SORT_ASC]);
 
     return $this;
   }
 
   /**
-   * Only returns games which are visible for this user
+   * @inheritdoc
    *
-   * @param User|null $user
+   * @param ?User $user
    *
-   * @return ActiveQueryGame the query
+   * @return ActiveQuery
    */
-  public function visible(User $user = null): ActiveQueryGame {
+  public function visible(?User $user = null): ActiveQuery
+  {
     $this->trigger(self::EVENT_CHECK_VISIBILITY, new ActiveQueryEvent(['query' => $this]));
 
     if ($user === null && !Yii::$app->user->isGuest) {
       try {
         $user = Yii::$app->user->getIdentity();
-      } catch (Throwable $error) {
-        Yii::error($error, 'game');
+      }
+      catch (Throwable $e) {
+        Yii::error($e, 'game');
       }
     }
 
     if ($user !== null) {
-      $this->andWhere(
-        [
-          'OR',
-          [
-            'IN',
-            'game.visibility',
-            [
-              Game::VISIBILITY_ALL,
-              Game::VISIBILITY_REGISTERED_ONLY,
-            ],
-          ],
-          /*
-              [
-              'AND',
-              ['=', 'game.visibility', Game::VISIBILITY_NONE],
-              ['IN', 'game.id', Membership::find()->select('game')->where(['user_id' => $user->id])]
-          ]*/
-        ]
-      );
+      /*
+      if ($user->can(ManageGames::class)) {
+        return $this;
+      }
+      */
+      $this->andWhere(['=', 'game.status', Game::STATUS_ENABLED]);
     }
-    $this->andWhere(['!=', 'game.visibility', Game::VISIBILITY_HIDDEN]);
+    else {
+      $this->andWhere(['=', 'game.status', Game::STATUS_ENABLED]);
+    }
 
     return $this;
   }
+
+  /**
+   * @inheritdoc
+   * @returns string[]
+   */
+  protected function getSearchableFields(): array
+  {
+    return ['game.title', 'game.description', 'game.module'];
+  }
+
 }

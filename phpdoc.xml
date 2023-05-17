@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdocumentor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns="https://www.phpdoc.org"
+               configVersion="3"
+               xsi:schemaLocation="https://www.phpdoc.org https://raw.githubusercontent.com/phpDocumentor/phpDocumentor/master/data/xsd/phpdoc.xsd">
+
+    <title>GameCenter</title>
+
+    <paths>
+        <output>docs/api</output>
+        <cache>.build/cache</cache>
+    </paths>
+
+    <version number="1.0">
+        <api>
+            <source>
+                <path>.</path>
+            </source>
+
+            <ignore>
+                <path>docs/*</path>
+                <path>migrations/*</path>
+                <path>resources/*</path>
+                <path>tests/*</path>
+            </ignore>
+
+            <visibility>api</visibility>
+            <visibility>public</visibility>
+            <visibility>protected</visibility>
+
+            <default-package-name>GameCenter</default-package-name>
+
+            <markers>
+                <marker>TODO</marker>
+            </markers>
+
+            <ignore-tags>
+                <ignore-tag>noinspection</ignore-tag>
+            </ignore-tags>
+        </api>
+        <!-- <folder></folder>-->
+        <guide>
+            <source>
+                <path>guides</path>
+            </source>
+        </guide>
+    </version>
+
+    <setting name="template.color" value="light-green"/>
+    <setting name="guides.enabled" value="true"/>
+    <setting name="graphs.enabled" value="true"/>
+
+    <template name="clean"/>
+
+</phpdocumentor>

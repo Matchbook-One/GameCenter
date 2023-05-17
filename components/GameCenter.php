@@ -1,51 +1,70 @@
 <?php
 
 /**
- * @author  christianseiler
- * @version 1.0
  * @package GameCenter
+ * @author  Christian Seiler <christian@christianseiler.ch>
+ * @since   1.0.0
  */
 
 namespace fhnw\modules\gamecenter\components;
 
+use fhnw\modules\gamecenter\models\AchievementDescription;
 use fhnw\modules\gamecenter\models\Game;
 use Yii;
 use yii\base\Component;
 
 /**
  * The Class GameCenter
+ * @phpstan-import-type GameConfig from GameModule
+ * @phpstan-import-type AchievementConfig from GameModule
+ *
+ * @package GameCenter/Components
  */
-class GameCenter extends Component {
+class GameCenter extends Component
+{
+
+  /** @var GameCenter $instance */
+  private static $instance;
 
   /**
-   * @param string $module the Module ID
-   * @param array  $config the configuration
-   *
-   * @return bool
+   * @return GameCenter
+   * @static
    */
-  public static function register(string $module, array $config): bool {
-    Yii::debug("Register module {$module}", __METHOD__);
-    $game = new Game();
-    $game->module = $module;
+  public static function getInstance(): GameCenter
+  {
+    if (self::$instance === null) {
+      self::$instance = new GameCenter();
+    }
 
-    $game->title = $config['title'];
-    $game->description = $config['description'];
+    return self::$instance;
+  }
 
-    return $game->save();
+  /**
+   * @param string     $moduleID the Module ID
+   * @param GameModule $module   the module
+   *
+   * @return boolean
+   */
+  public function register(string $moduleID, GameModule $module): bool
+  {
+    Yii::debug("Register module $moduleID", __METHOD__);
+    $gameConfig = $module->getGameConfig();
+    $game = self::registerGame($moduleID, $gameConfig);
+    $achievements = $module->getAchievementConfig();
+    $this->registerAchievements($game, $achievements);
+
+    return true;
   }
 
   /**
    * unregister
    *
-   * @static
-   *
    * @param string $module the Module ID
    *
    * @return bool
    */
-  public static function unregister(string $module): bool {
-
-    /** @var Game $game */
+  public function unregister(string $module): bool
+  {
     $game = Game::findOne(['module' => $module]);
     if ($game) {
       $game->status = Game::STATUS_DISABLED;
@@ -55,4 +74,39 @@ class GameCenter extends Component {
 
     return false;
   }
+
+  /**
+   * @param Game                $game         the Game id
+   * @param AchievementConfig[] $achievements The Configs
+   *
+   * @return void
+   */
+  private function registerAchievements(Game $game, $achievements): void
+  {
+    foreach ($achievements as $config) {
+      /** @var AchievementConfig $config */
+      $achievement = new AchievementDescription($config);
+      $achievement->link('game', $game);
+      $achievement->save();
+    }
+  }
+
+  /**
+   * @param string     $module
+   * @param GameConfig $config
+   *
+   * @return Game
+   */
+  private function registerGame(string $module, $config): Game
+  {
+    $game = Game::findOne(['module' => $module]);
+    if (!$game) {
+      $game = new Game($config);
+      $game->module = $module;
+      $game->save();
+    }
+
+    return $game;
+  }
+
 }

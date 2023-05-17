@@ -1,0 +1,19 @@
+{
+  "name": "gamecenter",
+  "description": "GameCenter",
+  "type": "library",
+  "require": {},
+  "config": {
+    "process-timeout": 1800,
+    "platform": {
+      "php": "8.0"
+    }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
+  "minimum-stability": "dev"
+}

@@ -1,50 +1,57 @@
 <?php
 
 /**
- * @author  Christian Seiler
  * @package GameCenter
- * @since   1.0
+ * @author  Christian Seiler <christian@christianseiler.ch>
+ * @since   1.0.0
  */
 
 namespace fhnw\modules\gamecenter\widgets;
 
 use fhnw\modules\gamecenter\assets\GameFilterAssets;
+use fhnw\modules\gamecenter\GameCenterModule;
 use humhub\libs\Html;
 use humhub\widgets\JsWidget;
-use JetBrains\PhpStorm\ArrayShape;
-use Yii;
 
-class GameFilter extends JsWidget {
+/**
+ * @phpstan-type Attributes array{class: string, style: string}
+ */
+class GameFilter extends JsWidget
+{
 
   /**
+   * @var boolean $init
+   * @inheritdocs
+   */
+  public $init = true;
+
+  /**
+   * @var string $jsWidget
    * @inheritdocs
    */
   public $jsWidget = 'gamecenter.GameFilter';
 
   /**
    * @inheritdocs
-   */
-  public $init = true;
-
-  /**
-   * @inheritdocs
    * @return string
    */
-  public function run(): string {
+  public function run(): string
+  {
     GameFilterAssets::register($this->view);
 
-    return Html::dropDownList('', [], ['all' => Yii::t('base', 'All')], $this->getOptions());
+    return Html::dropDownList('', [], ['all' => GameCenterModule::t('base', 'All')], $this->getOptions());
   }
 
   /**
    * getAttributes
    *
-   * @return string[]
+   * @return Attributes
    */
-  #[ArrayShape(['class' => "string", 'style' => "string"])] protected function getAttributes(): array {
+  protected function getAttributes(): array
+  {
     return [
       'class' => 'form-control pull-right visible-md visible-lg',
-      'style' => 'width:150px;margin-right:20px',
+      'style' => 'width:150px; margin-right:20px',
     ];
   }
 
@@ -53,7 +60,8 @@ class GameFilter extends JsWidget {
    *
    * @return string[]
    */
-  #[ArrayShape(['action-change' => "string"])] protected function getData(): array {
+  protected function getData(): array
+  {
     return ['action-change' => 'change'];
   }
 }
