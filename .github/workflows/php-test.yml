@@ -26,15 +26,15 @@ jobs:
           - ubuntu-latest
 
         php-version:
-          - 7.4
-          - 8.0
-          - 8.2
+          - "7.4"
+          - "8.0"
+          - "8.2"
 
         humhub-ref:
-          - main
+          - "master"
 
         mysql-version:
-          - 8.0
+          - "5.7"
 
     services:
       mysql:

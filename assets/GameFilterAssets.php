@@ -12,17 +12,13 @@ use humhub\components\assets\AssetBundle;
 
 /**
  * GameFilterAssets
- *
- * @package GameCenter/Assets
  */
-class GameFilterAssets extends AssetBundle
-{
+class GameFilterAssets extends AssetBundle {
+
+  public $sourcePath = '@gamecenter/resources';
 
   /**
-   * @var array<string> $js
    * @inheritdoc
    */
-  public $js = ['js/gamecenter.filter.js'];
-  /** @var string $sourcePath */
-  public $sourcePath = '@gamecenter/resources';
+  public $js = ['js/humhub.gamecenter.GameFilter.js'];
 }

@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @package GameCenter
+ */
+/**
  * @author  Christian Seiler <christian@christianseiler.ch>
  * @since   1.0.0
  */
