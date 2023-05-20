@@ -19,13 +19,13 @@ use function array_merge;
  */
 class GameSearch extends Game
 {
+
+  /** @var string $freeText */
+  public $freeText;
   /**
    * @var \yii\db\ActiveQuery query
    */
   public $query;
-
-  /** @var string $freeText */
-  public $freeText;
 
   /**
    * Returns the list of all attribute names of the model.
@@ -69,7 +69,9 @@ class GameSearch extends Game
   {
     $query = ($this->query == null) ? Game::find() : $this->query;
 
-    $achievementCount = AchievementDescription::find()->select('COUNT(*) as counter')->where('game_id=game.id');
+    $achievementCount = Achievement::find()
+                                   ->select('COUNT(*) as counter')
+                                   ->where('game_id=game.id');
     /** @var \fhnw\modules\gamecenter\components\ActiveQueryGame $query */
     $query->addSelect(['game.*', 'achievementCount' => $achievementCount]);
 
@@ -110,4 +112,5 @@ class GameSearch extends Game
 
     return $dataProvider;
   }
+
 }

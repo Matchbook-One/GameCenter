@@ -6,9 +6,9 @@
  */
 
 use fhnw\modules\gamecenter\models\Achievement;
-use fhnw\modules\gamecenter\models\AchievementDescription;
 use fhnw\modules\gamecenter\models\Game;
 use fhnw\modules\gamecenter\models\Play;
+use fhnw\modules\gamecenter\models\PlayerAchievement;
 use fhnw\modules\gamecenter\models\Score;
 use yii\db\Migration;
 
@@ -17,6 +17,7 @@ use yii\db\Migration;
  */
 class m230103_171019_gamecenter_initial extends Migration
 {
+
   public const ACHIEVEMENT = 'achievement';
 
   public const PLAYER_ACHIEVEMENT = 'player_achievement';
@@ -39,9 +40,9 @@ class m230103_171019_gamecenter_initial extends Migration
    */
   public function safeDown(): bool
   {
-    $this->dropForeignKey('fk_achievement_game', AchievementDescription::TABLE);
-    $this->dropForeignKey('fk_pa_achievement', Achievement::TABLE);
-    $this->dropForeignKey('fk_pa_player', Achievement::TABLE);
+    $this->dropForeignKey('fk_achievement_game', Achievement::TABLE);
+    $this->dropForeignKey('fk_pa_achievement', PlayerAchievement::TABLE);
+    $this->dropForeignKey('fk_pa_player', PlayerAchievement::TABLE);
 
     $this->dropTable(self::PLAYER_ACHIEVEMENT);
     $this->dropTable(self::GAME);
@@ -80,7 +81,7 @@ class m230103_171019_gamecenter_initial extends Migration
       'updated_by'  => $this->integer()
                             ->notNull()
     ];
-    $this->createTable(Game::TABLE, $columns);
+    $this->createTable(Game::tableName(), $columns);
 
     $columns = [
       'id'          => $this->primaryKey(),
@@ -106,7 +107,7 @@ class m230103_171019_gamecenter_initial extends Migration
       'updated_by'  => $this->integer()
                             ->notNull()
     ];
-    $this->createTable(AchievementDescription::TABLE, $columns);
+    $this->createTable(Achievement::tableName(), $columns);
 
     $columns = [
       'player_id'         => $this->integer()
@@ -125,7 +126,7 @@ class m230103_171019_gamecenter_initial extends Migration
                                   ->notNull(),
       'PRIMARY KEY(player_id, achievement_id)'
     ];
-    $this->createTable(Achievement::TABLE, $columns);
+    $this->createTable(PlayerAchievement::tableName(), $columns);
 
     $columns = [
       'id'        => $this->primaryKey(),
@@ -138,7 +139,7 @@ class m230103_171019_gamecenter_initial extends Migration
       'timestamp' => $this->dateTime()
                           ->notNull()
     ];
-    $this->createTable(Score::TABLE, $columns);
+    $this->createTable(Score::tableName(), $columns);
 
     $columns = [
       'game_id' => $this->integer()
@@ -204,4 +205,5 @@ class m230103_171019_gamecenter_initial extends Migration
     $this->addForeignKey('play_user_id_fk', Play::TABLE, 'player_id', 'user', 'id');
     $this->addForeignKey('play_game_id_fk', Play::TABLE, 'game_id', 'game', 'id');
   }
+
 }

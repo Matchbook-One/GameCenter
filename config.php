@@ -11,6 +11,7 @@ use fhnw\modules\gamecenter\GameCenterModule;
 use humhub\components\ModuleManager;
 use humhub\modules\admin\widgets\AdminMenu;
 use humhub\widgets\TopMenu;
+use yii\base\Application;
 use yii\base\Widget;
 
 /** @var \fhnw\humhub\stubs\ModuleConfig $config */
@@ -24,16 +25,9 @@ $config = [
       'event'    => ModuleManager::EVENT_BEFORE_MODULE_ENABLE,
       'callback' => [Events::class, 'onBeforeModuleEnabled']
     ],
-    [
-      'class'    => AdminMenu::class,
-      'event'    => Widget::EVENT_INIT,
-      'callback' => [Events::class, 'onAdminMenuInit'],
-    ],
-    [
-      'class'    => TopMenu::class,
-      'event'    => Widget::EVENT_INIT,
-      'callback' => [Events::class, 'onTopMenuInit']
-    ]
+    ['class' => AdminMenu::class, 'event' => Widget::EVENT_INIT, 'callback' => [Events::class, 'onAdminMenuInit']],
+    ['class' => TopMenu::class, 'event' => Widget::EVENT_INIT, 'callback' => [Events::class, 'onTopMenuInit']],
+    ['class' => Application::class, 'event' => Application::EVENT_BEFORE_REQUEST, 'callback' => [Events::class, 'onBeforeRequest']]
   ]
 ];
 

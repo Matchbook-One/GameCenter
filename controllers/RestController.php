@@ -44,6 +44,7 @@ use function array_merge;
  */
 class RestController extends Controller
 {
+
   /**
    * @var bool adminOnly
    */
@@ -53,11 +54,13 @@ class RestController extends Controller
    * @inheritdoc
    */
   public $enableCsrfValidation = false;
+  private int $playerID;
 
-  public function init()
+  public function init(): void
   {
     parent::init();
     Yii::$app->response->format = 'json';
+    $this->playerID = Yii::$app->user->id;
   }
 
   /**
@@ -77,6 +80,11 @@ class RestController extends Controller
     Yii::$app->request->parsers['application/json'] = JsonParser::class;
 
     return parent::beforeAction($action);
+  }
+
+  public function getPlayerID(): int
+  {
+    return $this->playerID;
   }
 
   /**

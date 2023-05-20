@@ -3,6 +3,7 @@
 /**
  * @package GameCenter
  */
+
 /**
  * @author  Christian Seiler <christian@christianseiler.ch>
  * @since   1.0.0
@@ -64,4 +65,5 @@ class AdminController extends Controller
 
     return $this->render('index', compact('dataProvider', 'searchModel'));
   }
+
 }

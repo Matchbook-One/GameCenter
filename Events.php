@@ -10,8 +10,11 @@
 namespace fhnw\modules\gamecenter;
 
 use fhnw\modules\gamecenter\components\{GameCenter, GameModule};
+use fhnw\modules\gamecenter\helpers\Url;
 use humhub\components\ModuleEvent;
 use humhub\modules\ui\menu\MenuLink;
+use Throwable;
+use Yii;
 use yii\base\Event;
 
 /**
@@ -21,6 +24,7 @@ use yii\base\Event;
  */
 class Events
 {
+
   /**
    * Defines what to do if admin menu is initialized.
    *
@@ -36,7 +40,7 @@ class Events
     $config = [
       'id'        => 'admin',
       'icon'      => 'gamepad',
-      'label'     => GameCenterModule::t('base', 'GameCenter'),
+      'label'     => 'GameCenter',
       'url'       => ['/gamecenter/admin'],
       'sortOrder' => 450,
       'isActive'  => MenuLink::isActiveState('gamecenter', 'admin')
@@ -57,7 +61,21 @@ class Events
     $module = $event->module;
 
     if ($module instanceof GameModule) {
-      GameCenter::getInstance()->register($module->id, $module);
+      GameCenter::getInstance()
+                ->register($module->id, $module);
+    }
+  }
+
+  /**
+   * Call before request, registering autoloader
+   */
+  public static function onBeforeRequest(): void
+  {
+    try {
+      static::registerAutoloader();
+    }
+    catch (Throwable $e) {
+      Yii::error($e);
     }
   }
 
@@ -77,10 +95,25 @@ class Events
       'id'        => 'games',
       'icon'      => 'gamepad',
       'label'     => 'Games',//GameCenterModule::t('base', 'Games'),
-      'url'       => ['/gamecenter/games'],
+      'url'       => Url::toGamesOverview(),
       'sortOrder' => 500,
       'isActive'  => MenuLink::isActiveState('gamecenter', 'games')
     ];
     $sender->addEntry(new MenuLink($config));
   }
+
+  /**
+   * Register composer autoloader when Reader not found
+   */
+  public static function registerAutoloader(): void
+  {
+    if (class_exists('\yii\swagger\SwaggerUIRenderer')) {
+      return;
+    }
+    Yii::setAlias('@vendor/yii/yii2-swagger', __DIR__ . '/vendor/yii/yii2-swagger/src');
+    Yii::setAlias('@bower/swagger-ui', __DIR__ . '/vendor/bower-asset/swagger-ui');
+
+    require Yii::getAlias('@gamecenter/vendor/autoload.php');
+  }
+
 }

@@ -8,7 +8,7 @@
 namespace fhnw\modules\gamecenter;
 
 use fhnw\modules\gamecenter\notifications\AchievementUnlocked;
-use humhub\components\Module;
+use humhub\modules\content\components\ContentContainerModule;
 use Yii;
 use yii\helpers\Url;
 
@@ -19,17 +19,17 @@ use yii\helpers\Url;
  * @property-read string $configUrl
  * @property-read string $name
  * @property-read string $description
- * @property-read bool   $isActivated
+ * @property-read bool $isActivated
  * @property-write array $aliases        List of path aliases to be defined.
- * @property string      $basePath       The root directory of the module.
- * @property string      $controllerPath The directory that contains the controller classes.
- * @property string      $layoutPath     The root directory of layout files. Defaults to '[[viewPath]]/layouts'.
- * @property array       $modules        The modules (indexed by their IDs).
+ * @property string $basePath       The root directory of the module.
+ * @property string $controllerPath The directory that contains the controller classes.
+ * @property string $layoutPath     The root directory of layout files. Defaults to '[[viewPath]]/layouts'.
+ * @property array $modules        The modules (indexed by their IDs).
  * @property-read string $uniqueId       The unique ID of the module.
- * @property string      $version        The version of this module.
- * @property string      $viewPath       The root directory of view files. Defaults to '[[basePath]]/views'.
+ * @property string $version        The version of this module.
+ * @property string $viewPath       The root directory of view files. Defaults to '[[basePath]]/views'.
  */
-class GameCenterModule extends Module
+class GameCenterModule extends ContentContainerModule
 {
 
   /**
@@ -39,6 +39,8 @@ class GameCenterModule extends Module
   public static string $icon = 'gamepad';
   /** @var string $controllerNamespace */
   public $controllerNamespace = 'fhnw\modules\gamecenter\controllers';
+  public bool $debug = false;
+  public int $pageSize = 20;
   /** @var string $resourcesPath defines path for resources, including the screenshots path for the marketplace */
   public $resourcesPath = 'resources';
 
@@ -52,10 +54,10 @@ class GameCenterModule extends Module
   /**
    * Translates a message to the specified language.
    *
-   * @param string   $category the message category.
-   * @param string   $message  the message to be translated.
-   * @param string[] $params   the parameters that will be used to replace the corresponding placeholders in the message.
-   * @param ?string  $language the language code (e.g. `en-US`, `en`).
+   * @param string $category the message category.
+   * @param string $message the message to be translated.
+   * @param string[] $params the parameters that will be used to replace the corresponding placeholders in the message.
+   * @param ?string $language the language code (e.g. `en-US`, `en`).
    *
    * @return string the translated message.
    */
@@ -78,6 +80,7 @@ class GameCenterModule extends Module
    * Returns modules description provided by module.json file
    *
    * @return string
+   * @noinspection PhpMissingParentCallCommonInspection
    */
   public function getDescription(): string
   {
@@ -88,13 +91,16 @@ class GameCenterModule extends Module
    * Returns modules name provided by module.json file
    *
    * @return string Name
+   * @noinspection PhpMissingParentCallCommonInspection
    */
   public function getName(): string
   {
     return GameCenterModule::t('base', 'GameCenter');
   }
 
-  /** @return array<class-string> */
+  /** @return array<class-string>
+   * @noinspection PhpMissingParentCallCommonInspection
+   */
   public function getNotifications(): array
   {
     return [
@@ -113,4 +119,5 @@ class GameCenterModule extends Module
       'basePath'       => '@gamecenter/messages'
     ];
   }
+
 }

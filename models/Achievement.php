@@ -8,36 +8,43 @@
 
 namespace fhnw\modules\gamecenter\models;
 
-use fhnw\modules\gamecenter\DateTime;
+use fhnw\modules\gamecenter\components\GameModule;
 use fhnw\modules\gamecenter\GameCenterModule;
 use humhub\components\ActiveRecord;
+use humhub\components\behaviors\GUID;
+use humhub\modules\search\jobs\DeleteDocument;
 use Yii;
 use yii\db\ActiveQuery;
 
+use function get_class;
+
 /**
- * This is the model class for the table "player_achievement".
+ * This is the model class for the table "achievement".
  *
  * @property int $id
- * @property int $progress
- * @property float $percent_completed A percentage value that states how far the player has progressed on the
- *           achievement.
+ * @property string $guid
+ * @property string $name
+ * @property string $title
+ * @property string $description
+ * @property ?string $image
+ * @property int $game_id
  * @property string $created_at
  * @property int $created_by
  * @property string $updated_at
  * @property int $updated_by
- * @property-read Player $player
- * @property-read AchievementDescription $achievementDescription
+ * @property-read PlayerAchievement[] $achievements
  * @property-read Game $game
+ * @mixin    GUID
+ * @phpstan-import-type AchievementConfig from GameModule
  */
 class Achievement extends ActiveRecord
 {
-  public const TABLE = 'player_achievement';
 
-  /** @var string $description_id The identifier for the Achievement Description. */
-  private string $description_id;
+  public const EVENT_BEFORE_SOFT_DELETE = 'beforeSoftDelete';
 
-  /** @var string $player_id The identifier for the Player. */
-  private string $player_id;
+  public const STATUS_ACTIVE = 0;
+
+  public const STATUS_SOFT_DELETED = 1;
 
   /**
    * @inheritdoc
@@ -45,95 +52,70 @@ class Achievement extends ActiveRecord
    * @return string
    * @noinspection PhpMissingParentCallCommonInspection
    */
-  public static function tableName(): string
-  {
-    return self::TABLE;
-  }
+  public static function tableName(): string { return 'achievement'; }
 
   /**
    * @inheritdoc
-   * @return array<string,string>
+   * @return array<string, string>
    * @noinspection PhpMissingParentCallCommonInspection
    */
-  public function attributeLabels()
+  public function attributeLabels(): array
   {
     return [
-      'id'               => 'ID',
-      'description'      => GameCenterModule::t('base', 'Achievement Description'),
-      'percentCompleted' => GameCenterModule::t('base', 'Percent completed'),
-      'player'           => GameCenterModule::t('base', 'Player'),
-      'lastReportedDate' => GameCenterModule::t('base', 'Last Reported Date'),
-      'isCompleted'      => GameCenterModule::t('base', 'Is Completed')
+      'id'          => 'ID',
+      'guid'        => 'GUID',
+      'name'        => GameCenterModule::t('base', 'Name'),
+      'title'       => GameCenterModule::t('base', 'Title'),
+      'description' => GameCenterModule::t('base', 'Description'),
+      'game_id'     => GameCenterModule::t('base', 'Game'),
+      'created_at'  => GameCenterModule::t('base', 'Created at'),
+      'created_by'  => GameCenterModule::t('base', 'Created by'),
+      'updated_at'  => GameCenterModule::t('base', 'Updated at'),
+      'updated_by'  => GameCenterModule::t('base', 'Updated by')
     ];
   }
 
   /**
-   * This method is called at the beginning of inserting or updating a record.
+   * Before Delete of a Achievement
    *
-   * @inheridoc
-   *
-   * @param bool $insert whether this method called while inserting a record.
-   *                     If `false`, it means the method is called while updating a record.
-   *
-   * @return bool whether the insertion or updating should continue.
-   *              If `false`, the insertion or updating will be cancelled.
+   * @return bool
    */
-  public function beforeSave($insert): bool
+  public function beforeDelete(): bool
   {
-    if (!isset($this->player_id)) {
-      $this->player_id = Yii::$app->user->id;
-    }
+    $this->softDelete();
 
-    return parent::beforeSave($insert);
+    return parent::beforeDelete();
   }
 
   /**
-   * @returns ActiveQuery
+   * @inheritdoc
+   * @return string[]
+   * @phpstan-return array<class-string>
+   * @noinspection PhpMissingParentCallCommonInspection
    */
-  public function getAchievementDescription(): ActiveQuery
+  public function behaviors(): array
   {
-    return $this->hasOne(AchievementDescription::class, ['id' => 'description_id']);
+    return [
+      GUID::class
+    ];
+  }
+
+  /**
+   * @return ActiveQuery
+   */
+  public function getAchievements(): ActiveQuery
+  {
+    return $this->hasMany(PlayerAchievement::class, ['description_id' => 'id']);
   }
 
   /**
    * getGame
    *
-   * @return \yii\db\ActiveQuery
+   * @return ActiveQuery
    */
   public function getGame(): ActiveQuery
   {
-    return $this->hasOne(Game::class, ['id' => 'game_id'])
-                ->via('achievement');
-  }
-
-  /**
-   * The player who earned the achievement.
-   *
-   * @return \yii\db\ActiveQuery
-   */
-  public function getPlayer(): ActiveQuery
-  {
-    return $this->hasOne(Player::class, ['id' => 'player_id']);
-  }
-
-  /**
-   * A Boolean value that states whether the player has completed the achievement.
-   *
-   * @return bool
-   */
-  public function isCompleted(): bool
-  {
-    return $this->percent_completed == 100.0;
-  }
-
-  /**
-   * The last time your game reported progress on the achievement for the player.
-   *
-   * @return \DateTime
-   */
-  public function lastReportedDate(): \DateTime
-  {
-    return DateTime::date($this->updated_at);
+    return $this->hasOne(Game::class, ['id' => 'game_id']);
   }
 
   /**
@@ -141,10 +123,27 @@ class Achievement extends ActiveRecord
    * @return mixed[]
    * @noinspection PhpMissingParentCallCommonInspection
    */
-  public function rules(): mixed
+  public function rules(): array
   {
-    return [
-      [['percent_completed'], 'float', 'min' => 0, 'max' => 100]
-    ];
+    return [];
   }
+
+  /**
+   * @return bool
+   */
+  public function softDelete(): bool
+  {
+    $this->trigger(self::EVENT_BEFORE_SOFT_DELETE);
+
+    $config = [
+      'activeRecordClass' => get_class($this),
+      'primaryKey'        => $this->id
+    ];
+    Yii::$app->queue->push(new DeleteDocument($config));
+
+    $this->updateAttributes(['status' => self::STATUS_SOFT_DELETED]);
+
+    return true;
+  }
+
 }
