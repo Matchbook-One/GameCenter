@@ -45,7 +45,7 @@ class GameCenter extends Component
    * @param string $moduleID the Module ID
    * @param GameModule $module the module
    *
-   * @return bool
+   * @return boolean
    */
   public function register(string $moduleID, GameModule $module): bool
   {

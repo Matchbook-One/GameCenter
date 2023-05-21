@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         name="PHP_CodeSniffer"
+         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
+  <description>The Coding Standard for GameCenter HumHub Modules</description>
+
+
+  <arg name="basepath" value="." />
+  <arg name="colors" />
+  <arg name="parallel" value="75" />
+  <arg value="np" />
+
+  <rule ref="Generic.Arrays.DisallowLongArraySyntax" />
+
+  <rule ref="Generic.Commenting.Todo" />
+  <rule ref="Generic.Commenting.DocComment" />
+  <rule ref="PEAR.Commenting.ClassComment" />
+  <rule ref="PEAR.Commenting.FileComment" />
+  <rule ref="PEAR.Commenting.FunctionComment" />
+  <rule ref="PEAR.Commenting.InlineComment" />
+
+  <rule ref="Generic.CodeAnalysis.EmptyStatement" />
+
+  <rule ref="Generic.ControlStructures.InlineControlStructure" />
+  <rule ref="PEAR.ControlStructures.MultiLineCondition" />
+
+  <rule ref="Zend.Debug.CodeAnalyzer" />
+
+  <rule ref="PEAR.Files.IncludingFile" />
+  <rule ref="PSR2.Files.EndFileNewline" />
+  <rule ref="Zend.Files.ClosingTag" />
+  <rule ref="Generic.Files.LineLength">
+    <properties>
+      <property name="lineLimit" value="140" />
+      <property name="absoluteLineLimit" value="0" />
+    </properties>
+  </rule>
+  <rule ref="Generic.Files.LineEndings">
+    <properties>
+      <property name="eolChar" value="\n" />
+    </properties>
+  </rule>
+
+  <rule ref="Generic.Formatting.DisallowMultipleStatements" />
+  <rule ref="Generic.Formatting.SpaceAfterCast" />
+  <rule ref="PEAR.Formatting.MultiLineAssignment" />
+
+  <rule ref="Generic.Functions.FunctionCallArgumentSpacing" />
+  <rule ref="PEAR.Functions.ValidDefaultValue" />
+
+  <rule ref="Generic.NamingConventions.ConstructorName" />
+  <rule ref="Generic.NamingConventions.UpperCaseConstantName" />
+
+  <rule ref="Generic.PHP.DeprecatedFunctions" />
+  <rule ref="Generic.PHP.DisallowShortOpenTag" />
+  <rule ref="Generic.PHP.LowerCaseKeyword" />
+  <rule ref="Generic.PHP.LowerCaseConstant" />
+  <rule ref="Generic.PHP.ForbiddenFunctions">
+    <properties>
+      <property name="forbiddenFunctions" type="array">
+        <element key="sizeof" value="count" />
+        <element key="delete" value="unset" />
+        <element key="print" value="echo" />
+        <element key="is_null" value="null" />
+        <element key="create_function" value="null" />
+      </property>
+    </properties>
+  </rule>
+
+  <rule ref="Generic.Strings.UnnecessaryStringConcat" />
+
+  <rule ref="Generic.WhiteSpace.DisallowTabIndent" />
+  <rule ref="Generic.WhiteSpace.LanguageConstructSpacing" />
+  <rule ref="Generic.WhiteSpace.IncrementDecrementSpacing" />
+  <rule ref="Generic.WhiteSpace.ScopeIndent">
+    <properties>
+      <property name="indent" value="2" />
+    </properties>
+  </rule>
+
+
+</ruleset>

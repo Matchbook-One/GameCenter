@@ -27,6 +27,9 @@ class GameSearch extends Game
    */
   public $query;
 
+  /** @var string $freeText */
+  public $freeText;
+
   /**
    * Returns the list of all attribute names of the model.
    * The default implementation will return all column names of the table associated with this AR class.
@@ -112,5 +115,4 @@ class GameSearch extends Game
 
     return $dataProvider;
   }
-
 }

@@ -26,10 +26,10 @@ use yii\db\ActiveQuery;
 class Score extends ActiveRecord
 {
 
-  /** @returns string
-   * @noinspection PhpMissingParentCallCommonInspection
-   */
-  public static function tableName(): string { return 'score'; }
+  public const TABLE = 'score';
+
+  /** @returns string */
+  public static function tableName(): string { return self::TABLE; }
 
   /**
    * @return array
@@ -54,5 +54,4 @@ class Score extends ActiveRecord
   {
     return $this->hasOne(Player::class, ['id' => 'player_id']);
   }
-
 }

@@ -19,7 +19,7 @@ use yii\db\ActiveQuery;
 use function get_class;
 
 /**
- * This is the model class for the table "player_achievement".
+ * This is the model class for the table "achievement".
  *
  * @property int $id
  * @property string $guid
@@ -32,13 +32,14 @@ use function get_class;
  * @property int $created_by
  * @property string $updated_at
  * @property int $updated_by
- * @property-read PlayerAchievement[] $achievements
+ * @property-read Achievement[] $achievements
  * @property-read Game $game
  * @mixin    GUID
  * @phpstan-import-type AchievementConfig from GameModule
  */
-class Achievement extends ActiveRecord
+class AchievementDescription extends ActiveRecord
 {
+  public const TABLE = 'achievement';
 
   public const EVENT_BEFORE_SOFT_DELETE = 'beforeSoftDelete';
 
@@ -47,12 +48,27 @@ class Achievement extends ActiveRecord
   public const STATUS_SOFT_DELETED = 1;
 
   /**
+   * @param string $module the module id
+   *
+   * @return AchievementDescription[]
+   */
+  public static function loadAchievements(string $module): array
+  {
+    /** @var AchievementDescription[] $result */
+    $result = AchievementDescription::find()
+                                    ->where(['game_id' => $module])
+                                    ->all();
+
+    return $result;
+  }
+
+  /**
    * @inheritdoc
    * @static
    * @return string
    * @noinspection PhpMissingParentCallCommonInspection
    */
-  public static function tableName(): string { return 'achievement'; }
+  public static function tableName(): string { return self::TABLE; }
 
   /**
    * @inheritdoc
@@ -105,7 +121,7 @@ class Achievement extends ActiveRecord
    */
   public function getAchievements(): ActiveQuery
   {
-    return $this->hasMany(PlayerAchievement::class, ['description_id' => 'id']);
+    return $this->hasMany(Achievement::class, ['description_id' => 'id']);
   }
 
   /**
@@ -145,5 +161,4 @@ class Achievement extends ActiveRecord
 
     return true;
   }
-
 }

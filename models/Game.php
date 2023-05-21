@@ -69,6 +69,8 @@ class Game extends ContentContainerActiveRecord implements Searchable
    */
   public const EVENT_BEFORE_SOFT_DELETE = 'beforeSoftDelete';
 
+  public const TABLE = 'game';
+
   /**
    * @return ActiveQueryGame
    * @static
