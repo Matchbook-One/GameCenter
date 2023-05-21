@@ -14,7 +14,7 @@ on:
 
 jobs:
   phpstan:
-    name: "PHP: 7.4 | PHPStan"
+    name: "PHP: 8.1 | PHPStan"
 
     runs-on: "ubuntu-latest"
 
@@ -25,7 +25,7 @@ jobs:
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.1'
           coverage: none
           tools: phpstan
 

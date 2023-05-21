@@ -1,14 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "baseBranches": ["main"],
+  "baseBranches": [ "main" ],
   "extends": [
     "config:base",
-    
     "npm:unpublishSafe",
-    
     "schedule:daily",
     "schedule:automergeNonOfficeHours",
-
     ":automergeLinters",
     ":automergePatch",
     ":automergeTypes",
@@ -26,18 +23,18 @@
     ":separatePatchReleases",
     ":updateNotScheduled"
   ],
-  "automergeStrategy": "squash", 
+  "automergeStrategy": "squash",
   "commitBodyTable": true,
   "configMigration": true,
   "dependencyDashboardAutoclose": true,
-  "internalChecksFilter":"strict",
-  "minimumReleaseAge":"3 days",
-  "osvVulnerabilityAlerts":true,
+  "internalChecksFilter": "strict",
+  "minimumReleaseAge": "3 days",
+  "osvVulnerabilityAlerts": true,
   "rangeStrategy": "bump",
   "stopUpdatingLabel": "take-a-break-renovate",
   "packageRules": [
     {
-      "matchUpdateTypes": ["major"],
+      "matchUpdateTypes": [ "major" ],
       "dependencyDashboardApproval": true
     }
   ]
