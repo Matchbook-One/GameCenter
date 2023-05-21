@@ -18,7 +18,7 @@ use humhub\modules\search\events\SearchAddEvent;
 use humhub\modules\search\interfaces\Searchable;
 use humhub\modules\search\jobs\DeleteDocument;
 use humhub\modules\space\widgets\Wall;
-use Swagger\Annotations\{Definition, Property};
+use humhub\modules\user\models\User;
 use Yii;
 use Yii\db\ActiveQuery;
 
@@ -26,23 +26,20 @@ use const SORT_ASC;
 
 /**
  * This is the model class for the table “game”.
- * @Definition()
- * @Property(property="id", type="integer")
- * @Property(property="guid", type="string")
  *
  * @property int $id
  * @property string $guid
  * @property string $module
  * @property string $title
  * @property string $description
- * @property string[] $game_tags
  * @property int $status
  * @property string $created_at
  * @property int $created_by
- * @property \humhub\modules\user\models\User $createdBy
- * @property \humhub\modules\user\models\User $updatedBy
+ * @property User $createdBy
+ * @property User $updatedBy
+ * @property-read GameTag[] $gameTags
  * @property-read Score[] $scores
- * @property-read Achievement[] $achievementDescriptions
+ * @property-read Achievement[] $achievements
  * @property int $contentcontainer_id
  * @property ContentContainerPermissionManager $permissionManager
  * @property ContentContainerSettingsManager $settings
@@ -159,7 +156,7 @@ class Game extends ContentContainerActiveRecord implements Searchable
   /**
    * @return \Yii\db\ActiveQuery
    */
-  public function getAchievementDescriptions(): ActiveQuery
+  public function getAchievement(): ActiveQuery
   {
     return $this->hasMany(Achievement::class, ['game_id' => 'id']);
   }
@@ -187,12 +184,9 @@ class Game extends ContentContainerActiveRecord implements Searchable
     return '';
   }
 
-  /**
-   * @return string[]
-   */
-  public function getGameTags(): array
+  public function getGameTags(): ActiveQuery
   {
-    return $this->game_tags;
+    return $this->hasMany(GameTag::class, ['game_id' => 'id']);
   }
 
   /**
@@ -207,7 +201,7 @@ class Game extends ContentContainerActiveRecord implements Searchable
     }
     /** @var Score|null $score */
     $score = $this->getScores()
-                  ->where(['player_id' => $player->id])
+                  ->andWhere(['player_id' => $player->id])
                   ->orderBy(['score' => SORT_ASC])
                   ->one();
 

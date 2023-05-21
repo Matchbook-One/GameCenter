@@ -21,7 +21,7 @@ class Url extends \yii\helpers\Url
 
   public static function toLeaderboards($id): string
   {
-    return self::to(['/gamecenter/leaderboards', 'gid' => $id]);
+    return self::to(['/gamecenter/games/leaderboard', 'gid' => $id]);
   }
 
   public static function toLoadGamePage(ContentContainerActiveRecord $container): string { return $container->createUrl('load-page'); }

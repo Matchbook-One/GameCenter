@@ -12,10 +12,11 @@ use yii\data\Pagination;
  */
 class GameDirectoryQuery extends ActiveQueryGame
 {
+
   /** @var int */
-  public $pageSize = 25;
+  public int $pageSize = 25;
   /** @var \yii\data\Pagination */
-  public $pagination;
+  public Pagination $pagination;
 
   /**
    * @inheritdoc
@@ -28,7 +29,7 @@ class GameDirectoryQuery extends ActiveQueryGame
   }
 
   /** @return void */
-  public function init()
+  public function init(): void
   {
     parent::init();
 
@@ -136,6 +137,8 @@ class GameDirectoryQuery extends ActiveQueryGame
     $countQuery = clone $this;
     $this->pagination = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => $this->pageSize]);
 
-    return $this->offset($this->pagination->offset)->limit($this->pagination->limit);
+    return $this->offset($this->pagination->offset)
+                ->limit($this->pagination->limit);
   }
+
 }

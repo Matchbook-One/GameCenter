@@ -11,6 +11,7 @@ use fhnw\modules\gamecenter\components\ActiveQueryGame;
 use fhnw\modules\gamecenter\GameCenterModule;
 use fhnw\modules\gamecenter\models\Achievement;
 use fhnw\modules\gamecenter\models\Game;
+use fhnw\modules\gamecenter\models\Leaderboard;
 use fhnw\modules\gamecenter\models\PlayerAchievement;
 
 /**
@@ -43,6 +44,16 @@ class GamesController extends ContentController
                                      ->all();
 
     return $this->render('achievements', ['game' => $game, 'achievements' => $achievements]);
+  }
+
+  public function actionLeaderboard($gid): string
+  {
+    $game = Game::findOne(['id' => $gid]);
+    $leaderboards = Leaderboard::find()
+                               ->where(['game_id' => $game->id])
+                               ->all();
+
+    return $this->render('leaderboards', ['game' => $game, 'leaderboards' => $leaderboards]);
   }
 
   protected function getPaginationQuery(): ActiveQueryGame

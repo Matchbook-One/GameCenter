@@ -11,10 +11,12 @@ namespace fhnw\modules\gamecenter\components;
 use fhnw\modules\gamecenter\models\Game;
 use humhub\events\ActiveQueryEvent;
 use humhub\modules\content\components\AbstractActiveQueryContentContainer;
+use humhub\modules\content\components\ContentContainerActiveRecord;
 use humhub\modules\user\models\User;
 use Throwable;
 use Yii;
 use yii\db\ActiveQuery;
+use yii\db\Expression;
 
 use const SORT_ASC;
 
@@ -48,6 +50,28 @@ class ActiveQueryGame extends AbstractActiveQueryContentContainer
     $this->trigger(self::EVENT_CHECK_ACTIVE, new ActiveQueryEvent(['query' => $this]));
 
     return $this->andWhere(['game.status' => Game::STATUS_ENABLED]);
+  }
+
+  /**
+   * Limits the returned records to the given ContentContainer.
+   *
+   * @param ?ContentContainerActiveRecord $container | null or null for global content
+   *
+   * @return ActiveQueryGame
+   * @throws \yii\base\Exception
+   */
+  public function contentContainer(?ContentContainerActiveRecord $container): static
+  {
+    if ($container === null) {
+      $this->joinWith(['content', 'content.contentContainer', 'content.createdBy']);
+      $this->andWhere(['IS', 'contentcontainer.pk', new Expression('NULL')]);
+    }
+    else {
+      $this->joinWith(['content', 'content.contentContainer', 'content.createdBy']);
+      $this->andWhere(['contentcontainer.pk' => $container->id, 'contentcontainer.class' => $container->className()]);
+    }
+
+    return $this;
   }
 
   /**

@@ -8,6 +8,8 @@
 
 namespace fhnw\modules\gamecenter\models;
 
+use fhnw\modules\gamecenter\components\Period;
+use fhnw\modules\gamecenter\GameCenterModule;
 use humhub\components\ActiveRecord;
 use yii\db\ActiveQuery;
 
@@ -38,16 +40,17 @@ class Leaderboard extends ActiveRecord
     return 'leaderboard';
   }
 
-  public function getCurrentPeriod()
+  /**
+   * @return \fhnw\modules\gamecenter\components\Period|null
+   */
+  public function getCurrentPeriod(): ?Period
   {
-    date('w');
-
-    switch ($this->id) {
-      case Leaderboard::CLASSIC:
-      case Leaderboard::RECURRING_DAILY:
-      case Leaderboard::RECURRING_WEEKLY:
-      case Leaderboard::RECURRING_MONTHLY:
-    }
+    return match ($this->type) {
+      Leaderboard::RECURRING_DAILY   => Period::daily(),
+      Leaderboard::RECURRING_WEEKLY  => Period::weekly(),
+      Leaderboard::RECURRING_MONTHLY => Period::month(),
+      default                        => null,
+    };
   }
 
   /**
@@ -56,6 +59,16 @@ class Leaderboard extends ActiveRecord
   public function getGame(): ActiveQuery
   {
     return $this->hasOne(Game::class, ['id' => 'game_id']);
+  }
+
+  public function getTitle(): string
+  {
+    return match ($this->type) {
+      Leaderboard::RECURRING_DAILY   => GameCenterModule::t('leaderboard', 'Daily Leaderboard'),
+      Leaderboard::RECURRING_WEEKLY  => GameCenterModule::t('leaderboard', 'Weekly Leaderboard'),
+      Leaderboard::RECURRING_MONTHLY => GameCenterModule::t('leaderboard', 'Monthly Leaderboard'),
+      Leaderboard::CLASSIC           => GameCenterModule::t('leaderboard', 'All time Leaderboard'),
+    };
   }
 
 }

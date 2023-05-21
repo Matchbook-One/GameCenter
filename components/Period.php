@@ -43,10 +43,11 @@ class Period
   {
     $start = IntlCalendar::fromDateTime(self::getDate());
     $weekday = $start->get(IntlCalendar::FIELD_DAY_OF_WEEK);
-    $start->add(IntlCalendar::FIELD_DAY_OF_MONTH, -$weekday);
+    $start->add(IntlCalendar::FIELD_DAY_OF_MONTH, -7 + $weekday);
 
     $end = IntlCalendar::fromDateTime(self::getDate());
-    $end->add(IntlCalendar::FIELD_DAY_OF_MONTH, 7 - $weekday);
+    $end->add(IntlCalendar::FIELD_DAY_OF_MONTH, 7 + $weekday);
+    $end->add(IntlCalendar::FIELD_SECOND, -1);
 
     return new Period($start->toDateTime(), $end->toDateTime());
   }
@@ -66,12 +67,27 @@ class Period
     return $this->end;
   }
 
+  public function getEndDate(): string
+  {
+    return $this->end->format($this->getFormat());
+  }
+
   /**
    * @return \DateTime
    */
   public function getStart(): DateTime
   {
     return $this->start;
+  }
+
+  public function getStartDate(): string
+  {
+    return $this->start->format($this->getFormat());
+  }
+
+  private function getFormat(): string
+  {
+    return 'D, d M Y';
   }
 
 }

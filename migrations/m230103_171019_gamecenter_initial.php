@@ -7,9 +7,13 @@
 
 use fhnw\modules\gamecenter\models\Achievement;
 use fhnw\modules\gamecenter\models\Game;
+use fhnw\modules\gamecenter\models\GameTag;
+use fhnw\modules\gamecenter\models\Leaderboard;
 use fhnw\modules\gamecenter\models\Play;
 use fhnw\modules\gamecenter\models\PlayerAchievement;
+use fhnw\modules\gamecenter\models\Report;
 use fhnw\modules\gamecenter\models\Score;
+use humhub\modules\user\models\User;
 use yii\db\Migration;
 
 /**
@@ -18,35 +22,19 @@ use yii\db\Migration;
 class m230103_171019_gamecenter_initial extends Migration
 {
 
-  public const ACHIEVEMENT = 'achievement';
-
-  public const PLAYER_ACHIEVEMENT = 'player_achievement';
-
-  public const GAME = 'game';
-
-  public const SCORE = 'score';
-
-  public const GAME_TAG = 'game_tag';
-
-  public const LEADERBOARD = 'leaderboard';
-
-  public const USER = 'user';
-
-  public const GAME_REPORT = 'game_report';
-
   /**
    * {@inheritdoc}
    * @return bool
    */
   public function safeDown(): bool
   {
-    $this->dropForeignKey('fk_achievement_game', Achievement::TABLE);
-    $this->dropForeignKey('fk_pa_achievement', PlayerAchievement::TABLE);
-    $this->dropForeignKey('fk_pa_player', PlayerAchievement::TABLE);
+    $this->dropForeignKey('fk_achievement_game', Achievement::tableName());
+    $this->dropForeignKey('fk_pa_achievement', PlayerAchievement::tableName());
+    $this->dropForeignKey('fk_pa_player', PlayerAchievement::tableName());
 
-    $this->dropTable(self::PLAYER_ACHIEVEMENT);
-    $this->dropTable(self::GAME);
-    $this->dropTable(self::PLAYER_ACHIEVEMENT);
+    $this->dropTable(PlayerAchievement::tableName());
+    $this->dropTable(Game::tableName());
+    $this->dropTable(Achievement::tableName());
 
     return true;
   }
@@ -148,7 +136,7 @@ class m230103_171019_gamecenter_initial extends Migration
                         ->notNull(),
       'PRIMARY KEY(game_id, tag)'
     ];
-    $this->createTable(self::GAME_TAG, $columns);
+    $this->createTable(GameTag::tableName(), $columns);
 
     $columns = [
       'id'        => $this->primaryKey(),
@@ -163,7 +151,7 @@ class m230103_171019_gamecenter_initial extends Migration
       'timestamp' => $this->dateTime()
                           ->notNull()
     ];
-    $this->createTable(self::GAME_REPORT, $columns);
+    $this->createTable(Report::tableName(), $columns);
 
     $columns = [
       'id'      => $this->primaryKey(),
@@ -172,7 +160,7 @@ class m230103_171019_gamecenter_initial extends Migration
       'type'    => $this->integer()
                         ->notNull()
     ];
-    $this->createTable(self::LEADERBOARD, $columns);
+    $this->createTable(Leaderboard::tableName(), $columns);
 
     $columns = [
       'id'          => $this->primaryKey(),
@@ -192,18 +180,24 @@ class m230103_171019_gamecenter_initial extends Migration
                             ->notNull(),
 
     ];
-    $this->createTable(Play::TABLE, $columns);
+    $this->createTable(Play::tableName(), $columns);
 
-    $this->addForeignKey('achievement_game_id_fk', self::ACHIEVEMENT, 'game_id', self::GAME, 'id');
-    $this->addForeignKey('playerachievement_user_id_fk', self::PLAYER_ACHIEVEMENT, 'player_id', self::USER, 'id');
-    $this->addForeignKey('playerachievement_achievement_id_fk', self::PLAYER_ACHIEVEMENT, 'achievement_id', self::ACHIEVEMENT, 'id');
-    $this->addForeignKey('gametag_game_id_fk', self::GAME_TAG, 'game_id', self::GAME, 'id');
-    $this->addForeignKey('score_game_id_fk', self::SCORE, 'game_id', self::GAME, 'id');
-    $this->addForeignKey('score_user_id_fk', self::SCORE, 'player_id', self::USER, 'id');
-    $this->addForeignKey('report_game_id_fk', self::GAME_REPORT, 'game_id', self::GAME, 'id');
-    $this->addForeignKey('report_user_id_fk', self::GAME_REPORT, 'player_id', self::USER, 'id');
-    $this->addForeignKey('play_user_id_fk', Play::TABLE, 'player_id', 'user', 'id');
-    $this->addForeignKey('play_game_id_fk', Play::TABLE, 'game_id', 'game', 'id');
+    $this->addForeignKey('achievement_game_id_fk', Achievement::tableName(), 'game_id', Game::tableName(), 'id');
+    $this->addForeignKey('playerachievement_user_id_fk', PlayerAchievement::tableName(), 'player_id', User::tableName(), 'id');
+    $this->addForeignKey(
+      'playerachievement_achievement_id_fk',
+      PlayerAchievement::tableName(),
+      'achievement_id',
+      Achievement::tableName(),
+      'id'
+    );
+    $this->addForeignKey('gametag_game_id_fk', GameTag::tableName(), 'game_id', Game::tableName(), 'id');
+    $this->addForeignKey('score_game_id_fk', Score::tableName(), 'game_id', Game::tableName(), 'id');
+    $this->addForeignKey('score_user_id_fk', Score::tableName(), 'player_id', User::tableName(), 'id');
+    $this->addForeignKey('report_game_id_fk', Report::tableName(), 'game_id', Game::tableName(), 'id');
+    $this->addForeignKey('report_user_id_fk', Report::tableName(), 'player_id', User::tableName(), 'id');
+    $this->addForeignKey('play_user_id_fk', Play::tableName(), 'player_id', User::tableName(), 'id');
+    $this->addForeignKey('play_game_id_fk', Play::tableName(), 'game_id', User::tableName(), 'id');
   }
 
 }

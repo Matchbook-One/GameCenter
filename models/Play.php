@@ -15,7 +15,7 @@ use yii\db\Query;
 use function is_subclass_of;
 
 /**
- * This is the model class for table "user_play".
+ * This is the model class for table "play".
  *
  * @property int $id
  * @property int $game_id
@@ -37,8 +37,6 @@ class Play extends ActiveRecord
    */
   public const EVENT_PLAY = 'play';
 
-  public const TABLE = 'user_play';
-
   /**
    * Returns a query searching for all container ids the user is following.
    * If $containerClass is given we only search for a certain container type.
@@ -50,8 +48,10 @@ class Play extends ActiveRecord
    */
   public static function getPlayedContainerIdQuery(Player $player, string $containerClass = null): Query
   {
+    $table = self::tableName();
+
     return (new Query())->select('contentcontainer.id AS id')
-                        ->from(self::TABLE)
+                        ->from($table)
                         ->innerJoin(
                           'contentcontainer',
                           'contentcontainer.pk = user_follow.object_id AND contentcontainer.class = user_follow.object_model'
@@ -60,11 +60,11 @@ class Play extends ActiveRecord
                         ->indexBy('id')
                         ->andWhere(
                           $containerClass
-                            ? ['user_play.object_model' => $containerClass]
+                            ? ["{$table}.object_model" => $containerClass]
                             : [
                             'OR',
-                            ['user_play.object_model' => Game::class],
-                            ['user_play.object_model' => User::class]
+                            ["{$table}.object_model" => Game::class],
+                            ["{$table}.object_model" => User::class]
                           ]
                         );
   }
@@ -79,7 +79,7 @@ class Play extends ActiveRecord
   public static function getPlayedGamesQuery(Game $game): ActiveQuery
   {
     return self::find()
-               ->where(['user_play.game_id' => $game->id]);
+               ->where(['play.game_id' => $game->id]);
   }
 
   /**
@@ -89,11 +89,12 @@ class Play extends ActiveRecord
    *
    * @return ActiveQueryUser
    */
-  public static function getPlayersQuery(ActiveRecord $target)
+  public static function getPlayersQuery(ActiveRecord $target): ActiveQueryUser
   {
+    $table = self::tableName();
     $subQuery = self::find()
-                    ->where(['user_play.object_model' => get_class($target), 'user_play.object_id' => $target->getPrimaryKey()])
-                    ->andWhere('user_play.user_id=user.id');
+                    ->where(["{$table}.object_model" => get_class($target), "{$table}.object_id" => $target->getPrimaryKey()])
+                    ->andWhere("{$table}.user_id=user.id");
 
     return User::find()
                ->visible()
@@ -102,10 +103,11 @@ class Play extends ActiveRecord
 
   /**
    * @inheritdoc
+   * @noinspection PhpMissingParentCallCommonInspection
    */
-  public static function tableName()
+  public static function tableName(): string
   {
-    return Play::TABLE;
+    return 'play';
   }
 
   /**
@@ -114,7 +116,7 @@ class Play extends ActiveRecord
    *
    * @return void
    */
-  public function afterSave($insert, $changedAttributes)
+  public function afterSave($insert, $changedAttributes): void
   {
     $this->trigger(
       Play::EVENT_PLAY,
@@ -125,7 +127,7 @@ class Play extends ActiveRecord
   }
 
   /** @return array */
-  public function behaviors()
+  public function behaviors(): array
   {
     return [
       [
@@ -140,14 +142,15 @@ class Play extends ActiveRecord
   /**
    * @return \yii\db\ActiveRecord|null
    */
-  public function getTarget()
+  public function getTarget(): ?\yii\db\ActiveRecord
   {
     try {
       $targetClass = $this->object_model;
       if ($targetClass != '' && is_subclass_of($targetClass, \yii\db\ActiveRecord::class)) {
         return $targetClass::findOne(['id' => $this->object_id]);
       }
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
       // Avoid errors in integrity check
       Yii::error($e);
     }
@@ -163,8 +166,10 @@ class Play extends ActiveRecord
     return $this->hasOne(Player::class, ['id' => 'user_id']);
   }
 
-  /** @return array */
-  public function rules()
+  /** @return array
+   * @noinspection PhpMissingParentCallCommonInspection
+   */
+  public function rules(): array
   {
     return [
       [['game_id', 'user_id'], 'required'],
@@ -172,4 +177,5 @@ class Play extends ActiveRecord
       [['last_played', 'created_at', 'updated_at'], 'safe']
     ];
   }
+
 }

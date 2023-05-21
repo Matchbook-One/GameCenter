@@ -12,4 +12,9 @@ class DateTime
     return \DateTime::createFromFormat(format: static::FORMAT, datetime: $datetime);
   }
 
+  public static function formated(\DateTime $dateTime): string
+  {
+    return $dateTime->format(static::FORMAT);
+  }
+
 }
