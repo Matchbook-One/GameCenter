@@ -1,11 +1,14 @@
 <?php
+
+use fhnw\modules\gamecenter\components\Period;
+use fhnw\modules\gamecenter\models\Score;
+use fhnw\modules\gamecenter\widgets\LeaderboardScore;
+
 /**
  * @var string $title
- * @var array<\fhnw\modules\gamecenter\models\Score> $scores
- * @var ?\fhnw\modules\gamecenter\components\Period $period
+ * @var array<Score> $scores
+ * @var ?Period $period
  */
-
-use fhnw\modules\gamecenter\widgets\LeaderboardScore;
 
 ?>
 
@@ -27,6 +30,7 @@ use fhnw\modules\gamecenter\widgets\LeaderboardScore;
     <th scope='col' class="text-right">#</th>
     <th scope='col' class='text-right'>Score</th>
     <th scope='col'>Player</th>
+    <th scope='col'>Date</th>
   </tr>
   </thead>
   <tbody class='table-group-divider'>
@@ -35,7 +39,8 @@ use fhnw\modules\gamecenter\widgets\LeaderboardScore;
       [
         'rank'   => $key + 1,
         'score'  => $score->score,
-        'player' => $score->player->displayName
+        'player' => $score->player->displayName,
+        'date'   => $score->timestamp
       ]
     ) ?>
   <?php endforeach ?>

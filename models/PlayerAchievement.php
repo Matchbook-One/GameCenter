@@ -128,6 +128,14 @@ class PlayerAchievement extends ActiveRecord
     return $this->percent_completed == 100.0;
   }
 
+  public function lastReported(): string
+  {
+    return DateTime::relative(
+      $this->lastReportedDate()
+           ->diff(new \DateTime())
+    );
+  }
+
   /**
    * The last time your game reported progress on the achievement for the player.
    *

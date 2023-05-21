@@ -6,7 +6,7 @@
  */
 
 use fhnw\modules\gamecenter\helpers\Url;
-use fhnw\modules\gamecenter\widgets\LeaderboardList;
+use fhnw\modules\gamecenter\widgets\LeaderboardCard;
 use humhub\widgets\Button;
 
 ?>
@@ -14,6 +14,6 @@ use humhub\widgets\Button;
 <h1>Game: <strong><?= $game->title ?></strong></h1>
 <div class="row">
   <?php foreach ($leaderboards as $leaderboard): ?>
-    <div class=" col-lg-6 col-sm-12"><?= LeaderboardList::withBoard($leaderboard) ?></div>
+    <div class=" col-lg-6 col-sm-12"><?= LeaderboardCard::withBoard($leaderboard) ?></div>
   <?php endforeach ?>
 </div>

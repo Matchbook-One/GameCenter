@@ -3,7 +3,6 @@
 namespace fhnw\modules\gamecenter\models;
 
 use Exception;
-use fhnw\modules\gamecenter\events\PlayEvent\PlayEvent;
 use humhub\components\ActiveRecord;
 use humhub\components\behaviors\PolymorphicRelation;
 use humhub\modules\user\components\ActiveQueryUser;
@@ -79,7 +78,7 @@ class Play extends ActiveRecord
   public static function getPlayedGamesQuery(Game $game): ActiveQuery
   {
     return self::find()
-               ->where(['play.game_id' => $game->id]);
+               ->where([self::tableName() . '.game_id' => $game->id]);
   }
 
   /**
@@ -94,7 +93,7 @@ class Play extends ActiveRecord
     $table = self::tableName();
     $subQuery = self::find()
                     ->where(["{$table}.object_model" => get_class($target), "{$table}.object_id" => $target->getPrimaryKey()])
-                    ->andWhere("{$table}.user_id=user.id");
+                    ->andWhere("{$table}.player_id=user.id");
 
     return User::find()
                ->visible()
@@ -118,11 +117,11 @@ class Play extends ActiveRecord
    */
   public function afterSave($insert, $changedAttributes): void
   {
-    $this->trigger(
-      Play::EVENT_PLAY,
-      new PlayEvent(['user' => $this->player, 'target' => $this->getTarget()])
-    );
-
+    /* $this->trigger(
+       Play::EVENT_PLAY,
+       new PlayEvent(['player' => $this->player, 'target' => $this->getTarget()])
+     );
+ */
     parent::afterSave($insert, $changedAttributes);
   }
 
@@ -137,6 +136,11 @@ class Play extends ActiveRecord
         ]
       ]
     ];
+  }
+
+  public function getPlayer(): ActiveQuery
+  {
+    return $this->hasOne(Player::class, ['id' => 'player_id']);
   }
 
   /**
@@ -158,22 +162,14 @@ class Play extends ActiveRecord
     return null;
   }
 
-  /**
-   * @return \yii\db\ActiveQuery
-   */
-  public function getUser(): ActiveQuery
-  {
-    return $this->hasOne(Player::class, ['id' => 'user_id']);
-  }
-
   /** @return array
    * @noinspection PhpMissingParentCallCommonInspection
    */
   public function rules(): array
   {
     return [
-      [['game_id', 'user_id'], 'required'],
-      [['game_id', 'user_id'], 'integer'],
+      [['game_id', 'player_id'], 'required'],
+      [['game_id', 'player_id'], 'integer'],
       [['last_played', 'created_at', 'updated_at'], 'safe']
     ];
   }

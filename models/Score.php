@@ -26,7 +26,9 @@ use yii\db\ActiveQuery;
 class Score extends ActiveRecord
 {
 
-  /** @returns string */
+  /** @returns string
+   * @noinspection PhpMissingParentCallCommonInspection
+   */
   public static function tableName(): string { return 'score'; }
 
   /**

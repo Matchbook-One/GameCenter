@@ -15,9 +15,8 @@ use humhub\widgets\Button;
 <div>Count: <?= count($achievements) ?></div>
 
 <div class='row'>
-  <div class='col-lg-4 col-md-6 col-sm-12'>
-    <?php foreach ($achievements as $achievement): ?>
-      <?= AchievementCard::with($achievement) ?>
-    <?php endforeach ?>
-  </div>
+
+  <?php foreach ($achievements as $achievement): ?>
+    <?= AchievementCard::with($achievement) ?>
+  <?php endforeach ?>
 </div>

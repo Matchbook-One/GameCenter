@@ -2,8 +2,8 @@
 
 namespace fhnw\modules\gamecenter\components;
 
+use DateInterval;
 use DateTime;
-use IntlCalendar;
 
 class Period
 {
@@ -19,44 +19,22 @@ class Period
 
   public static function daily(): Period
   {
-    $start = IntlCalendar::fromDateTime(self::getDate());
-
-    $end = IntlCalendar::fromDateTime(self::getDate());
-    $end->add(IntlCalendar::FIELD_DAY_OF_MONTH, 1);
-
-    return new Period($start->toDateTime(), $end->toDateTime());
+    return new Period(new DateTime('today'), new DateTime('midnight tomorrow -1 sec'));
   }
 
   public static function month(): Period
   {
-    $start = IntlCalendar::fromDateTime(self::getDate());
-    $start->set(IntlCalendar::FIELD_DAY_OF_MONTH, 1);
-
-    $end = IntlCalendar::fromDateTime(self::getDate());
-    $end->set(IntlCalendar::FIELD_DAY_OF_MONTH, 1);
-    $end->add(IntlCalendar::FIELD_MONTH, 1);
-
-    return new Period($start->toDateTime(), $end->toDateTime());
+    return new Period(new DateTime('midnight first day of'), new DateTime('midnight first day of next month -1 sec'));
   }
 
   public static function weekly(): Period
   {
-    $start = IntlCalendar::fromDateTime(self::getDate());
-    $weekday = $start->get(IntlCalendar::FIELD_DAY_OF_WEEK);
-    $start->add(IntlCalendar::FIELD_DAY_OF_MONTH, -7 + $weekday);
-
-    $end = IntlCalendar::fromDateTime(self::getDate());
-    $end->add(IntlCalendar::FIELD_DAY_OF_MONTH, 7 + $weekday);
-    $end->add(IntlCalendar::FIELD_SECOND, -1);
-
-    return new Period($start->toDateTime(), $end->toDateTime());
+    return new Period(new DateTime('midnight monday this week'), new DateTime('monday next week -1 sec'));
   }
 
-  private static function getDate(): DateTime
+  public function getDuration(): DateInterval
   {
-    $date = new DateTime();
-
-    return $date->setTime(0, 0, 0, 0);
+    return $this->start->diff($this->end);
   }
 
   /**

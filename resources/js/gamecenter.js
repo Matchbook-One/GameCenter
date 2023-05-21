@@ -12,7 +12,6 @@ humhub.module('gamecenter', function (module, requireModule, $) {
      */
     moduleRegex = /humhub\.modules\.(.*)/
 
-
     /**
      * @param {string} moduleId
      * @returns {Promise<Array<Achievement>>}

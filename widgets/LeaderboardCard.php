@@ -12,7 +12,7 @@ use Yii;
 /**
  * @package GameCenter/Widgets
  */
-class LeaderboardList extends Widget
+class LeaderboardCard extends Widget
 {
 
   public Leaderboard $leaderboard;
@@ -60,7 +60,7 @@ class LeaderboardList extends Widget
       $config['period'] = $this->leaderboard->getCurrentPeriod();
     }
 
-    return $this->render('leaderboardList', $config);
+    return $this->render('leaderboardCard', $config);
   }
 
   /**
@@ -77,7 +77,7 @@ class LeaderboardList extends Widget
         [
           '>=',
           'timestamp',
-          DateTime::formated(
+          DateTime::formatted(
             $leaderboard->getCurrentPeriod()
                         ->getStart()
           )
