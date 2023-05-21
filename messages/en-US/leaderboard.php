@@ -17,5 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'GameCenter' => '',
+    'All time Leaderboard' => '',
+    'Daily Leaderboard' => '',
+    'Monthly Leaderboard' => '',
+    'Weekly Leaderboard' => '',
 ];

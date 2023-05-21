@@ -18,4 +18,5 @@
  */
 return [
     'GameCenter' => '',
+    'Receive Notifications of Space Membership events.' => '',
 ];

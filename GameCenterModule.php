@@ -11,6 +11,7 @@ use fhnw\modules\gamecenter\notifications\AchievementUnlocked;
 use humhub\modules\content\components\ContentContainerModule;
 use Yii;
 use yii\helpers\Url;
+use yii\i18n\PhpMessageSource;
 
 /**
  * The GameCenter Module
@@ -114,8 +115,8 @@ class GameCenterModule extends ContentContainerModule
   private function registerTranslations(): void
   {
     Yii::$app->i18n->translations['gamecenter*'] = [
-      'class'          => 'yii\i18n\PhpMessageSource',
-      'sourceLanguage' => 'en',
+      'class'          => PhpMessageSource::class,
+      'sourceLanguage' => 'en-US',
       'basePath'       => '@gamecenter/messages'
     ];
   }
