@@ -4,6 +4,7 @@
 humhub.module('gamecenter', function (module, requireModule, $) {
 
   const client = requireModule('client')
+  const uiStatus = requireModule('ui.status')
 
   class GameCenter {
     /**
@@ -11,67 +12,71 @@ humhub.module('gamecenter', function (module, requireModule, $) {
      * @type {RegExp}
      */
     moduleRegex = /humhub\.modules\.(.*)/
+    /**
+     *  @private
+     *  @type {string}
+     */
+    module
+
+    constructor(module) {
+      this.module = module.match(this.moduleRegex)[1]
+    }
 
     /**
-     * @param {string} moduleId
-     * @returns {Promise<Array<Achievement>>}
+     * @returns {Promise<{achievements: Array<Achievement>}>}
      */
-    loadAchievements(moduleId) {
+    loadAchievements() {
       const url = '/gamecenter/achievements/load'
       const payload = {
-        module: moduleId.match(this.moduleRegex)[1]
+        module: this.module
       }
       return client.post(url, { data: payload })
     }
 
     /**
-     * @param {string} moduleId
-     * @param {*} achievement
+     * @param {Achievement} achievement
      * @returns {Promise<Achievement>}
      */
-    updateAchievements(moduleId, achievement) {
+    updateAchievement(achievement) {
       const url = '/gamecenter/achievements/update'
       const payload = {
-        module: moduleId.match(this.moduleRegex)[1],
+        module: this.module,
         achievement: achievement
       }
       return client.post(url, { data: payload })
     }
 
     /**
-     * @param {string} moduleId the module id
      * @returns {Promise<void>}
      */
-    startGame(moduleId) {
+    startGame() {
       const url = '/gamecenter/report/start'
       const config = {
-        data: { module: moduleId.match(this.moduleRegex)[1] }
+        data: { module: this.module }
       }
       return client.post(url, config)
     }
 
     /**
-     * @param {string} moduleId the module id
      * @returns {Promise<void>}
      */
-    endGame(moduleId) {
+    endGame() {
       const url = '/gamecenter/report/end'
-      const payload = { module: moduleId.match(this.moduleRegex)[1] }
+      const payload = { module: this.module }
 
       return client.post(url, { data: payload })
     }
 
     /**
      *
-     * @param {string} moduleId the module id
      * @param {string} option
      * @param {any} value
      * @returns {Promise<void>}
      */
-    report(moduleId, option, value) {
+    report(option, value) {
       const url = '/gamecenter/report/report'
       const payload = {
-        module: moduleId.match(this.moduleRegex)[1],
+        module: this.module,
         option,
         value
       }
@@ -80,32 +85,40 @@ humhub.module('gamecenter', function (module, requireModule, $) {
     }
 
     /**
-     * @param {string} module
      * @param {number} score
      * @return {Promise<void>}
      */
-    submitScore(module, score) {
+    submitScore(score) {
       const url = '/gamecenter/score/create'
       const payload = {
-        module: module.match(this.moduleRegex)[1],
+        module: this.module,
         score
       }
 
       return client.post(url, { data: payload })
     }
 
+    getHighScore() {
+      const url = '/gamecenter/score/highscore'
+      const payload = {
+        module: this.module
+      }
+
+      return client.post(url, { data: payload })
+    }
+
     /**
-     * @param {string} moduleId
      * @param {string} text
      * @returns {Promise<void>}
      */
-    share(moduleId, text) {
+    share(text) {
       const url = '/gamecenter/share'
       const payload = {
         module: moduleId.match(this.moduleRegex)[1],
         message: text
       }
       return client.post(url, { data: payload })
+                   .then(() => {uiStatus.success(module.text('saved'))})
     }
 
   }

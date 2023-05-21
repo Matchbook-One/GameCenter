@@ -16,6 +16,8 @@ use Yii;
 use yii\base\Action;
 use yii\web\Response as WebResponse;
 
+use const SORT_DESC;
+
 /**
  * Class ScoreController
  *
@@ -73,6 +75,38 @@ class ScoreController extends RestController
 
     if ($score->save()) {
       return $this->returnSuccess();
+    }
+    else {
+      return $this->returnError();
+    }
+  }
+
+  /**
+   * Creates a score
+   *
+   * @return \yii\web\Response
+   * @throws \yii\web\HttpException
+   */
+  #[Post(path: '/gamecenter/score/highscore', tags: ['Score'])]
+  #[RequestBody(content: new MediaType('application/json', new Schema('#/components/schemas/ModuleRequestBody')))]
+  #[Response(response: 200, description: 'OK')]
+  #[Response(response: 400, description: 'Invalid request')]
+  public function actionHighscore(): WebResponse
+  {
+    $this->forcePostRequest();
+    $request = Yii::$app->request;
+
+    $game = Game::findOne(['module' => $request->post('module')]);
+
+    /** @var ?Score $score */
+    $score = Score::find()
+                  ->where(['game_id' => $game->id])
+                  ->andWhere(['player_id' => $this->getPlayerID()])
+                  ->orderBy(['score' => SORT_DESC])
+                  ->one();
+
+    if ($score) {
+      return $this->returnSuccess(additional: ['score' => $score]);
     }
     else {
       return $this->returnError();

@@ -15,6 +15,7 @@ use Yii;
 class LeaderboardCard extends Widget
 {
 
+  private const LIMIT = 10;
   public Leaderboard $leaderboard;
 
   /**
@@ -86,7 +87,7 @@ class LeaderboardCard extends Widget
     }
 
     return $scores->orderBy(['score' => SORT_DESC])
-                  ->limit(15)
+                  ->limit(self::LIMIT)
                   ->all();
   }
 

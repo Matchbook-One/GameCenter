@@ -20,7 +20,7 @@ CardsAsset::register($this);
 
 ?>
 
-<h1><?= GameCenterModule::t('base', '<strong>Games</strong>'); ?></h1>
+<h1><?= GameCenterModule::t('base', 'Games'); ?></h1>
 
 <!--<div class="panel-body">
     <?= GameDirectoryFilters::widget(); ?>

@@ -14,36 +14,12 @@ declare namespace humhub {
   type LogFunction = (text: string, details: any, setStatus: boolean) => void
 
   type EventFunction = {
-    (events: string, selector: string, handler: Function): void,
-    (events: string, handler: Function): void
+    (events: string, selector: string, handler: Function): void, (events: string, handler: Function): void
   }
   type EventDataFunction = {
     (event: string, handler: Function): void,
     (event: string, data: object, handler: Function): void,
     (event: string, selector: string, data: object, handler: Function): void
-  }
-
-  interface GameCenterModule extends Module {
-    config: {}
-    id: 'humhub.modules.gamecenter'
-    initOnPjaxLoad: false
-    isModule: true
-    log: Logger
-    require: Require
-
-    export(exports: object): void
-
-    submitScore(): Promise<unknown>
-
-    text(key: string): string
-  }
-
-  interface UiModule extends Module {
-    widget: {
-      Widget: Widget
-      init(): void
-      sortOrder: number
-    }
   }
 
   class Widget {
@@ -88,6 +64,62 @@ declare namespace humhub {
 
   }
 
+  class Response {
+    /** the url of your call */
+    url: string
+    /** the result status of the xhr object */
+    status: unknown
+    /** the server response, either a json object or html depending of the 'dataType' setting of your call. */
+    response: any
+    /** In case of error: "timeout", "error", "abort", "parsererror", "application" */
+    textStatus: 'timeout' | 'error' | 'abort' | 'parsererror' | 'application'
+    /** the expected response dataType of your call */
+    dataType: string
+    /** the response depending on dataType */
+    html?: string
+    xml?: string
+  }
+
+
+  interface Achievement {
+    achievement: string
+    game: string
+    lastUpdated: string
+    percentCompleted: number
+  }
+
+  interface AchievementData {
+    achievements: Array<Achievement>
+  }
+
+  class GameCenter {
+    constructor(module: string)
+
+    loadAchievements(): Promise<{ achievements: Array<Achievement> }>
+
+    updateAchievement(achievement: Achievement): Promise<{ achievement: Achievement }>
+
+    startGame(): Promise<unknown>
+
+    endGame(): Promise<unknown>
+
+    report(option: string, value: unknown): Promise<unknown>
+
+    submitScore(score: number): Promise<void>
+
+    getHighScore(): Promise<{ highscore: number }>
+
+    share(text: string): Promise<unknown>
+  }
+
+  interface UiModule extends Module {
+    widget: {
+      Widget: Widget
+      init(): void
+      sortOrder: number
+    }
+  }
+
   interface UiViewModule extends Module {
     sortOrder: number
 
@@ -123,6 +155,47 @@ declare namespace humhub {
     setViewContext(vctx: unknown): void
 
     unload(): void
+  }
+
+  interface UiAdditionsModule extends Module {
+    sortOrder: number,
+
+    apply(element: HTMLElement | JQueryStatic, id: string, selector: string): void,
+
+    applyTo(element: HTMLElement | JQueryStatic, options): void,
+
+    extend(id, handler, options): void,
+
+    highlight(node: HTMLElement): void,
+
+    init(): void,
+
+    observe(node, options): JQueryStatic,
+
+    register(id: number, selector: Function, handler, options: object): void,
+
+    switchButtons(outButton, inButton, cfg): void,
+
+    unload(): void
+  }
+
+  interface UiStatusModule extends Module {
+
+    info(msg: string, closeAfter?: number)
+
+    success(msg: string, closeAfter?: number)
+
+    warn(msg: string, error: unknown, closeAfter?: number)
+
+    error(msg: string, error: unknown, closeAfter?: number)
+
+    setContent(content, error)
+
+    toggle(error?: unknown)
+
+    show(callback?: () => void)
+
+    hide(callback?: () => void)
   }
 
   interface UtilModule extends Module {
@@ -164,44 +237,6 @@ declare namespace humhub {
     url: { getUrlParameter(search: string): string | undefined }
   }
 
-  interface ClientPjaxModule extends Module {
-    sortOrder: number
-
-    init(): void,
-
-    post(event: unknown): void,
-
-    redirect(url: string): void,
-
-    reload(): void,
-
-    isActive(): boolean,
-
-    installLoader(): void,
-  }
-
-  interface UiAdditionsModule extends Module {
-    sortOrder: number,
-
-    apply(element: HTMLElement | JQueryStatic, id: string, selector: string): void,
-
-    applyTo(element: HTMLElement | JQueryStatic, options): void,
-
-    extend(id, handler, options): void,
-
-    highlight(node: HTMLElement): void,
-
-    init(): void,
-
-    observe(node, options): JQueryStatic,
-
-    register(id: number, selector: Function, handler, options: object): void,
-
-    switchButtons(outButton, inButton, cfg): void,
-
-    unload(): void
-  }
-
   interface UserModule extends Module {
   }
 
@@ -218,37 +253,32 @@ declare namespace humhub {
     triggerCondition(target: unknown, event: unknown, extraParameters: unknown): unknown
   }
 
-  class Response {
-    /** the url of your call */
-    url: string
-    /** the result status of the xhr object */
-    status: unknown
-    /** the server response, either a json object or html depending of the 'dataType' setting of your call. */
-    response: any
-    /** In case of error: "timeout", "error", "abort", "parsererror", "application" */
-    textStatus: 'timeout' | 'error' | 'abort' | 'parsererror' | 'application'
-    /** the expected response dataType of your call */
-    dataType: string
-    /** the response depending on dataType */
-    html?: string
-    xml?: string
+  interface ClientPjaxModule extends Module {
+    sortOrder: number
+
+    init(): void,
+
+    post(event: unknown): void,
+
+    redirect(url: string): void,
+
+    reload(): void,
+
+    isActive(): boolean,
+
+    installLoader(): void,
   }
 
   interface ClientModule extends Module {
     config: {
-      baseUrl: string,
-      reloadableScripts: string[],
-      text: object
+      baseUrl: string, reloadableScripts: string[], text: object
     }
     id: string
     initOnPjaxLoad: boolean
     isModule: boolean
     log: Logger
     pjax: {
-      require: Require,
-      initOnPjaxLoad: boolean,
-      isModule: boolean,
-      id: string
+      require: Require, initOnPjaxLoad: boolean, isModule: boolean, id: string
       config: object
     }
     require: Require
@@ -322,10 +352,11 @@ declare namespace humhub {
     (moduleNS: 'client.pjax', lazy?: boolean): ClientPjaxModule,
     (moduleNS: 'ui', lazy?: boolean): UiModule,
     (moduleNS: 'ui.additions', lazy?: boolean): UiAdditionsModule,
+    (moduleNS: 'ui.status', lazy?: boolean): UiStatusModule,
     (moduleNS: 'ui.view', lazy?: boolean): UiViewModule,
     (moduleNS: 'user', lazy?: boolean): UserModule,
     (moduleNS: 'util', lazy?: boolean): UtilModule,
-    (moduleNS: 'gamecenter', lazy?: boolean): GameCenterModule
+    (moduleNS: 'gamecenter', lazy?: boolean): GameCenter
   }
 
   /**

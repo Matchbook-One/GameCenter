@@ -1,6 +1,7 @@
 <?php
 
 use fhnw\modules\gamecenter\components\Period;
+use fhnw\modules\gamecenter\GameCenterModule;
 use fhnw\modules\gamecenter\models\Score;
 use fhnw\modules\gamecenter\widgets\LeaderboardScore;
 
@@ -18,19 +19,21 @@ use fhnw\modules\gamecenter\widgets\LeaderboardScore;
   <div class='panel-heading'>
     <h1 class="panel-title"><?= $title ?></h1>
   </div>
-  <?php if (!empty($period)): ?>
-    <div class='panel-body'>
-      <p><span class="start"><?= $period->getStartDate() ?></span> - <span class='end'><?= $period->getEndDate() ?></span></p>
-    </div>
-  <?php endif ?>
+  <div class='panel-body'>
+    <?php if (!empty($period)): ?>
+      <p>
+        <span class="start"><?= $period->getStartDate() ?></span> - <span class='end'><?= $period->getEndDate() ?></span>
+      </p>
+    <?php endif ?>
+  </div>
   <div class='table-responsive'>
   <table class='table table-striped'>
   <thead>
   <tr>
     <th scope='col' class="text-right">#</th>
-    <th scope='col' class='text-right'>Score</th>
-    <th scope='col'>Player</th>
-    <th scope='col'>Date</th>
+    <th scope='col' class='text-right'><?= GameCenterModule::t('base', 'Score') ?></th>
+    <th scope='col'><?= GameCenterModule::t('base', 'Player') ?></th>
+    <th scope='col'><?= GameCenterModule::t('base', 'Date') ?></th>
   </tr>
   </thead>
   <tbody class='table-group-divider'>

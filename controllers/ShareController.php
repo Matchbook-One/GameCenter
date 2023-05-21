@@ -66,10 +66,16 @@ class ShareController extends RestController
     $request = Yii::$app->request;
 
     $game = Game::findOne(['module' => $request->post('module')]);
+    $url = $game->getModule()
+                ->getGameUrl();
+    $message = '# ' . $request->post('message');
+    $message .= "\n\n";
+    $message .= "via [GameCenter]({$url})";
+
     $contentContainer = ContentContainer::findOne(['class' => User::class, 'pk' => $this->getPlayerID()]);
     try {
       $post = new Post($contentContainer);
-      $post->message = $request->post('message');
+      $post->message = $message;
       $post->save();
 
       return $this->returnSuccess(statusCode: 201);

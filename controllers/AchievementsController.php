@@ -94,7 +94,7 @@ class AchievementsController extends RestController
       $achievements = $this->create($game->id, $this->getPlayerID());
     }
 
-    return $this->returnSuccess(additional: $achievements);
+    return $this->returnSuccess(additional: ['achievements' => $achievements]);
   }
 
   /**
@@ -130,7 +130,7 @@ class AchievementsController extends RestController
     }
     $pa->percent_completed = $achievement['percentCompleted'];
     if ($pa->save()) {
-      return $this->returnSuccess(additional: [$pa]);
+      return $this->returnSuccess(additional: ['achievement' => $pa]);
     }
     else {
       return $this->returnError(additional: $pa->errors);

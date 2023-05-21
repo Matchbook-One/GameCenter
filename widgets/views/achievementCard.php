@@ -5,6 +5,7 @@
  * @var \fhnw\modules\gamecenter\models\PlayerAchievement $achievement
  */
 
+use fhnw\modules\gamecenter\GameCenterModule;
 use humhub\libs\Html;
 use humhub\modules\ui\icon\widgets\Icon;
 use humhub\widgets\TimeAgo;
@@ -30,7 +31,7 @@ $iconOptions = [
     <?= TimeAgo::widget(
       [
         'timestamp'       => $achievement->updated_at,
-        'titlePrefixInfo' => Yii::t('ContentModule.base', 'Updated at:')
+        'titlePrefixInfo' => GameCenterModule::t('base', 'Updated at') . ': '
       ]
     ) ?>
   </small>

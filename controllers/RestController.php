@@ -117,6 +117,7 @@ class RestController extends Controller
   protected function returnSuccess(string $message = 'Request successful', int $statusCode = 200, array $additional = []): Response
   {
     $response = Yii::$app->getResponse();
+    $response->format = Response::FORMAT_JSON;
     $response->statusCode = $statusCode;
     $response->data = array_merge(['message' => $message], $additional);
 
