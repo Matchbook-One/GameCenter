@@ -8,8 +8,10 @@
 
 namespace fhnw\modules\gamecenter\components;
 
-use fhnw\modules\gamecenter\models\AchievementDescription;
+use fhnw\modules\gamecenter\models\Achievement;
 use fhnw\modules\gamecenter\models\Game;
+use fhnw\modules\gamecenter\models\GameTag;
+use fhnw\modules\gamecenter\models\Leaderboard;
 use Yii;
 use yii\base\Component;
 
@@ -24,7 +26,7 @@ class GameCenter extends Component
 {
 
   /** @var GameCenter $instance */
-  private static $instance;
+  private static GameCenter $instance;
 
   /**
    * @return GameCenter
@@ -40,8 +42,8 @@ class GameCenter extends Component
   }
 
   /**
-   * @param string     $moduleID the Module ID
-   * @param GameModule $module   the module
+   * @param string $moduleID the Module ID
+   * @param GameModule $module the module
    *
    * @return boolean
    */
@@ -52,6 +54,8 @@ class GameCenter extends Component
     $game = self::registerGame($moduleID, $gameConfig);
     $achievements = $module->getAchievementConfig();
     $this->registerAchievements($game, $achievements);
+    $leaderboards = $module->getLeaderboardConfig();
+    $this->registerLeaderboards($game, $leaderboards);
 
     return true;
   }
@@ -76,23 +80,22 @@ class GameCenter extends Component
   }
 
   /**
-   * @param Game                $game         the Game id
+   * @param Game $game the Game id
    * @param AchievementConfig[] $achievements The Configs
    *
    * @return void
    */
-  private function registerAchievements(Game $game, $achievements): void
+  private function registerAchievements(Game $game, array $achievements): void
   {
     foreach ($achievements as $config) {
-      /** @var AchievementConfig $config */
-      $achievement = new AchievementDescription($config);
+      $achievement = new Achievement($config);
       $achievement->link('game', $game);
       $achievement->save();
     }
   }
 
   /**
-   * @param string     $module
+   * @param string $module
    * @param GameConfig $config
    *
    * @return Game
@@ -104,9 +107,24 @@ class GameCenter extends Component
       $game = new Game($config);
       $game->module = $module;
       $game->save();
+      foreach ($config->tags as $name) {
+        $tag = new GameTag();
+        $tag->tag = $name;
+        $tag->link('game', $game);
+        $tag->save();
+      }
     }
 
     return $game;
+  }
+
+  private function registerLeaderboards(Game $game, $leaderboards): void
+  {
+    foreach ($leaderboards as $boardType) {
+      $board = new Leaderboard();
+      $board->type = $boardType;
+      $board->link('game', $game);
+    }
   }
 
 }

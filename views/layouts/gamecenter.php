@@ -1,10 +1,13 @@
 <?php
 
-use humhub\modules\ui\view\helpers\ThemeHelper;
+use humhub\assets\AppAsset;
 
-/* @var string $content */
-$container = ThemeHelper::isFluid() ? 'container-fluid' : 'container';
+/**
+ * @var \yii\web\View $this
+ * @var string $content
+ */
+AppAsset::register($this);
 ?>
-<div class="<?= $container ?> container-cards container-spaces">
+<div class="container">
   <?= $content; ?>
 </div>

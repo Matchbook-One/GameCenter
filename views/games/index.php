@@ -7,50 +7,37 @@
  */
 
 use fhnw\modules\gamecenter\GameCenterModule;
-use fhnw\modules\gamecenter\widgets\{GameDirectoryCard, GameDirectoryFilters};
+use fhnw\modules\gamecenter\widgets\{GameDirectoryFilters, GamesList};
 use humhub\assets\CardsAsset;
-use humhub\libs\Html;
 
 /**
- * @var \humhub\modules\ui\view\components\View                $this
- * @var \fhnw\modules\gamecenter\components\GameDirectoryQuery $games
+ * @var \humhub\modules\ui\view\components\View $this
+ * @var $games
+ * @var bool $showMore
  */
 
 CardsAsset::register($this);
+
 ?>
-<div class='panel panel-default'>
 
-  <div class='panel-heading'>
-    <?= GameCenterModule::t('base', '<strong>Games</strong>'); ?>
-  </div>
+<h1><?= GameCenterModule::t('base', 'Games'); ?></h1>
 
-  <div class="panel-body">
+<!--<div class="panel-body">
     <?= GameDirectoryFilters::widget(); ?>
-  </div>
-
-</div>
-
-<div class="row cards">
-  <?php if (!$games->exists()): ?>
+  </div>-->
+<?php if (empty($games)): ?>
+  <div class="row">
     <div class="col-md-12">
       <div class="panel panel-default">
+        <div class="panel-heading">
+          <h1><?= GameCenterModule::t('base', 'No results found!'); ?></h1>
+        </div>
         <div class="panel-body">
-          <strong><?= GameCenterModule::t('base', 'No results found!'); ?></strong><br/>
           <?= GameCenterModule::t('base', 'Try other keywords or remove filters.'); ?>
         </div>
       </div>
     </div>
-  <?php endif; ?>
-
-  <?php foreach ($games->all() as $game) : ?>
-    <?= GameDirectoryCard::widget(['game' => $game]); ?>
-  <?php endforeach; ?>
-</div>
-
-<?php if (!$games->isLastPage()) : ?>
-  <?= Html::tag('div', '', [
-    'class'             => 'cards-end',
-    'data-current-page' => $games->pagination->getPage() + 1,
-    'data-total-pages'  => $games->pagination->getPageCount(),
-  ]) ?>
+  </div>
 <?php endif; ?>
+
+<?= GamesList::widget(['games' => $games, 'showMore' => $showMore]) ?>

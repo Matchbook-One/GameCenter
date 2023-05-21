@@ -1,19 +1,30 @@
 {
-  "name": "gamecenter",
+  "name": "fhnw/gamecenter",
   "description": "GameCenter",
   "type": "library",
-  "require": {},
+  "scripts": {
+    "openapi": "openbinapi ./controllers ./models"
+  },
+  "require": {
+    "yii/yii2-swagger": "dev-main"
+  },
   "config": {
-    "process-timeout": 1800,
     "platform": {
-      "php": "8.0"
+      "php": "8.1"
+    },
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true
     }
   },
   "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/Christian-Seiler/yii2-swagger"
+    },
     {
       "type": "composer",
       "url": "https://asset-packagist.org"
     }
   ],
-  "minimum-stability": "dev"
+  "minimum-stability": "stable"
 }

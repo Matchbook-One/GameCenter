@@ -8,6 +8,11 @@
  * @since   1.0.0
  */
 
+/**
+ * @author  Christian Seiler <christian@christianseiler.ch>
+ * @since   1.0.0
+ */
+
 namespace fhnw\modules\gamecenter\controllers;
 
 use fhnw\modules\gamecenter\GameCenterModule;
@@ -64,4 +69,6 @@ class AdminController extends Controller
 
     return $this->render('index', compact('dataProvider', 'searchModel'));
   }
+}
+
 }

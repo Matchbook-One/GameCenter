@@ -7,21 +7,20 @@
 
 namespace fhnw\modules\gamecenter\controllers;
 
-use fhnw\modules\gamecenter\components\GameDirectoryQuery;
-use fhnw\modules\gamecenter\widgets\GameDirectoryCard;
-use humhub\components\Controller;
-use Yii;
-use yii\helpers\Url;
+use fhnw\modules\gamecenter\components\ActiveQueryGame;
+use fhnw\modules\gamecenter\GameCenterModule;
+use fhnw\modules\gamecenter\models\Achievement;
+use fhnw\modules\gamecenter\models\Game;
+use fhnw\modules\gamecenter\models\Leaderboard;
+use fhnw\modules\gamecenter\models\PlayerAchievement;
 
 /**
  * IndexController
  *
  * @package GameCenter/Controllers
  */
-class GamesController extends Controller
+class GamesController extends ContentController
 {
-  /** @var string $subLayout */
-  public $subLayout = '@gamecenter/views/layouts/gamecenter';
 
   /**
    * @inheritdoc
@@ -30,39 +29,56 @@ class GamesController extends Controller
    */
   public function init(): void
   {
-    //$this->setActionTitles(['gamecenter' => GameCenterModule::t('base', 'Games'),]);
     parent::init();
+    $this->setActionTitles(['gamecenter' => GameCenterModule::t('base', 'Games'),]);
   }
 
-  /** @return string */
-  public function actionIndex(): string
+  public function actionAchievements($gid, $pid): string
   {
-    $gameDirectoryQuery = new GameDirectoryQuery();
+    $game = Game::findOne(['id' => $gid]);
+    $join = sprintf("%s.id = %s.achievement_id", Achievement::tableName(), PlayerAchievement::tableName());
+    $achievements = PlayerAchievement::find()
+                                     ->leftJoin(Achievement::tableName(), $join)
+                                     ->where([Achievement::tableName() . '.game_id' => $gid])
+                                     ->andWhere([PlayerAchievement::tableName() . '.player_id' => $pid])
+                                     ->all();
 
-    $urlParams = Yii::$app->request->getQueryParams();
-    unset($urlParams['page']);
-    array_unshift($urlParams, '/gamecenter/gamecenter/load-more');
-    /** @var \humhub\modules\ui\view\components\View $view */
-    $view = $this->getView();
-    $view->registerJsConfig('cards', ['loadMoreUrl' => Url::to($urlParams)]);
+    return $this->render('achievements', ['game' => $game, 'achievements' => $achievements]);
+  }
 
-    return $this->render('index', ['games' => $gameDirectoryQuery]);
+  public function actionLeaderboard($gid): string
+  {
+    $game = Game::findOne(['id' => $gid]);
+    $leaderboards = Leaderboard::find()
+                               ->where(['game_id' => $game->id])
+                               ->all();
+
+    return $this->render('leaderboards', ['game' => $game, 'leaderboards' => $leaderboards]);
+  }
+
+  protected function getPaginationQuery(): ActiveQueryGame
+  {
+    $pageQuery = Game::find();
+
+    $pageQuery->orderBy(['title' => SORT_ASC]);
+
+    return $pageQuery;
   }
 
   /**
-   * Action to load cards for next page by AJAX
+   * @param \yii\base\Model[] $items
    *
-   * @throws \Exception
+   * @return string
    */
-  public function actionLoadMore(): string
+  protected function renderItems(array $items): string
   {
-    $gameQuery = new GameDirectoryQuery();
-
-    $gameCards = '';
-    foreach ($gameQuery->all() as $game) {
-      $gameCards .= GameDirectoryCard::widget(['game' => $game]);
-    }
-
-    return $gameCards;
+    return $this->render(
+      'index',
+      [
+        'games'    => $items,
+        'showMore' => !$this->isLastPage()
+      ]
+    );
   }
+
 }
