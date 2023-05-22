@@ -27,6 +27,7 @@ return [
     'Show more' => 'Mehr anzeigen',
     'Updated at' => 'Aktualisiert am',
     'Updated by' => 'Aktualisiert von',
+    '<strong>Game</strong> tags' => '',
     'Achievement' => '',
     'Achievements' => '',
     'Achievements HELP' => '',

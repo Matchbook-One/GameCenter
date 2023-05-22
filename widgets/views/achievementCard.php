@@ -6,6 +6,7 @@
  */
 
 use fhnw\modules\gamecenter\GameCenterModule;
+use fhnw\modules\gamecenter\widgets\AchievementProgress;
 use humhub\libs\Html;
 use humhub\modules\ui\icon\widgets\Icon;
 use humhub\widgets\TimeAgo;
@@ -20,11 +21,20 @@ $iconOptions = [
 <div class="panel-heading">
   <h1 class='card-title'>
     <?= Icon::get($achievement->isCompleted() ? 'glass' : 'lock', $iconOptions) ?>
-    <?= Html::encode($achievement->achievement->title) ?>
+    <?php if ($achievement->achievement->secret): ?>
+      <?= GameCenterModule::t('achievement', 'Secret Achievement') ?>
+    <?php else: ?>
+      <?= Html::encode($achievement->achievement->title) ?>
+    <?php endif; ?>
   </h1>
 </div>
 <div class='panel-body'>
-  <?= Html::encode($achievement->achievement->description) ?>
+  <?php if ($achievement->achievement->secret): ?>
+    <?= GameCenterModule::t('achievement', 'This Achievement is hidden') ?>
+  <?php else: ?>
+    <?= Html::encode($achievement->achievement->description) ?>
+  <?php endif; ?>
+  <?= AchievementProgress::make($achievement->percent_completed, $achievement->achievement->show_progress) ?>
 </div>
 <div class='panel-footer'>
   <small>

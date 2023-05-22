@@ -7,11 +7,13 @@
  * @var string $date
  */
 
+use humhub\widgets\TimeAgo;
+
 ?>
 
 <tr>
   <td class="text-right"><?= $rank ?></td>
   <td class='text-right'><?= $score ?></td>
   <td><?= $player ?></td>
-  <td><?= $date ?></td>
+  <td><?= TimeAgo::widget(['timestamp' => $date]) ?></td>
 </tr>

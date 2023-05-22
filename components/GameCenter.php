@@ -45,7 +45,7 @@ class GameCenter extends Component
    * @param string $moduleID the Module ID
    * @param GameModule $module the module
    *
-   * @return boolean
+   * @return bool
    */
   public function register(string $moduleID, GameModule $module): bool
   {
@@ -80,7 +80,7 @@ class GameCenter extends Component
   }
 
   /**
-   * @param Game $game the Game id
+   * @param Game $game the Game ID
    * @param AchievementConfig[] $achievements The Configs
    *
    * @return void

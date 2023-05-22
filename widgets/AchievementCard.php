@@ -23,15 +23,13 @@ class AchievementCard extends Widget
   public function __toString()
   {
     try {
-      $result = $this::widget($this->getWidgetOptions());
-
-      return $result ?: '';
+      return $this::widget($this->getWidgetOptions());
     }
     catch (Exception $e) {
       Yii::error($e);
-    }
 
-    return '';
+      return '';
+    }
   }
 
   /**
