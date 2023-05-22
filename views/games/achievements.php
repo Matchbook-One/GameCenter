@@ -11,7 +11,7 @@ use humhub\widgets\Button;
 
 ?>
 <?= Button::back(Url::toGamesOverview()) ?>
-<h1>Achievements: <?= $game->title ?></h1>
+<h1>Achievements: <strong><?= $game->title ?></strong></h1>
 <div>Count: <?= count($achievements) ?></div>
 
 <div class='row'>

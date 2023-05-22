@@ -97,6 +97,15 @@ class PlayerAchievement extends ActiveRecord
     return $this->hasOne(Achievement::class, ['id' => 'achievement_id']);
   }
 
+  public function getDescription(): string
+  {
+    if ($this->isCompleted() || !$this->isSecret()) {
+      return $this->achievement->description;
+    }
+
+    return GameCenterModule::t('achievement', 'This Achievement is hidden');
+  }
+
   /**
    * getGame
    *
@@ -118,6 +127,15 @@ class PlayerAchievement extends ActiveRecord
     return $this->hasOne(Player::class, ['id' => 'player_id']);
   }
 
+  public function getTitle(): string
+  {
+    if ($this->isCompleted() || !$this->isSecret()) {
+      return $this->achievement->title;
+    }
+
+    return GameCenterModule::t('achievement', 'Secret Achievement');
+  }
+
   /**
    * A Boolean value that states whether the player has completed the achievement.
    *
@@ -128,12 +146,9 @@ class PlayerAchievement extends ActiveRecord
     return $this->percent_completed == 100.0;
   }
 
-  public function lastReported(): string
+  public function isSecret(): bool
   {
-    return DateTime::relative(
-      $this->lastReportedDate()
-           ->diff(new \DateTime())
-    );
+    return $this->achievement->secret;
   }
 
   /**
@@ -157,6 +172,11 @@ class PlayerAchievement extends ActiveRecord
       [['percent_completed'], 'integer', 'min' => 0, 'max' => 100],
       [['percent_completed'], 'default', 'value' => 0]
     ];
+  }
+
+  public function showProgress(): bool
+  {
+    return $this->achievement->show_progress;
   }
 
 }
