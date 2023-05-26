@@ -19,7 +19,14 @@ use Yii;
 /**
  * The GameModule Class
  * @phpstan-type GameConfig array{title: non-empty-string, description: non-empty-string, tags: array<string> }
- * @phpstan-type AchievementConfig array{name: string, title: string, description: string, image: ?string}
+ * @phpstan-type AchievementConfig array{
+ *   name: string,
+ *   title: string,
+ *   description: string,
+ *   secret: ?bool,
+ *   show_progress: ?bool,
+ *   image: ?string
+ * }
  *
  * @property-read GameConfig $gameConfig
  * @property-read AchievementConfig[] $achievementConfig
@@ -63,9 +70,8 @@ abstract class GameModule extends Module
   public function getPlayer(): Player
   {
     $player_id = Yii::$app->user->id;
-    $player = Player::findOne(['id' => $player_id]);
 
-    return $player;
+    return Player::findOne(['id' => $player_id]);
   }
 
 }

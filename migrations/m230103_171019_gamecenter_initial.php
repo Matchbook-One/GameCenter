@@ -72,28 +72,32 @@ class m230103_171019_gamecenter_initial extends Migration
     $this->createTable(Game::tableName(), $columns);
 
     $columns = [
-      'id'          => $this->primaryKey(),
-      'guid'        => $this->string()
-                            ->notNull()
-                            ->unique(),
-      'name'        => $this->string()
-                            ->notNull(),
-      'title'       => $this->string()
-                            ->notNull(),
-      'description' => $this->string()
-                            ->notNull(),
-      'image'       => $this->string()
-                            ->notNull(),
-      'game_id'     => $this->integer()
-                            ->notNull(),
-      'created_at'  => $this->dateTime()
-                            ->notNull(),
-      'created_by'  => $this->integer()
-                            ->notNull(),
-      'updated_at'  => $this->dateTime()
-                            ->notNull(),
-      'updated_by'  => $this->integer()
-                            ->notNull()
+      'id'            => $this->primaryKey(),
+      'guid'          => $this->string()
+                              ->notNull()
+                              ->unique(),
+      'name'          => $this->string()
+                              ->notNull(),
+      'title'         => $this->string()
+                              ->notNull(),
+      'description'   => $this->string()
+                              ->notNull(),
+      'secret'        => $this->boolean()
+                              ->defaultValue(false),
+      'show_progress' => $this->boolean()
+                              ->defaultValue(false),
+      'image'         => $this->string()
+                              ->notNull(),
+      'game_id'       => $this->integer()
+                              ->notNull(),
+      'created_at'    => $this->dateTime()
+                              ->notNull(),
+      'created_by'    => $this->integer()
+                              ->notNull(),
+      'updated_at'    => $this->dateTime()
+                              ->notNull(),
+      'updated_by'    => $this->integer()
+                              ->notNull()
     ];
     $this->createTable(Achievement::tableName(), $columns);
 

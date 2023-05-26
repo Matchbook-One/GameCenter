@@ -39,6 +39,8 @@ humhub.module('gamecenter', function (module, requireModule, $) {
      */
     updateAchievement(achievement) {
       const url = '/gamecenter/achievements/update'
+      achievement.percentCompleted = clamp(achievement.percentCompleted, 0, 100)
+
       const payload = {
         module: this.module,
         achievement: achievement
@@ -121,6 +123,19 @@ humhub.module('gamecenter', function (module, requireModule, $) {
                    .then(() => {uiStatus.success(module.text('saved'))})
     }
 
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @param {number} min
+   * @param {number} max
+   * @return {number}
+   */
+  function clamp(value, min, max) {
+    const bigger = Math.max(min, max)
+    const smaller = Math.min(min, max)
+    return Math.max(smaller, Math.min(value), bigger)
   }
 
   module.export = GameCenter

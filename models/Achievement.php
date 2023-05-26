@@ -26,6 +26,8 @@ use function get_class;
  * @property string $name
  * @property string $title
  * @property string $description
+ * @property bool $secret
+ * @property bool $show_progress
  * @property ?string $image
  * @property int $game_id
  * @property string $created_at
@@ -125,7 +127,9 @@ class Achievement extends ActiveRecord
    */
   public function rules(): array
   {
-    return [];
+    return [
+      []
+    ];
   }
 
   /**

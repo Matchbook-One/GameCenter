@@ -23,15 +23,13 @@ class AchievementCard extends Widget
   public function __toString()
   {
     try {
-      $result = $this::widget($this->getWidgetOptions());
-
-      return $result ?: '';
+      return $this::widget($this->getWidgetOptions());
     }
     catch (Exception $e) {
       Yii::error($e);
-    }
 
-    return '';
+      return '';
+    }
   }
 
   /**
@@ -41,10 +39,25 @@ class AchievementCard extends Widget
   public function run(): string
   {
     $config = [
-      'achievement' => $this->achievement
+      'completed'     => $this->achievement->isCompleted(),
+      'title'         => $this->achievement->getTitle(),
+      'description'   => $this->achievement->getDescription(),
+      'icon'          => $this->achievement->isCompleted() ? 'glass' : 'lock',
+      'iconOptions'   => $this->getIconOptions($this->achievement->isCompleted()),
+      'updated_at'    => $this->achievement->updated_at,
+      'progress'      => $this->achievement->percent_completed,
+      'show_progress' => $this->achievement->showProgress()
     ];
 
     return $this->render('achievementCard', $config);
+  }
+
+  private function getIconOptions($completed): array
+  {
+    return [
+      'tooltip'     => $completed ? 'unlocked' : 'locked',
+      'htmlOptions' => ['class' => 'img-fluid rounded-start']
+    ];
   }
 
   private function getWidgetOptions(): array
