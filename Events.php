@@ -11,8 +11,11 @@ namespace fhnw\modules\gamecenter;
 
 use fhnw\modules\gamecenter\components\{GameCenter, GameModule};
 use fhnw\modules\gamecenter\helpers\Url;
+use fhnw\modules\gamecenter\openapi\humhub\stubs\MenuLinkConfig;
 use humhub\components\ModuleEvent;
+use humhub\modules\admin\widgets\AdminMenu;
 use humhub\modules\ui\menu\MenuLink;
+use humhub\widgets\TopMenu;
 use Throwable;
 use Yii;
 use yii\base\Event;
@@ -28,22 +31,22 @@ class Events
   /**
    * Defines what to do if admin menu is initialized.
    *
-   * @param \yii\base\Event $event
+   * @param Event $event
    *
    * @return void
    */
   public static function onAdminMenuInit(Event $event): void
   {
-    /** @var \humhub\modules\admin\widgets\AdminMenu $sender */
+    /** @var AdminMenu $sender */
     $sender = $event->sender;
-    /** @var \fhnw\humhub\stubs\MenuLinkConfig $config */
+    /** @var MenuLinkConfig $config */
     $config = [
-      'id'        => 'admin',
-      'icon'      => 'gamepad',
-      'label'     => 'GameCenter',
-      'url'       => ['/gamecenter/admin'],
-      'sortOrder' => 450,
-      'isActive'  => MenuLink::isActiveState('gamecenter', 'admin')
+        'id'        => 'admin',
+        'icon'      => 'gamepad',
+        'label'     => 'GameCenter',
+        'url'       => ['/gamecenter/admin'],
+        'sortOrder' => 450,
+        'isActive'  => MenuLink::isActiveState('gamecenter', 'admin')
     ];
     //$sender->addEntry(new MenuLink($config));
   }
@@ -73,33 +76,10 @@ class Events
   {
     try {
       static::registerAutoloader();
-    }
-    catch (Throwable $e) {
+    } catch (Throwable $e) {
       Yii::error($e);
     }
-  }
-
-  /**
-   * Defines what to do when the top menu is initialized.
-   *
-   * @param \yii\base\Event $event The Event
-   *
-   * @return void
-   */
-  public static function onTopMenuInit(Event $event): void
-  {
-    /** @var \humhub\widgets\TopMenu $sender */
-    $sender = $event->sender;
-    /** @var \fhnw\humhub\stubs\MenuLinkConfig $config */
-    $config = [
-      'id'        => 'games',
-      'icon'      => 'gamepad',
-      'label'     => 'Games',//GameCenterModule::t('base', 'Games'),
-      'url'       => Url::toGamesOverview(),
-      'sortOrder' => 500,
-      'isActive'  => MenuLink::isActiveState('gamecenter', 'games')
-    ];
-    $sender->addEntry(new MenuLink($config));
+    Url::prepareAPIRules();
   }
 
   /**
@@ -114,6 +94,29 @@ class Events
     Yii::setAlias('@bower/swagger-ui', __DIR__ . '/vendor/bower-asset/swagger-ui');
 
     require Yii::getAlias('@gamecenter/vendor/autoload.php');
+  }
+
+  /**
+   * Defines what to do when the top menu is initialized.
+   *
+   * @param Event $event The Event
+   *
+   * @return void
+   */
+  public static function onTopMenuInit(Event $event): void
+  {
+    /** @var TopMenu $sender */
+    $sender = $event->sender;
+    /** @var MenuLinkConfig $config */
+    $config = [
+        'id'        => 'games',
+        'icon'      => 'gamepad',
+        'label'     => 'Games',//GameCenterModule::t('base', 'Games'),
+        'url'       => Url::toGamesOverview(),
+        'sortOrder' => 500,
+        'isActive'  => MenuLink::isActiveState('gamecenter', 'games')
+    ];
+    $sender->addEntry(new MenuLink($config));
   }
 
 }

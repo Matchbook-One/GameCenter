@@ -49,18 +49,18 @@ return [
   // See helpers/FileHelper::findFiles() for pattern matching rules.
   // If a file/directory matches both a pattern in "only" and "except", it will NOT be processed.
   'except'       => [
-    '.*',
-    '/.*',
-    '/messages',
-    '/tests',
-    '/runtime',
-    '/vendor',
-    '/BaseYii.php',
+      '.*',
+      '/.*',
+      '/messages',
+      '/tests',
+      '/runtime',
+      '/vendor',
+      '/BaseYii.php',
   ],
   // 'php' output format is for saving messages to php files.
   'format'       => 'php',
   // Root directory containing message translations.
-  'messagePath'  => __DIR__,
+  'messagePath'  => __DIR__ . DIRECTORY_SEPARATOR . 'messages',
   // boolean, whether the message file should be overwritten with the merged messages
   'overwrite'    => true,
 

@@ -57,6 +57,7 @@ return [
     'Try other keywords or remove filters.' => '',
     'Updated at' => '',
     'Updated by' => '',
+    '{displayName} unlocked a new Achievement' => '',
     '<strong>Games</strong>' => '@@@@',
     'Achievement Description' => '@@@@',
 ];

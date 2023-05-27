@@ -8,12 +8,17 @@
 
 # RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.
 
+suite_namespace: fhnw\modules\gamecenter\tests\acceptance
+
 class_name: AcceptanceTester
+
 modules:
   enabled:
     - WebDriver
     - tests\codeception\_support\WebHelper
     - tests\codeception\_support\DynamicFixtureHelper
+    - Yii2:
+        part: init
   config:
     WebDriver:
       url: 'http://localhost:8080/'
@@ -23,4 +28,5 @@ modules:
       port: 4444
       capabilities:
         chromeOptions:
-          args: ["--lang=en-US"]
+          args: [ "--lang=en-US" ]
+

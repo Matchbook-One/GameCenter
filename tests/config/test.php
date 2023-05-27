@@ -1,14 +1,11 @@
 <?php
 
-use fhnw\modules\gamecenter\tests\codeception\fixtures\GameCenterFixture;
+use fhnw\modules\gamecenter\tests\fixtures\GameCenterFixture;
 
 return [
-  'modules'  => ['gamecenter'],
-  'fixtures' => [
-    'default',
-    'task' => GameCenterFixture::class
-  ]
+    'modules'  => ['gamecenter'],
+    'fixtures' => [
+        'default',
+        'task' => GameCenterFixture::class
+    ]
 ];
-
-
-

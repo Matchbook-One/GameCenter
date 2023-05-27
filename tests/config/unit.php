@@ -3,4 +3,7 @@
  * Here you can overwrite your functional humhub config.
  * The default config resides in @humhubTests/codeception/config/config.php
  */
-return [];
+
+use tests\codeception\_support\HumHubTestConfiguration;
+
+return HumHubTestConfiguration::getSuiteConfig('unit');

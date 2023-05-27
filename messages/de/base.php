@@ -57,6 +57,7 @@ return [
     'Tags' => '',
     'Title' => '',
     'Try other keywords or remove filters.' => '',
+    '{displayName} unlocked a new Achievement' => '',
     '<strong>Games</strong>' => '@@<strong>Spiele</strong>@@',
     'Achievement Description' => '@@@@',
 ];

@@ -1,0 +1,22 @@
+### Achievements
+GET {{host}}/gamecenter/api/achievement
+
+
+###
+GET {{host}}/gamecenter/api/achievement
+
+###
+GET {{host}}/gamecenter/api/achievement
+
+### Leaderboards
+
+### Reports
+
+### Send GET request for Highscore
+
+GET {{host}}/gamecenter/api/{{module}}/highscore
+
+
+###
+GET {{host}}/gamecenter/api/{{module}}/score
+

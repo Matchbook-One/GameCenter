@@ -2,10 +2,8 @@
 .gitmodules
 .build/
 .cache/
-.sass-cache/
 nbproject
 vendor/*
 composer.lock
 node_modules/
-.idea
 vendor

@@ -17,6 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'GameCenter' => '',
-    'Receive Notifications of Space Membership events.' => '',
+    'Receive Notifications of GameCenter events.' => '',
+    'You\'ve unlocked an Achievement in {gameTitle}' => '',
+    'GameCenter' => '@@@@',
+    'Receive Notifications of Space Membership events.' => '@@@@',
 ];

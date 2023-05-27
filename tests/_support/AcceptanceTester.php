@@ -1,6 +1,6 @@
 <?php
 
-namespace gamecenter;
+namespace fhnw\modules\gamecenter\tests;
 
 use Codeception\Lib\Friend;
 
@@ -21,5 +21,5 @@ use Codeception\Lib\Friend;
 class AcceptanceTester extends \AcceptanceTester
 {
 
-  use _generated\AcceptanceTesterActions;
+  use _generated\UnitTesterActions;
 }

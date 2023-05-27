@@ -1,6 +1,6 @@
 <?php
 
-namespace codeception\unit\components;
+namespace fhnw\modules\gamecenter\tests\unit\components;
 
 use Codeception\Test\Unit;
 use DateInterval;
@@ -13,14 +13,14 @@ class PeriodTest extends Unit
   {
     $period = Period::daily();
     self::assertEquals(
-      '00:00:00',
-      $period->getStart()
-             ->format('H:i:s')
+        '00:00:00',
+        $period->getStart()
+               ->format('H:i:s')
     );
     self::assertEquals(
-      '23:59:59',
-      $period->getEnd()
-             ->format('H:i:s')
+        '23:59:59',
+        $period->getEnd()
+               ->format('H:i:s')
     );
 
     $actual = $period->getDuration();
@@ -36,26 +36,26 @@ class PeriodTest extends Unit
     self::assertContains($actual->days, $expectedDays);
 
     self::assertEquals(
-      '01',
-      $period->getStart()
-             ->format('d')
+        '01',
+        $period->getStart()
+               ->format('d')
     );
     self::assertEquals(
-      '00:00:00',
-      $period->getStart()
-             ->format('H:i:s')
+        '00:00:00',
+        $period->getStart()
+               ->format('H:i:s')
     );
     self::assertEquals(
-      '23:59:59',
-      $period->getEnd()
-             ->format('H:i:s')
+        '23:59:59',
+        $period->getEnd()
+               ->format('H:i:s')
     );
 
     self::assertEquals(
-      $period->getStart()
-             ->format('m'),
-      $period->getEnd()
-             ->format('m')
+        $period->getStart()
+               ->format('m'),
+        $period->getEnd()
+               ->format('m')
     );
   }
 
@@ -64,28 +64,28 @@ class PeriodTest extends Unit
     $period = Period::weekly();
 
     self::assertEquals(
-      '1',
-      $period->getStart()
-             ->format('N')
+        '1',
+        $period->getStart()
+               ->format('N')
     );
     self::assertEquals(
-      '7',
-      $period->getEnd()
-             ->format('N')
+        '7',
+        $period->getEnd()
+               ->format('N')
     );
     self::assertEquals(
-      '00:00:00',
-      $period->getStart()
-             ->format('H:i:s')
+        '00:00:00',
+        $period->getStart()
+               ->format('H:i:s')
     );
     self::assertEquals(
-      '23:59:59',
-      $period->getEnd()
-             ->format('H:i:s')
+        '23:59:59',
+        $period->getEnd()
+               ->format('H:i:s')
     );
     $actual = $period->getDuration();
     $expected = new DateInterval('P6DT23H59M59S');
-    
+
     self::assertEquals($expected->d, $actual->d);
     self::assertEquals($expected->h, $actual->h);
     self::assertEquals($expected->i, $actual->i);

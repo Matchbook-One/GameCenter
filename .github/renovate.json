@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "baseBranches": [ "main" ],
+  "baseBranches": ["main"],
   "extends": [
     "config:base",
     "npm:unpublishSafe",
@@ -34,7 +34,7 @@
   "stopUpdatingLabel": "take-a-break-renovate",
   "packageRules": [
     {
-      "matchUpdateTypes": [ "major" ],
+      "matchUpdateTypes": ["major"],
       "dependencyDashboardApproval": true
     }
   ]
