@@ -1,4 +1,9 @@
 <?php
+/**
+ * @link      https://www.humhub.org/
+ * @copyright Copyright (c) 2015 HumHub GmbH & Co. KG
+ * @license   https://www.humhub.com/licences
+ */
 
 /*
  * This is the initial test bootstrap, which will load the default test bootstrap from the humhub core
@@ -15,7 +20,12 @@ $humhubPath = getenv('HUMHUB_PATH');
 if ($humhubPath === false) {
   // If no environment path was set, we assume residing in default the modules directory
   $moduleConfig = require $testRoot . '/config/test.php';
-  $humhubPath = $moduleConfig['humhub_root'] ?? dirname(__DIR__, 4);
+  if (isset($moduleConfig['humhub_root'])) {
+    $humhubPath = $moduleConfig['humhub_root'];
+  }
+  else {
+    $humhubPath = dirname(__DIR__, 4);
+  }
 }
 
 Configuration::append(['humhub_root' => $humhubPath]);

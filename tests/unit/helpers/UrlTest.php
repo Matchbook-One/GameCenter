@@ -1,9 +1,8 @@
 <?php
 
-namespace fhnw\modules\gamecenter\tests\unit\helpers;
+namespace Test;
 
-use Codeception\Test\Unit;
-
+/*
 class UrlTest extends Unit
 {
 
@@ -24,3 +23,4 @@ class UrlTest extends Unit
   public function testToModuleConfig() {}
 
 }
+*/

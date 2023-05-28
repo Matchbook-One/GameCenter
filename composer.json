@@ -3,6 +3,7 @@
   "description": "GameCenter",
   "type": "library",
   "scripts": {
+    "test": "codecept tests",
     "openapi": "openapi ./controllers ./models ./openapi"
   },
   "require": {
@@ -10,7 +11,7 @@
   },
   "config": {
     "platform": {
-      "php": "8.1.0"
+      "php": "8.1"
     },
     "allow-plugins": {
       "yiisoft/yii2-composer": true,
@@ -30,5 +31,15 @@
   "minimum-stability": "stable",
   "require-dev": {
     "phpstan/extension-installer": "^1.3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "fhnw\\modules\\gamecenter\\": "."
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
   }
 }

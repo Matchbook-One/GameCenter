@@ -1,9 +1,8 @@
 <?php
 
-namespace gamecenter;
+namespace Tests;
 
 use Codeception\Actor;
-use Codeception\Lib\Friend;
 
 /**
  * Inherited Methods
@@ -16,15 +15,11 @@ use Codeception\Lib\Friend;
  * @method void am($role)
  * @method void lookForwardTo($achieveValue)
  * @method void comment($description)
- * @method Friend haveFriend($name, $actorClass = null)
+ * @method void pause()
  * @SuppressWarnings(PHPMD)
  */
-class FunctionalTester extends Actor
+class ApiTester extends Actor
 {
 
-  use _generated\FunctionalTesterActions;
-
-  /**
-   * Define custom actions here
-   */
+  use _generated\ApiTesterActions;
 }

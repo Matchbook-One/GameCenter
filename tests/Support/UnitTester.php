@@ -1,6 +1,6 @@
 <?php
 
-namespace fhnw\modules\gamecenter\tests;
+namespace Tests;
 
 use Codeception\Actor;
 use Codeception\Lib\Friend;

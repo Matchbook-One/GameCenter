@@ -1,6 +1,6 @@
 <?php
 
-namespace fhnw\modules\gamecenter\tests\fixtures;
+namespace Support\fixtures;
 
 use yii\test\ActiveFixture;
 

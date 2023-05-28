@@ -1,7 +1,8 @@
 <?php
 
-namespace fhnw\modules\gamecenter\tests;
+namespace Tests;
 
+use Codeception\Actor;
 use Codeception\Lib\Friend;
 
 /**
@@ -18,8 +19,8 @@ use Codeception\Lib\Friend;
  * @method Friend haveFriend($name, $actorClass = null)
  * @SuppressWarnings(PHPMD)
  */
-class AcceptanceTester extends \AcceptanceTester
+class FunctionalTester extends Actor
 {
 
-  use _generated\UnitTesterActions;
+  use _generated\FunctionalTesterActions;
 }

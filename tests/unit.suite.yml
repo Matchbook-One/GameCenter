@@ -1,18 +1,14 @@
 # Codeception Test Suite Configuration
 
-# suite for unit (internal) tests.
+# Suite for unit (internal) tests.
 # RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.
 
-suite_namespace: fhnw\modules\gamecenter\tests\unit
-
 class_name: UnitTester
-
 modules:
   enabled:
-    #    - tests\_support\CodeHelper
+    - tests\codeception\_support\CodeHelper
     - Yii2
-
   config:
     Yii2:
-      configFile: 'tests/config/unit.php'
+      configFile: 'tests/config/unit.yii.php'
       transaction: false

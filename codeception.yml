@@ -1,38 +1,32 @@
 actor: Tester
-namespace: fhnw\modules\gamecenter\tests
+namespace: Tests
 
 settings:
   colors: true
   log: true
-  suite_class: \PHPUnit_Framework_TestSuite
   shuffle: true
   report_useless_tests: true
-  be_strict_about_changes_to_global_state: true
 
 config:
-  test_entry_url: http://localhost:9000/index-test.php
+  test_entry_url: http://localhost:8080/index-test.php
 
 paths:
   tests: tests
-  log: tests/_output
-  data: tests/_data
   output: tests/_output
-  support: tests/_support
-  helpers: tests/_support
+  data: tests/Support/Data
+  support: tests/Support
+  log: tests/_output
+  helpers: tests/Support
   envs: ../../humhub/tests/config/env
-
-modules:
-  config:
-    Yii2:
-      configFile: 'tests/config/test.php'
+actor_suffix: Tester
+extensions:
+  enabled:
+    - Codeception\Extension\RunFailed
 
 bootstrap: _bootstrap.php
 
 coverage:
-  c3_url: 'http://localhost:9000/index-test.php'
+  c3_url: 'http://localhost:8080/index-test.php'
   enabled: true
-  include:
-    - components/*
-    - controllers/*
-    - events/*
-    - models/*
+  exclude:
+    - tests

@@ -1,23 +1,18 @@
 # Codeception Test Suite Configuration
 
-# suite for functional (integration) tests.
-# emulate web requests and make application process them.
+# Suite for functional (integration) tests.
+# Emulate web requests and make application process them.
 # (tip: better to use with frameworks).
 
 # RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.
-suite_namespace: fhnw\modules\gamecenter\tests\functional
-
 class_name: FunctionalTester
-
 modules:
   enabled:
     - Filesystem
     - Yii2
-    - Asserts
     - tests\codeception\_support\TestHelper
     - tests\codeception\_support\DynamicFixtureHelper
     - tests\codeception\_support\HumHubHelper
-
   config:
     Yii2:
-      configFile: 'config/functional.php'
+      configFile: 'tests/config/Functional.yii.php'

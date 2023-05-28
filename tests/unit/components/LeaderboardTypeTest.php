@@ -1,6 +1,6 @@
 <?php
 
-namespace fhnw\modules\gamecenter\tests\unit\components;
+namespace Unit\components;
 
 use Codeception\Test\Unit;
 use fhnw\modules\gamecenter\components\LeaderboardType;
