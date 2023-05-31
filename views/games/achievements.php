@@ -6,7 +6,7 @@ use humhub\widgets\Button;
 
 /**
  * @var \fhnw\modules\gamecenter\models\PlayerAchievement $achievements
- * @var \fhnw\modules\gamecenter\models\Game $game
+ * @var \fhnw\modules\gamecenter\models\Game              $game
  */
 
 ?>

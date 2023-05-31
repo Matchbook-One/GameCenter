@@ -1,17 +1,61 @@
-import * as jQuery from 'jQuery'
+import { GameCenterModule } from './gamecenter'
 
+export namespace humhub {
 
-declare namespace humhub {
 
   /**
    * All log functions accept up to three arguments:
    *
    * @param {string} text The actual message (or text key)
    * @param {any} details Details about the message this could be an js object an error or a client response object
-   * @param {boolean} setStatus A flag, which will trigger a global `humhub:modules:log:setStatus` event. This can be used to trigger the status bar for providing user feedback.
+   * @param {boolean} setStatus A flag, which will trigger a global `humhub:modules:log:setStatus` event.
+   * This can be used to trigger the status bar for providing user feedback.
    * @returns {void}
    */
   type LogFunction = (text: string, details: any, setStatus: boolean) => void
+
+  interface Logger {
+    trace: LogFunction,
+    debug: LogFunction,
+    info: LogFunction,
+    success: LogFunction,
+    warn: LogFunction,
+    error: LogFunction,
+    fatal: LogFunction
+  }
+
+  class Module<T> {
+    require: Require
+    initOnPjaxLoad: boolean
+    isModule: boolean
+    id: string
+    config: Record<string, any>
+    log: Logger
+
+    text(key: string): string
+
+    export(exports: Record<string, Function>): void
+  }
+
+
+  /**
+   * @param {string} moduleId
+   * @param {boolean} lazy
+   * @returns {Module}
+   */
+  type Require = {
+    (moduleNS: string, lazy?: boolean): Module<unknown>,
+    (moduleNS: 'event', lazy?: boolean): Module<EventModule>,
+    (moduleNS: 'client', lazy?: boolean): Module<ClientModule>,
+    (moduleNS: 'client.pjax', lazy?: boolean): Module<ClientPjaxModule>,
+    (moduleNS: 'ui', lazy?: boolean): Module<UiModule>,
+    (moduleNS: 'ui.additions', lazy?: boolean): Module<UiAdditionsModule>,
+    (moduleNS: 'ui.status', lazy?: boolean): Module<UiStatusModule>,
+    (moduleNS: 'ui.view', lazy?: boolean): Module<UiViewModule>,
+    (moduleNS: 'user', lazy?: boolean): Module<UserModule>,
+    (moduleNS: 'util', lazy?: boolean): Module<UtilModule>,
+    (moduleNS: 'gamecenter', lazy?: boolean): Module<GameCenterModule>
+  }
 
   type EventFunction = {
     (events: string, selector: string, handler: Function): void, (events: string, handler: Function): void
@@ -69,9 +113,9 @@ declare namespace humhub {
     url: string
     /** the result status of the xhr object */
     status: unknown
-    /** the server response, either a json object or html depending of the 'dataType' setting of your call. */
+    /** The server response: Either a json object or html depending on the 'dataType' setting of your call. */
     response: any
-    /** In case of error: "timeout", "error", "abort", "parsererror", "application" */
+    /** In case of an error: "timeout", "error", "abort", "parsererror" or "application" */
     textStatus: 'timeout' | 'error' | 'abort' | 'parsererror' | 'application'
     /** the expected response dataType of your call */
     dataType: string
@@ -81,38 +125,7 @@ declare namespace humhub {
   }
 
 
-  interface Achievement {
-    achievement: string
-    game: string
-    lastUpdated: string
-    percentCompleted: number
-  }
-
-  interface AchievementData {
-    achievements: Array<Achievement>
-  }
-
-  class GameCenter {
-    constructor(module: string)
-
-    loadAchievements(): Promise<{ achievements: Array<Achievement> }>
-
-    updateAchievement(achievement: Achievement): Promise<{ achievement: Achievement }>
-
-    startGame(): Promise<unknown>
-
-    endGame(): Promise<unknown>
-
-    report(option: string, value: unknown): Promise<unknown>
-
-    submitScore(score: number): Promise<void>
-
-    getHighScore(): Promise<{ highscore: number }>
-
-    share(text: string): Promise<unknown>
-  }
-
-  interface UiModule extends Module {
+  interface UiModule {
     widget: {
       Widget: Widget
       init(): void
@@ -120,7 +133,7 @@ declare namespace humhub {
     }
   }
 
-  interface UiViewModule extends Module {
+  interface UiViewModule {
     sortOrder: number
 
     getContentTop(): number
@@ -150,14 +163,14 @@ declare namespace humhub {
 
     preventSwipe(prev): void
 
-    setState(moduleId: string, controlerId: string, action): void
+    setState(moduleID: string, controllerID: string, action): void
 
     setViewContext(vctx: unknown): void
 
     unload(): void
   }
 
-  interface UiAdditionsModule extends Module {
+  interface UiAdditionsModule {
     sortOrder: number,
 
     apply(element: HTMLElement | JQueryStatic, id: string, selector: string): void,
@@ -179,7 +192,7 @@ declare namespace humhub {
     unload(): void
   }
 
-  interface UiStatusModule extends Module {
+  interface UiStatusModule {
 
     info(msg: string, closeAfter?: number)
 
@@ -198,7 +211,7 @@ declare namespace humhub {
     hide(callback?: () => void)
   }
 
-  interface UtilModule extends Module {
+  interface UtilModule {
     object: {
       chain(thisObj): unknown,
       debounce(func, wait, immediate): unknown,
@@ -237,10 +250,10 @@ declare namespace humhub {
     url: { getUrlParameter(search: string): string | undefined }
   }
 
-  interface UserModule extends Module {
+  interface UserModule {
   }
 
-  interface EventModule extends Module {
+  interface EventModule {
     events: typeof jQuery
     off: EventFunction
     on: EventDataFunction
@@ -253,7 +266,7 @@ declare namespace humhub {
     triggerCondition(target: unknown, event: unknown, extraParameters: unknown): unknown
   }
 
-  interface ClientPjaxModule extends Module {
+  interface ClientPjaxModule {
     sortOrder: number
 
     init(): void,
@@ -269,7 +282,7 @@ declare namespace humhub {
     installLoader(): void,
   }
 
-  interface ClientModule extends Module {
+  class ClientModule {
     config: {
       baseUrl: string, reloadableScripts: string[], text: object
     }
@@ -284,80 +297,39 @@ declare namespace humhub {
     require: Require
     sortOrder: number
 
-    actionPost(evt: unknown): unknown
+    public actionPost(evt: unknown): unknown
 
-    ajax(url: string, cfg: object, originalEvent?: unknown): Promise<Response>
+    public ajax(url: string, cfg: object, originalEvent?: unknown): Promise<Response>
 
-    back(): unknown
+    public back(): unknown
 
-    export(exports: object): unknown
+    public export(exports: object): unknown
 
-    get(url: string, cfg, originalEvent): Promise<Response>
+    public get(url: string, cfg, originalEvent): Promise<Response>
 
-    html(url: string, cfg, originalEvent): Promise<Response>
+    public html(url: string, cfg, originalEvent): Promise<Response>
 
-    init(isPjax: boolean): unknown
+    public init(isPjax: boolean): unknown
 
-    json(url: string, cfg: object, originalEvent: Event): unknown
+    public json(url: string, cfg: object, originalEvent: Event): unknown
 
-    offBeforeLoad(): unknown
+    public offBeforeLoad(): unknown
 
-    onBeforeLoad(form, msg, msgModal): unknown
+    public onBeforeLoad(form, msg, msgModal): unknown
 
-    post(url: string, cfg: object, originalEvent?): Promise<unknown>
+    public post(url: string, cfg: object, originalEvent?): Promise<unknown>
 
-    redirect(url): unknown
+    public redirect(url): unknown
 
-    reload(preventPjax): unknown
+    public reload(preventPjax): unknown
 
-    submit($form, cfg, originalEvent): unknown
+    public submit($form, cfg, originalEvent): unknown
 
-    text(key: string): string
+    public text(key: string): string
 
-    unloadForm($form, msg): unknown
+    public unloadForm($form, msg): unknown
   }
 
-  interface Module {
-    require: Require
-    initOnPjaxLoad: boolean
-    isModule: boolean
-    id: string
-    config: Record<string, any>
-    log: Logger
-
-    text(key: string): string
-
-    export(exports: Record<string, Function>): void,
-  }
-
-  interface Logger {
-    trace: LogFunction,
-    debug: LogFunction,
-    info: LogFunction,
-    success: LogFunction,
-    warn: LogFunction,
-    error: LogFunction,
-    fatal: LogFunction
-  }
-
-  /**
-   * @param {string} moduleId
-   * @param {boolean} lazy
-   * @returns {Module}
-   */
-  type Require = {
-    (moduleNS: string, lazy?: boolean): Module,
-    (moduleNS: 'event', lazy?: boolean): EventModule
-    (moduleNS: 'client', lazy?: boolean): ClientModule
-    (moduleNS: 'client.pjax', lazy?: boolean): ClientPjaxModule,
-    (moduleNS: 'ui', lazy?: boolean): UiModule,
-    (moduleNS: 'ui.additions', lazy?: boolean): UiAdditionsModule,
-    (moduleNS: 'ui.status', lazy?: boolean): UiStatusModule,
-    (moduleNS: 'ui.view', lazy?: boolean): UiViewModule,
-    (moduleNS: 'user', lazy?: boolean): UserModule,
-    (moduleNS: 'util', lazy?: boolean): UtilModule,
-    (moduleNS: 'gamecenter', lazy?: boolean): GameCenter
-  }
 
   /**
    * Adds a module to the humhub.modules namespace.
@@ -457,5 +429,5 @@ declare namespace humhub {
    *
    * @see https://docs.humhub.org/docs/develop/javascript-index#module-lifecycle
    */
-  type module = (id, moduleFunction: (module: Module, require: Require, $: typeof jQuery) => void) => void
+  type module = (id, moduleFunction: (module: Module<unknown>, require: Require, $: typeof jQuery) => void) => void
 }

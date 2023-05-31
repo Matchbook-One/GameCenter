@@ -4,7 +4,7 @@ use humhub\assets\AppAsset;
 
 /**
  * @var \yii\web\View $this
- * @var string $content
+ * @var string        $content
  */
 AppAsset::register($this);
 ?>

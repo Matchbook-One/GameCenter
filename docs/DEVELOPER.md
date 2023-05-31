@@ -6,18 +6,18 @@
 
 | Attribute      | Type | Description |
 |----------------|------|-------------|
-| `id`           |||
-| `guid`         |||
-| `name`         |||
-| `title`        |||
-| `description`  |||
-| `achievements` |||
-| `status`       |||
-| `visibility`   |||
-| `created_at`   |||
-| `created_by`   |||
-| `updated_at`   |||
-| `updated_by`   |||
+| `id`           |      |             |
+| `guid`         |      |             |
+| `name`         |      |             |
+| `title`        |      |             |
+| `description`  |      |             |
+| `achievements` |      |             |
+| `status`       |      |             |
+| `visibility`   |      |             |
+| `created_at`   |      |             |
+| `created_by`   |      |             |
+| `updated_at`   |      |             |
+| `updated_by`   |      |             |
 
 ### GameCenter
 

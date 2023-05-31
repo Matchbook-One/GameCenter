@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author Christian Seiler <christian@christianseiler.ch>
+ * @since  1.0.0
+ */
 
 namespace fhnw\modules\gamecenter\widgets;
 
@@ -10,6 +14,7 @@ use humhub\modules\content\components\ContentContainerActiveRecord;
  */
 class GameContent extends Widget
 {
+
   /**
    * @var string
    */
@@ -24,4 +29,5 @@ class GameContent extends Widget
   {
     return $this->content;
   }
+
 }

@@ -1,17 +1,23 @@
 <?php
+/**
+ * @author Christian Seiler <christian@christianseiler.ch>
+ * @since  1.0.0
+ */
 
 namespace fhnw\modules\gamecenter\controllers;
 
 use DateTime;
+use fhnw\modules\gamecenter\components\RestController;
 use fhnw\modules\gamecenter\models\{Game, Play, Report};
 use OpenApi\Attributes\MediaType;
 use OpenApi\Attributes\Post;
 use OpenApi\Attributes\RequestBody;
-use OpenApi\Attributes\Response as OAResponse;
+use OpenApi\Attributes\Response;
 use OpenApi\Attributes\Schema;
 use Yii;
 use yii\base\Action;
-use yii\web\Response;
+use yii\web\HttpException;
+use yii\web\Response as WebResponse;
 
 /**
  * @package GameCenter/Controllers
@@ -22,67 +28,67 @@ use yii\web\Response;
 class ReportController extends RestController
 {
 
+  /** @var string the model class name. This property must be set. */
+  public $modelClass = Report::class;
+
   /**
    * Creates an End Report
    *
-   * @return \yii\web\Response
-   * @throws \yii\web\HttpException
+   * @return WebResponse
+   * @throws HttpException
    */
-  #[Post(path: '/gamecenter/report/end', tags: ['Report'])]
+  #[Post(path: '/gamecenter/api/report/end', tags: ['Report'])]
   #[RequestBody(content: new MediaType('application/json', new Schema(ref: '#/components/schemas/ModuleRequestBody')))]
-  #[OAResponse(response: 201, description: 'Created')]
-  #[OAResponse(response: 400, description: 'Invalid Request')]
-  public function actionEnd(): Response
+  #[Response(response: 201, description: 'Created')]
+  #[Response(response: 400, description: 'Invalid Request')]
+  public function actionEnd(): void
   {
-    $this->forcePostRequest();
     $request = Yii::$app->request;
     $game = Game::findOne(['module' => $request->post('module')])->id;
 
-    return $this->report('game_end', (new DateTime())->getTimestamp(), $game);
+    $this->report('game_end', (new DateTime())->getTimestamp(), $game);
   }
 
   /**
    * Creates a Report
    *
-   * @return \yii\web\Response
-   * @throws \yii\web\HttpException
+   * @return WebResponse
+   * @throws HttpException
    */
   #[Post(path: '/gamecenter/report/report', tags: ['Report'])]
   #[RequestBody(content: new MediaType('application/json', new Schema(ref: '#/components/schemas/ReportRequestBody')))]
-  #[OAResponse(response: 201, description: 'Created')]
-  #[OAResponse(response: 400, description: 'Invalid Request')]
-  public function actionReport(): Response
+  #[Response(response: 201, description: 'Created')]
+  #[Response(response: 400, description: 'Invalid Request')]
+  public function actionReport(): void
   {
-    $this->forcePostRequest();
     $request = Yii::$app->request;
     $moduleId = $request->post('module');
     $game = $this->getGameId($moduleId);
     $option = $request->post('option');
     $value = $request->post('value');
 
-    return $this->report($option, $value, $game);
+    $this->report($option, $value, $game);
   }
 
   /**
    * Creates a Start Report
    *
-   * @return \yii\web\Response
-   * @throws \yii\web\HttpException
+   * @return WebResponse
+   * @throws HttpException
    */
   #[Post(path: '/gamecenter/report/start', tags: ['Report'])]
   #[RequestBody(content: new MediaType('application/json', new Schema(ref: '#/components/schemas/ModuleRequestBody')))]
-  #[OAResponse(response: 201, description: 'Created')]
-  #[OAResponse(response: 400, description: 'Invalid Request')]
-  public function actionStart(): Response
+  #[Response(response: 201, description: 'Created')]
+  #[Response(response: 400, description: 'Invalid Request')]
+  public function actionStart(): void
   {
-    $this->forcePostRequest();
     $request = Yii::$app->request;
     $moduleId = $request->post('module');
     $game = $this->getGameId($moduleId);
 
     $this->savePlay($game);
 
-    return $this->report('game_start', (new DateTime())->getTimestamp(), $game);
+    $this->report('game_start', (new DateTime())->getTimestamp(), $game);
   }
 
   /**
@@ -100,11 +106,12 @@ class ReportController extends RestController
    *
    * @param string $option
    * @param string $value
-   * @param int $game
+   * @param int    $game
    *
-   * @return \yii\web\Response
+   * @return void
+   * @throws HttpException
    */
-  private function report(string $option, string $value, int $game): Response
+  private function report(string $option, string $value, int $game): void
   {
     $report = new Report();
     $report->game_id = $game;
@@ -112,11 +119,11 @@ class ReportController extends RestController
     $report->option = $option;
     $report->value = $value;
 
-    if ($report->save()) {
-      return $this->returnSuccess();
-    }
-    else {
-      return $this->returnError();
+    if (!$report->save()) {
+      throw new HttpException(
+          500,
+          $report->getErrorMessage()
+      );
     }
   }
 

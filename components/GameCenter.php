@@ -1,7 +1,6 @@
 <?php
 
 /**
- * @package GameCenter
  * @author  Christian Seiler <christian@christianseiler.ch>
  * @since   1.0.0
  */
@@ -12,6 +11,7 @@ use fhnw\modules\gamecenter\models\Achievement;
 use fhnw\modules\gamecenter\models\Game;
 use fhnw\modules\gamecenter\models\GameTag;
 use fhnw\modules\gamecenter\models\Leaderboard;
+use JetBrains\PhpStorm\ArrayShape;
 use Yii;
 use yii\base\Component;
 
@@ -25,8 +25,8 @@ use yii\base\Component;
 class GameCenter extends Component
 {
 
-  /** @var GameCenter $instance */
-  private static GameCenter $instance;
+  /** @var GameCenter|null $instance */
+  private static ?GameCenter $instance = null;
 
   /**
    * @return GameCenter
@@ -34,7 +34,7 @@ class GameCenter extends Component
    */
   public static function getInstance(): GameCenter
   {
-    if (self::$instance === null) {
+    if (!isset(self::$instance)) {
       self::$instance = new GameCenter();
     }
 
@@ -42,8 +42,8 @@ class GameCenter extends Component
   }
 
   /**
-   * @param string $moduleID the Module ID
-   * @param GameModule $module the module
+   * @param string     $moduleID the Module ID
+   * @param GameModule $module   the module
    *
    * @return bool
    */
@@ -80,7 +80,7 @@ class GameCenter extends Component
   }
 
   /**
-   * @param Game $game the Game ID
+   * @param Game                $game         the Game ID
    * @param AchievementConfig[] $achievements The Configs
    *
    * @return void
@@ -96,23 +96,30 @@ class GameCenter extends Component
 
   /**
    * @param string $module
-   * @param GameConfig $config
+   * @param        $config
    *
    * @return Game
    */
-  private function registerGame(string $module, $config): Game
-  {
+
+  private function registerGame(
+      string $module,
+      #[ArrayShape(['title' => 'string', 'description' => 'string', 'tags' => 'string[]'])]
+             $config
+  ): Game {
     $game = Game::findOne(['module' => $module]);
-    if (!$game) {
-      $game = new Game($config);
-      $game->module = $module;
-      $game->save();
-      foreach ($config->tags as $name) {
-        $tag = new GameTag();
-        $tag->tag = $name;
-        $tag->link('game', $game);
-        $tag->save();
-      }
+
+    if (isset($game)) {
+      return $game;
+    }
+    $game = new Game($config);
+    $game->module = $module;
+    $game->save();
+
+    foreach ($config->tags as $name) {
+      $tag = new GameTag();
+      $tag->tag = $name;
+      $tag->link('game', $game);
+      $tag->save();
     }
 
     return $game;

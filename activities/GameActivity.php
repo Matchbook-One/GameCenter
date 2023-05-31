@@ -1,8 +1,10 @@
 <?php
+
 /**
  * @author Christian Seiler <christian@christianseiler.ch>
  * @since  1.0.0
  */
+
 namespace fhnw\modules\gamecenter\activities;
 
 use humhub\modules\activity\components\BaseActivity;
@@ -13,9 +15,10 @@ use humhub\modules\activity\components\BaseActivity;
 class GameActivity extends BaseActivity
 {
 
-  /** @var string view name used for rendering the activity */
-  public $viewName = 'somethingHappend';
-  /** @var string the module id which this activity belongs to (required) */
-  public $moduleId = 'example';
+  /** @var string $moduleId the module id which this activity belongs to (required) */
+  public string $moduleId = 'example';
+
+  /** @var string $viewName view name used for rendering the activity */
+  public string $viewName = 'somethingHappend';
 
 }

@@ -1,7 +1,6 @@
 <?php
 
 /**
- * @package GameCenter
  * @author  Christian Seiler <christian@christianseiler.ch>
  * @since   1.0.0
  */
@@ -12,15 +11,17 @@ use fhnw\modules\gamecenter\assets\GameFilterAssets;
 use fhnw\modules\gamecenter\GameCenterModule;
 use humhub\libs\Html;
 use humhub\widgets\JsWidget;
+use JetBrains\PhpStorm\ArrayShape;
 
 /**
+ * @package GameCenter/Widgets
  * @phpstan-type Attributes array{class: string, style: string}
  */
 class GameFilter extends JsWidget
 {
 
   /**
-   * @var boolean $init
+   * @var bool $init
    * @inheritdocs
    */
   public $init = true;
@@ -45,13 +46,15 @@ class GameFilter extends JsWidget
   /**
    * getAttributes
    *
-   * @return Attributes
+   * @return array
+   * @noinspection PhpMissingParentCallCommonInspection
    */
+  #[ArrayShape(['class' => "string", 'style' => "string"])]
   protected function getAttributes(): array
   {
     return [
-      'class' => 'form-control pull-right visible-md visible-lg',
-      'style' => 'width:150px; margin-right:20px',
+        'class' => 'form-control pull-right visible-md visible-lg',
+        'style' => 'width:150px; margin-right:20px',
     ];
   }
 
@@ -64,4 +67,5 @@ class GameFilter extends JsWidget
   {
     return ['action-change' => 'change'];
   }
+
 }

@@ -1,14 +1,13 @@
 <?php
 /**
- * @link      https://www.humhub.org/
- * @copyright Copyright (c) 2021 HumHub GmbH & Co. KG
- * @license   https://www.humhub.com/licences
+ * @author Christian Seiler <christian@christianseiler.ch>
+ * @since  1.0.0
  */
 
 namespace fhnw\modules\gamecenter\widgets;
 
+use fhnw\modules\gamecenter\components\ContentController;
 use fhnw\modules\gamecenter\components\GameModule;
-use fhnw\modules\gamecenter\controllers\ContentController;
 use fhnw\modules\gamecenter\helpers\Url;
 use fhnw\modules\gamecenter\models\Game;
 use fhnw\modules\gamecenter\models\Player;
@@ -17,6 +16,7 @@ use humhub\widgets\Button;
 use Yii;
 
 /**
+ * @package GameCenter/Widgets
  */
 class GameDirectoryActionButtons extends Widget
 {
@@ -47,18 +47,10 @@ class GameDirectoryActionButtons extends Widget
     return str_replace('{buttons}', $html, $this->template);
   }
 
-  private function getAchievementsLink(Game $game, Player $player): Button
+  private function getPlayLink(GameModule $module): Button
   {
-    return Button::defaultType('Achievements')
-                 ->link(Url::toAchievements($game, $player));
-  }
-
-  private function getController(): ContentController
-  {
-    /** @var ContentController $controller */
-    $controller = Yii::$app->controller;
-
-    return $controller;
+    return Button::primary('Play')
+                 ->link($module->getGameUrl());
   }
 
   private function getLeaderBoardLink(Game $game): Button
@@ -67,10 +59,18 @@ class GameDirectoryActionButtons extends Widget
                  ->link(Url::toLeaderboards($game->id));
   }
 
-  private function getPlayLink(GameModule $module): Button
+  private function getAchievementsLink(Game $game, Player $player): Button
   {
-    return Button::primary('Play')
-                 ->link($module->getGameUrl());
+    return Button::defaultType('Achievements')
+                 ->link(Url::toAchievements($game->getId(), $player->getId()));
+  }
+
+  private function getController(): ContentController
+  {
+    /** @var ContentController $controller */
+    $controller = Yii::$app->controller;
+
+    return $controller;
   }
 
 }

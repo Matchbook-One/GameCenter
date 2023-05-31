@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author Christian Seiler <christian@christianseiler.ch>
+ * @since  1.0.0
+ */
 
 namespace fhnw\modules\gamecenter\components;
 
@@ -105,12 +109,6 @@ class GameDirectoryQuery extends ActiveQueryGame
     return $this->search($keyword);
   }
 
-  /** @return bool */
-  public function isLastPage(): bool
-  {
-    return $this->pagination->getPage() == $this->pagination->getPageCount() - 1;
-  }
-
   /** @return $this */
   public function order(): GameDirectoryQuery
   {
@@ -139,6 +137,12 @@ class GameDirectoryQuery extends ActiveQueryGame
 
     return $this->offset($this->pagination->offset)
                 ->limit($this->pagination->limit);
+  }
+
+  /** @return bool */
+  public function isLastPage(): bool
+  {
+    return $this->pagination->getPage() == $this->pagination->getPageCount() - 1;
   }
 
 }

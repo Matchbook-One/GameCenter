@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author Christian Seiler <christian@christianseiler.ch>
+ * @since  1.0.0
+ */
 
 namespace fhnw\modules\gamecenter\widgets;
 
@@ -6,6 +10,9 @@ use Throwable;
 use Yii;
 use yii\bootstrap\Progress;
 
+/**
+ * @package GameCenter/Widgets
+ */
 class AchievementProgress extends Progress
 {
 
@@ -13,14 +20,13 @@ class AchievementProgress extends Progress
   {
     try {
       return Progress::widget(
-        [
-          'percent'    => self::getProgress($progress, $showProgress),
-          'barOptions' => ['class' => self::getStyle($progress, $showProgress)],
-          'options'    => ['class' => 'progress-striped']
-        ]
+          [
+              'percent'    => self::getProgress($progress, $showProgress),
+              'barOptions' => ['class' => self::getStyle($progress, $showProgress)],
+              'options'    => ['class' => 'progress-striped']
+          ]
       );
-    }
-    catch (Throwable $e) {
+    } catch (Throwable $e) {
       Yii::error($e);
 
       return '';

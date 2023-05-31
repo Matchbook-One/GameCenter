@@ -1,11 +1,14 @@
 <?php
+/**
+ * @author Christian Seiler <christian@christianseiler.ch>
+ * @since  1.0.0
+ */
 
 namespace fhnw\modules\gamecenter\widgets;
 
 use Exception;
-use fhnw\modules\gamecenter\helpers\DateTime;
+use fhnw\modules\gamecenter\components\LeaderboardType;
 use fhnw\modules\gamecenter\models\Leaderboard;
-use fhnw\modules\gamecenter\models\Score;
 use humhub\components\Widget;
 use Yii;
 
@@ -16,6 +19,7 @@ class LeaderboardCard extends Widget
 {
 
   private const LIMIT = 10;
+
   public Leaderboard $leaderboard;
 
   /**
@@ -38,12 +42,19 @@ class LeaderboardCard extends Widget
       $result = $this::widget($this->getWidgetOptions());
 
       return $result ?: '';
-    }
-    catch (Exception $e) {
+    } catch (Exception $e) {
       Yii::error($e);
     }
 
     return '';
+  }
+
+  private function getWidgetOptions(): array
+  {
+    return [
+        'leaderboard' => $this->leaderboard,
+        'id'          => $this->id
+    ];
   }
 
   /**
@@ -53,50 +64,15 @@ class LeaderboardCard extends Widget
   public function run(): string
   {
     $config = [
-      'scores' => $this->getScores(leaderboard: $this->leaderboard),
-      'title'  => $this->leaderboard->getTitle(),
+        'scores' => $this->leaderboard->getScores(),
+        'title'  => $this->leaderboard->getTitle(),
     ];
 
-    if ($this->leaderboard->type !== Leaderboard::CLASSIC) {
+    if ($this->leaderboard->getType() !== LeaderboardType::CLASSIC) {
       $config['period'] = $this->leaderboard->getCurrentPeriod();
     }
 
     return $this->render('leaderboardCard', $config);
-  }
-
-  /**
-   * @param \fhnw\modules\gamecenter\models\Leaderboard $leaderboard
-   *
-   * @return array<Score>
-   */
-  private function getScores(Leaderboard $leaderboard): array
-  {
-    $scores = Score::find()
-                   ->where(['game_id' => $leaderboard->game_id]);
-    if ($leaderboard->type !== Leaderboard::CLASSIC) {
-      $scores->andWhere(
-        [
-          '>=',
-          'timestamp',
-          DateTime::formatted(
-            $leaderboard->getCurrentPeriod()
-                        ->getStart()
-          )
-        ]
-      );
-    }
-
-    return $scores->orderBy(['score' => SORT_DESC])
-                  ->limit(self::LIMIT)
-                  ->all();
-  }
-
-  private function getWidgetOptions(): array
-  {
-    return [
-      'leaderboard' => $this->leaderboard,
-      'id'          => $this->id
-    ];
   }
 
 }

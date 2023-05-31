@@ -9,7 +9,7 @@
       ([e]) => {
         e.target.classList.toggle('-stuck', e.intersectionRatio < 1)
       },
-      {threshold: [1]}
+      { threshold: [1] }
     )
 
     observer.observe(el)

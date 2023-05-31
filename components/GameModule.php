@@ -3,7 +3,6 @@
 /**
  * GameModule.php
  *
- * @package GameCenter/Components
  * @author  Christian Seiler <christian@christianseiler.ch>
  * @since   1.0.0
  */
@@ -11,9 +10,9 @@
 namespace fhnw\modules\gamecenter\components;
 
 use fhnw\modules\gamecenter\models\Game;
-use fhnw\modules\gamecenter\models\Leaderboard;
 use fhnw\modules\gamecenter\models\Player;
 use humhub\components\Module;
+use JetBrains\PhpStorm\ArrayShape;
 use Yii;
 
 /**
@@ -28,33 +27,24 @@ use Yii;
  *   image: ?string
  * }
  *
- * @property-read GameConfig $gameConfig
+ * @property-read GameConfig          $gameConfig
  * @property-read AchievementConfig[] $achievementConfig
+ * @package GameCenter/Components
  */
 abstract class GameModule extends Module
 {
 
-  final public function hasAchievements(): bool { return $this->getAchievementConfig() !== []; }
-
-  final public function hasLeaderboards(): bool { return $this->getLeaderBoardConfig() !== []; }
-
   /**
-   * @return AchievementConfig[]
+   * @returns array<{name: string, title: string, description: string, secret?: bool, show_progress?: bool}>
    */
+  #[ArrayShape([['name' => 'string', 'title' => 'string', 'description' => 'string', 'secret' => 'bool', 'show_progress' => 'bool']])]
   abstract public function getAchievementConfig(): array;
-
-  /**
-   * @return \fhnw\modules\gamecenter\models\Game
-   */
-  public function getGame(): Game
-  {
-    return Game::findOne(['module' => $this->id]);
-  }
 
   /**
    * @phpstan-return GameConfig
    * @return array
    */
+  #[ArrayShape(['title' => 'string', 'description' => 'string', 'tags' => 'string[]'])]
   abstract public function getGameConfig(): array;
 
   /**
@@ -63,10 +53,37 @@ abstract class GameModule extends Module
   abstract public function getGameUrl(): string;
 
   /**
-   * @phpstan-return array<Leaderboard::CLASSIC|Leaderboard::RECURRING_DAILY|Leaderboard::RECURRING_WEEKLY|Leaderboard::RECURRING_MONTHLY>
+   * @return array<LeaderboardType>
    */
   abstract public function getLeaderboardConfig(): array;
 
+  /**
+   * @return bool
+   */
+  final public function hasAchievements(): bool
+  {
+    return $this->getAchievementConfig() !== [];
+  }
+
+  /**
+   * @return bool
+   */
+  final public function hasLeaderboards(): bool
+  {
+    return $this->getLeaderboardConfig() !== [];
+  }
+
+  /**
+   * @return Game
+   */
+  public function getGame(): Game
+  {
+    return Game::findOne(['module' => $this->id]);
+  }
+
+  /**
+   * @return Player
+   */
   public function getPlayer(): Player
   {
     $player_id = Yii::$app->user->id;

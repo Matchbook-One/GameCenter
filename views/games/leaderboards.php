@@ -1,7 +1,7 @@
 <?php
 /**
- * @var \humhub\modules\ui\view\components\View $view
- * @var \fhnw\modules\gamecenter\models\Game $game
+ * @var \humhub\modules\ui\view\components\View            $view
+ * @var \fhnw\modules\gamecenter\models\Game               $game
  * @var array<\fhnw\modules\gamecenter\models\Leaderboard> $leaderboards
  */
 

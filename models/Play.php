@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author Christian Seiler <christian@christianseiler.ch>
+ * @since  1.0.0
+ */
 
 namespace fhnw\modules\gamecenter\models;
 
@@ -16,15 +20,16 @@ use function is_subclass_of;
 /**
  * This is the model class for table "play".
  *
- * @property int $id
- * @property int $game_id
- * @property int $player_id
- * @property ?string $last_played
- * @property ?string $created_at
- * @property ?int $created_by
- * @property ?string $updated_at
- * @property ?int $updated_by
- * @property \fhnw\modules\gamecenter\models\Game $game
+ * @package GameCenter/Models
+ * @property int                                    $id
+ * @property int                                    $game_id
+ * @property int                                    $player_id
+ * @property ?string                                $last_played
+ * @property ?string                                $created_at
+ * @property ?int                                   $created_by
+ * @property ?string                                $updated_at
+ * @property ?int                                   $updated_by
+ * @property \fhnw\modules\gamecenter\models\Game   $game
  * @property \fhnw\modules\gamecenter\models\Player $player
  * @package GameCenter/Models
  */
@@ -41,7 +46,7 @@ class Play extends ActiveRecord
    * If $containerClass is given we only search for a certain container type.
    *
    * @param \fhnw\modules\gamecenter\models\Player $player
-   * @param ?class-string $containerClass
+   * @param ?class-string                          $containerClass
    *
    * @return Query
    */
@@ -52,20 +57,29 @@ class Play extends ActiveRecord
     return (new Query())->select('contentcontainer.id AS id')
                         ->from($table)
                         ->innerJoin(
-                          'contentcontainer',
-                          'contentcontainer.pk = user_follow.object_id AND contentcontainer.class = user_follow.object_model'
+                            'contentcontainer',
+                            'contentcontainer.pk = user_follow.object_id AND contentcontainer.class = user_follow.object_model'
                         )
                         ->where(['user_follow.user_id' => $player->id])
                         ->indexBy('id')
                         ->andWhere(
-                          $containerClass
-                            ? ["{$table}.object_model" => $containerClass]
-                            : [
-                            'OR',
-                            ["{$table}.object_model" => Game::class],
-                            ["{$table}.object_model" => User::class]
-                          ]
+                            $containerClass
+                                ? ["{$table}.object_model" => $containerClass]
+                                : [
+                                'OR',
+                                ["{$table}.object_model" => Game::class],
+                                ["{$table}.object_model" => User::class]
+                            ]
                         );
+  }
+
+  /**
+   * @inheritdoc
+   * @noinspection PhpMissingParentCallCommonInspection
+   */
+  public static function tableName(): string
+  {
+    return 'play';
   }
 
   /**
@@ -101,16 +115,7 @@ class Play extends ActiveRecord
   }
 
   /**
-   * @inheritdoc
-   * @noinspection PhpMissingParentCallCommonInspection
-   */
-  public static function tableName(): string
-  {
-    return 'play';
-  }
-
-  /**
-   * @param bool $insert
+   * @param bool  $insert
    * @param array $changedAttributes
    *
    * @return void
@@ -129,12 +134,12 @@ class Play extends ActiveRecord
   public function behaviors(): array
   {
     return [
-      [
-        'class'            => PolymorphicRelation::class,
-        'mustBeInstanceOf' => [
-          \yii\db\ActiveRecord::class,
+        [
+            'class'            => PolymorphicRelation::class,
+            'mustBeInstanceOf' => [
+                \yii\db\ActiveRecord::class,
+            ]
         ]
-      ]
     ];
   }
 
@@ -153,8 +158,7 @@ class Play extends ActiveRecord
       if ($targetClass != '' && is_subclass_of($targetClass, \yii\db\ActiveRecord::class)) {
         return $targetClass::findOne(['id' => $this->object_id]);
       }
-    }
-    catch (Exception $e) {
+    } catch (Exception $e) {
       // Avoid errors in integrity check
       Yii::error($e);
     }
@@ -168,9 +172,9 @@ class Play extends ActiveRecord
   public function rules(): array
   {
     return [
-      [['game_id', 'player_id'], 'required'],
-      [['game_id', 'player_id'], 'integer'],
-      [['last_played', 'created_at', 'updated_at'], 'safe']
+        [['game_id', 'player_id'], 'required'],
+        [['game_id', 'player_id'], 'integer'],
+        [['last_played', 'created_at', 'updated_at'], 'safe']
     ];
   }
 

@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author Christian Seiler <christian@christianseiler.ch>
+ * @since  1.0.0
+ */
 
 namespace fhnw\modules\gamecenter\components;
 
@@ -11,6 +15,7 @@ use function str_starts_with;
  */
 class TranslationEventHandler
 {
+
   /**
    * @param MissingTranslationEvent $event
    *
@@ -23,4 +28,5 @@ class TranslationEventHandler
       $event->translatedMessage = "@MISSING: '$event->category.$event->message' FOR LANGUAGE '$event->language'";
     }
   }
+
 }

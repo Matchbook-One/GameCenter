@@ -29,16 +29,16 @@ use humhub\libs\Html;
       </div>
     <?php endif; ?>
     <?= GameDirectoryTagList::widget(
-      [
-        'game'     => $game,
-        'template' => '<div class="card-tags">{tags}</div>',
-      ]
+        [
+            'game'     => $game,
+            'template' => '<div class="card-tags">{tags}</div>',
+        ]
     ); ?>
   </div>
   <?= GameDirectoryActionButtons::widget(
-    [
-      'game'     => $game,
-      'template' => '<div class="card-footer">{buttons}</div>',
-    ]
+      [
+          'game'     => $game,
+          'template' => '<div class="card-footer">{buttons}</div>',
+      ]
   ); ?>
 </div>

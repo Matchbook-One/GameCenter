@@ -1,34 +1,64 @@
 <?php
 
 /**
- * @package GameCenter
- * @since 1.0.0
+ * @since   1.0.0
  * @author  Christian Seiler <christian@christianseiler.ch>
  */
 
 namespace fhnw\modules\gamecenter\notifications;
 
+use fhnw\modules\gamecenter\GameCenterModule;
 use humhub\modules\notification\components\BaseNotification;
-use yii\helpers\Html;
+use humhub\modules\notification\components\NotificationCategory;
+use humhub\modules\user\models\User;
+use yii\db\ActiveRecord;
 
 /**
- * Notifies a user about something happend
+ * Notifies the player about an unlocked Achievement
+ *
+ * @package GameCenter/Notifications
+ * @method about(ActiveRecord $source)
+ * @method send(User $user)
  */
 class AchievementUnlocked extends BaseNotification
 {
-    // Module Id (required)
-    public $moduleId = "gamecenter";
 
-    // Viewname (optional)
-    public $viewName = "achievementUnlocked";
+  /**
+   * @inheritdoc
+   * @var string $moduleId Module Id
+   */
+  public $moduleId = 'gamecenter';
 
-    // Content
-    public function html()
-    {
-        return Yii::t(
-            'SomethingHappend.views_notifications_somethingHappened',
-            "%someUser% did something cool.",
-            [ '%someUser%' => '<strong>' . Html::encode($originator->displayName) . '</strong>' ]
-        );
-    }
+  /**
+   * @inheritdoc
+   * @var bool $requireOriginator
+   */
+  public $requireOriginator = false;
+
+  /**
+   * @noinspection PhpMissingParentCallCommonInspection
+   */
+  public function html(): string
+  {
+    return GameCenterModule::t(
+        'notification',
+        "You've unlocked an Achievement in {gameTitle}",
+        ['gameTitle' => $this->getGameTitle()]
+    );
+  }
+
+  /**
+   * @inheritdoc
+   * @noinspection PhpMissingParentCallCommonInspection
+   */
+  protected function category(): NotificationCategory
+  {
+    return new GameCenterNotificationCategory();
+  }
+
+  private function getGameTitle(): string
+  {
+    return '';
+  }
+
 }

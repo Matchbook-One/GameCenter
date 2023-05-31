@@ -1,7 +1,6 @@
 <?php
 
 /**
- * @package GameCenter
  * @author  Christian Seiler <christian@christianseiler.ch>
  * @since   1.0.0
  */
@@ -14,7 +13,7 @@ use humhub\libs\Helpers;
 /**
  * GameTitleColumn
  *
- * @package GameCenter
+ * @package GameCenter/Widgets
  * @since   1.0.0
  * @author  Christian Seiler <christian@christianseiler.ch>
  * @property ?string $attribute
@@ -22,11 +21,12 @@ use humhub\libs\Helpers;
  */
 class GameTitleColumn extends GameBaseColumn
 {
+
   /**
    * @inheritdoc
    * @return void
    */
-  public function init()
+  public function init(): void
   {
     parent::init();
 
@@ -51,4 +51,5 @@ class GameTitleColumn extends GameBaseColumn
 
     return "<div>$game->title<br /><small>$text</small></div>";
   }
+
 }

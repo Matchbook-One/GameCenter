@@ -10,12 +10,12 @@ use fhnw\modules\gamecenter\models\Game;
 use yii\bootstrap\Html;
 
 /**
- * @var Game $game
+ * @var Game   $game
  * @var string $acronym
- * @var bool $link
- * @var array $linkOptions
- * @var array $acronymHtmlOptions
- * @var array $imageHtmlOptions
+ * @var bool   $link
+ * @var array  $linkOptions
+ * @var array  $acronymHtmlOptions
+ * @var array  $imageHtmlOptions
  */
 
 if ($link) :

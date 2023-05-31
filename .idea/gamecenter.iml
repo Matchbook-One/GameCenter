@@ -13,8 +13,23 @@
       <excludeFolder url="file://$MODULE_DIR$/documentation" />
       <excludeFolder url="file://$MODULE_DIR$/node_modules" />
       <excludeFolder url="file://$MODULE_DIR$/vendor" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/bower-asset/swagger-ui" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/annotations" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/lexer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpstan/extension-installer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpstan/phpstan" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/log" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/deprecation-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/finder" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-ctype" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/yaml" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/yii/yii2-swagger" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/zircote/swagger-php" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="GameCenter" level="project" />
   </component>
 </module>

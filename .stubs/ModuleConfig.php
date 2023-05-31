@@ -1,6 +1,6 @@
 <?php
 
-namespace fhnw\humhub\stubs;
+namespace fhnw\modules\gamecenter\openapi\humhub\stubs;
 
 /**
  * @package HumHub/stubs
@@ -14,6 +14,7 @@ namespace fhnw\humhub\stubs;
  */
 interface ModuleConfig
 {
+
 }
 
 /**
@@ -24,4 +25,5 @@ interface ModuleConfig
  */
 interface EventConfig
 {
+
 }

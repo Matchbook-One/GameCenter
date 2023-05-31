@@ -16,9 +16,9 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 /**
- * @var GameSearch $searchModel
+ * @var GameSearch         $searchModel
  * @var ActiveDataProvider $dataProvider
- * @var View $this
+ * @var View               $this
  */
 
 ?>
@@ -35,7 +35,9 @@ $form = ActiveForm::begin(['method' => 'get', 'action' => Url::to(['/gamecenter/
   <div class="col-md-8">
     <div class="input-group">
       <?= Html::activeTextInput(
-        $searchModel, 'freeText', ['class' => 'form-control', 'placeholder' => GameCenterModule::t('admin', 'Search by...')]
+          $searchModel,
+          'freeText',
+          ['class' => 'form-control', 'placeholder' => GameCenterModule::t('admin', 'Search by...')]
       ) ?>
       <span class="input-group-btn">
         <button class="btn btn-default" type="submit">
@@ -51,17 +53,17 @@ ActiveForm::end(); ?>
 
 <div class="table-responsive">
   <?= GridView::widget(
-    [
-      'dataProvider' => $dataProvider,
-      'tableOptions' => ['class' => 'table table-hover'],
-      'summary'      => '',
-      'columns'      => [
-        ['class' => GameTitleColumn::class],
-        [
-          'attribute' => 'achievementCount',
-          'label'     => GameCenterModule::t('admin', 'Achievements')
-        ]
-      ],
-    ]
+      [
+          'dataProvider' => $dataProvider,
+          'tableOptions' => ['class' => 'table table-hover'],
+          'summary'      => '',
+          'columns'      => [
+              ['class' => GameTitleColumn::class],
+              [
+                  'attribute' => 'achievementCount',
+                  'label'     => GameCenterModule::t('admin', 'Achievements')
+              ]
+          ],
+      ]
   ) ?>
 </div>

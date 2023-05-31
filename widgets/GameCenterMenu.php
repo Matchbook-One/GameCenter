@@ -1,7 +1,6 @@
 <?php
 
 /**
- * @package GameCenter
  * @author  Christian Seiler <christian@christianseiler.ch>
  * @since   1.0.0
  */
@@ -16,12 +15,11 @@ use yii\helpers\Url;
 /**
  * GameCenter Administration Menu
  *
- * @package GameCenter
- * @since   1.0.0
- * @author  Christian Seiler <christian@christianseiler.ch>
+ * @package GameCenter/Widgets
  */
 class GameCenterMenu extends TabMenu
 {
+
   /**
    * @inheritdoc
    * @return void
@@ -29,21 +27,21 @@ class GameCenterMenu extends TabMenu
   public function init(): void
   {
     $gamesLink = new MenuLink(
-      [
-        'label'     => GameCenterModule::t('base', 'Game'),
-        'url'       => Url::toRoute(['/gamecenter/admin/index']),
-        'sortOrder' => 100,
-        'isActive'  => MenuLink::isActiveState('gamecenter', 'admin', 'index')
-      ]
+        [
+            'label'     => GameCenterModule::t('base', 'Game'),
+            'url'       => Url::toRoute(['/gamecenter/admin/index']),
+            'sortOrder' => 100,
+            'isActive'  => MenuLink::isActiveState('gamecenter', 'admin', 'index')
+        ]
     );
 
     $achievementsLink = new MenuLink(
-      [
-        'label'     => GameCenterModule::t('base', 'Achievements'),
-        'url'       => Url::toRoute(['/gamecenter/admin/achievements']),
-        'sortOrder' => 200,
-        'isActive'  => MenuLink::isActiveState('gamecenter', 'admin', 'achievements')
-      ]
+        [
+            'label'     => GameCenterModule::t('base', 'Achievements'),
+            'url'       => Url::toRoute(['/gamecenter/admin/achievements']),
+            'sortOrder' => 200,
+            'isActive'  => MenuLink::isActiveState('gamecenter', 'admin', 'achievements')
+        ]
     );
 
     $this->addEntry($gamesLink);
@@ -51,4 +49,5 @@ class GameCenterMenu extends TabMenu
 
     parent::init();
   }
+
 }

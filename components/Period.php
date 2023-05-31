@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author Christian Seiler <christian@christianseiler.ch>
+ * @since  1.0.0
+ */
 
 namespace fhnw\modules\gamecenter\components;
 
@@ -50,6 +54,11 @@ class Period
     return $this->end->format($this->getFormat());
   }
 
+  private function getFormat(): string
+  {
+    return 'D, d M Y';
+  }
+
   /**
    * @return \DateTime
    */
@@ -61,11 +70,6 @@ class Period
   public function getStartDate(): string
   {
     return $this->start->format($this->getFormat());
-  }
-
-  private function getFormat(): string
-  {
-    return 'D, d M Y';
   }
 
 }

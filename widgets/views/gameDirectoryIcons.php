@@ -18,7 +18,8 @@ $text = " <span>$playerCount</span>";
 $class = 'fa fa-users';
 ?>
 <?php if ($canViewPlayers) : ?>
-  <?= Link::withAction($text, 'ui.modal.load', $game->createUrl('/space/membership/members-list'))->cssClass($class) ?>
+  <?= Link::withAction($text, 'ui.modal.load', $game->createUrl('/space/membership/members-list'))
+          ->cssClass($class) ?>
 <?php else: ?>
   <?= Html::tag('span', $text, ['class' => $class]) ?>
 <?php endif; ?>

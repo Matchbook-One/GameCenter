@@ -15,6 +15,7 @@ use humhub\components\Widget;
  */
 class GameDirectoryStatus extends Widget
 {
+
   public Game $game;
 
   /**
@@ -23,10 +24,13 @@ class GameDirectoryStatus extends Widget
   public function run()
   {
     if ($this->game->isArchived()) {
-      return $this->render('gameDirectoryStatus', [
-        'class' => 'label label-primary',
-        'text'  => GameCenterModule::t('base', 'Archived'),
-      ]);
+      return $this->render(
+          'gameDirectoryStatus',
+          [
+              'class' => 'label label-primary',
+              'text'  => GameCenterModule::t('base', 'Archived'),
+          ]
+      );
     }
   }
 

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @var int $rank
- * @var int $score
+ * @var int    $rank
+ * @var int    $score
  * @var string $player
  * @var string $date
  */

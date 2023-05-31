@@ -1,12 +1,14 @@
 <?php
 
-namespace fhnw\humhub\stubs;
+namespace fhnw\modules\gamecenter\openapi\humhub\stubs;
 
 /**
  * @property-read ?array<string, string> $class
  * @property-read ?array<string, string> $style
  */
-interface HtmlOptions { }
+interface HtmlOptions
+{
+}
 
 /**
  * @property-read ?string      $id
@@ -20,4 +22,5 @@ interface HtmlOptions { }
  */
 interface MenuLinkConfig
 {
+
 }

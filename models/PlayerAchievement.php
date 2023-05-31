@@ -1,44 +1,55 @@
 <?php
 
 /**
- * @package GameCenter
  * @author  Christian Seiler <christian@christianseiler.ch>
  * @since   1.0.0
  */
 
 namespace fhnw\modules\gamecenter\models;
 
+use fhnw\modules\gamecenter\activities\AchievementUnlock;
 use fhnw\modules\gamecenter\GameCenterModule;
 use fhnw\modules\gamecenter\helpers\DateTime;
+use fhnw\modules\gamecenter\helpers\Url;
+use fhnw\modules\gamecenter\notifications\AchievementUnlocked;
 use humhub\components\ActiveRecord;
+use humhub\components\behaviors\GUID;
+use humhub\modules\user\models\User;
 use OpenApi\Attributes\Property;
 use OpenApi\Attributes\Schema;
 use Yii;
+use yii\base\Exception;
+use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
+use yii\web\Linkable;
+
+use function min;
 
 /**
  * This is the model class for the table "player_achievement".
  *
- * @property int $id
- * @property int $percent_completed A percentage value that states how far the player has progressed on the achievement.
- * @property int $player_id The identifier for the Player.
- * @property string $achievement_id The identifier for the Achievement Description.
- * @property string $created_at
- * @property int $created_by
- * @property string $updated_at
- * @property int $updated_by
- * @property-read Player $player
+ * @package GameCenter/Models
+ * @property string           $guid
+ * @property int              $percent_completed A percentage value that states how far the player has progressed on the achievement.
+ * @property int              $player_id         The identifier for the Player.
+ * @property int              $achievement_id    The identifier for the Achievement Description.
+ * @property string           $created_at
+ * @property int              $created_by
+ * @property string           $updated_at
+ * @property int              $updated_by
+ * @property-read Player      $player
  * @property-read Achievement $achievement
- * @property-read Game $game
+ * @property-read Game        $game
+ * @mixin GUID
  */
 #[Schema(properties: [
-  new Property('id', type: 'int'),
-  new Property('percent_completed', type: 'int', maximum: 100, minimum: 0),
-  new Property('updated_at', type: 'string', format: 'datetime'),
-  new Property('player', ref: '#/components/schemas/Player'),
-  new Property('achievement', ref: '#/components/schemas/Achievement')
+    new Property('guid', type: 'string', format: 'guid'),
+    new Property('percentCompleted', type: 'integer', maximum: 100, minimum: 0),
+    new Property('updatedAt', type: 'string', format: 'date-time'),
+    new Property('player', type: 'integer'),
+    new Property('isCompleted', type: 'boolean')
 ])]
-class PlayerAchievement extends ActiveRecord
+class PlayerAchievement extends ActiveRecord implements Linkable
 {
 
   /**
@@ -60,12 +71,12 @@ class PlayerAchievement extends ActiveRecord
   public function attributeLabels(): array
   {
     return [
-      'id'               => 'ID',
-      'description'      => GameCenterModule::t('base', 'Achievement'),
-      'percentCompleted' => GameCenterModule::t('base', 'Percent completed'),
-      'player'           => GameCenterModule::t('base', 'Player'),
-      'lastReportedDate' => GameCenterModule::t('base', 'Last Reported Date'),
-      'isCompleted'      => GameCenterModule::t('base', 'Is Completed')
+        'id'                => 'ID',
+        'description'       => GameCenterModule::t('base', 'Achievement'),
+        'percent_completed' => GameCenterModule::t('base', 'Percent completed'),
+        'player'            => GameCenterModule::t('base', 'Player'),
+        'lastReportedDate'  => GameCenterModule::t('base', 'Last Reported Date'),
+        'isCompleted'       => GameCenterModule::t('base', 'Is Completed')
     ];
   }
 
@@ -90,6 +101,47 @@ class PlayerAchievement extends ActiveRecord
   }
 
   /**
+   * @inheritdoc
+   * @return array<class-string>
+   * @noinspection PhpMissingParentCallCommonInspection
+   */
+  public function behaviors(): array
+  {
+    return [GUID::class];
+  }
+
+  public function extraFields(): array
+  {
+    $extraFields = ['achievement'];
+
+    return array_merge(parent::extraFields(), $extraFields);
+  }
+
+  /** @noinspection PhpMissingParentCallCommonInspection */
+  public function fields(): array
+  {
+    return [
+        'id'               => 'guid',
+        'player'           => 'player_id',
+        'percentCompleted' => 'percent_completed',
+        'isComplete'       => function () {
+          return $this->isCompleted();
+        },
+        'updatedAt'        => 'updated_at'
+    ];
+  }
+
+  /**
+   * A Boolean value that states whether the player has completed the achievement.
+   *
+   * @return bool
+   */
+  public function isCompleted(): bool
+  {
+    return $this->percent_completed == 100;
+  }
+
+  /**
    * @returns ActiveQuery
    */
   public function getAchievement(): ActiveQuery
@@ -106,10 +158,15 @@ class PlayerAchievement extends ActiveRecord
     return GameCenterModule::t('achievement', 'This Achievement is hidden');
   }
 
+  public function isSecret(): bool
+  {
+    return $this->achievement->secret;
+  }
+
   /**
    * getGame
    *
-   * @return \yii\db\ActiveQuery
+   * @return ActiveQuery
    */
   public function getGame(): ActiveQuery
   {
@@ -117,10 +174,19 @@ class PlayerAchievement extends ActiveRecord
                 ->via('achievement');
   }
 
+  public function getLinks(): array
+  {
+    return [
+      //Link::REL_SELF => Url::toLeaderboard($this->id),
+        'description' => Url::toAchievement($this->achievement_id),
+        'view'        => Url::toAchievements($this->achievement->game_id, $this->player_id)
+    ];
+  }
+
   /**
    * The player who earned the achievement.
    *
-   * @return \yii\db\ActiveQuery
+   * @return ActiveQuery
    */
   public function getPlayer(): ActiveQuery
   {
@@ -136,19 +202,9 @@ class PlayerAchievement extends ActiveRecord
     return GameCenterModule::t('achievement', 'Secret Achievement');
   }
 
-  /**
-   * A Boolean value that states whether the player has completed the achievement.
-   *
-   * @return bool
-   */
-  public function isCompleted(): bool
+  public function getUrl(): string
   {
-    return $this->percent_completed == 100.0;
-  }
-
-  public function isSecret(): bool
-  {
-    return $this->achievement->secret;
+    return Url::toAchievements($this->game->id, $this->player->id);
   }
 
   /**
@@ -169,14 +225,48 @@ class PlayerAchievement extends ActiveRecord
   public function rules(): array
   {
     return [
-      [['percent_completed'], 'integer', 'min' => 0, 'max' => 100],
-      [['percent_completed'], 'default', 'value' => 0]
+        [['percent_completed'], 'integer', 'min' => 0, 'max' => 100],
+        [['percent_completed'], 'default', 'value' => 0],
+        [['guid'], 'string', 'max' => 45, 'min' => 2],
     ];
   }
 
   public function showProgress(): bool
   {
     return $this->achievement->show_progress;
+  }
+
+  public function updateProgress(int $progress): bool
+  {
+    if ($this->isCompleted() && $progress < 100) {
+      Yii::error('Updating progress of a completed Achievement is not allowed!');
+
+      return false;
+    }
+    $this->percent_completed = min(100, $progress);
+    if ($progress == 100) {
+      $this->sendNotification();
+    }
+
+    return $this->save(true, ['percent_completed']);
+  }
+
+  /**
+   * @return void
+   */
+  private function sendNotification(): void
+  {
+    $user = User::findOne(['id' => $this->player_id]);
+    try {
+      AchievementUnlock::instance()
+                       ->about($this)
+                       ->create();
+      AchievementUnlocked::instance()
+                         ->about($this)
+                         ->send($user);
+    } catch (InvalidConfigException|Exception $e) {
+      Yii::error('Could not send ', $e);
+    }
   }
 
 }

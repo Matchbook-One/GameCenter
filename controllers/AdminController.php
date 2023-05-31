@@ -1,14 +1,6 @@
 <?php
 
 /**
- * @package GameCenter
- */
-/**
- * @author  Christian Seiler <christian@christianseiler.ch>
- * @since   1.0.0
- */
-
-/**
  * @author  Christian Seiler <christian@christianseiler.ch>
  * @since   1.0.0
  */
@@ -25,12 +17,12 @@ use Yii;
  * Admin Controller
  *
  * @package GameCenter/Controllers
- * @property ?string $subLayout
- * @property string $pageTitle
- * @property array $actionTitlesMap
- * @property bool $prependActionTitles
+ * @property ?string      $subLayout
+ * @property string       $pageTitle
+ * @property array        $actionTitlesMap
+ * @property bool         $prependActionTitles
  * @property class-string $access
- * @property View $view
+ * @property View         $view
  */
 class AdminController extends Controller
 {
@@ -69,6 +61,5 @@ class AdminController extends Controller
 
     return $this->render('index', compact('dataProvider', 'searchModel'));
   }
-}
 
 }

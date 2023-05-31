@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author Christian Seiler <christian@christianseiler.ch>
+ * @since  1.0.0
+ */
 
 namespace fhnw\modules\gamecenter\widgets;
 
@@ -10,11 +14,11 @@ use humhub\components\Widget;
  */
 class PlayButton extends Widget
 {
-  public Game $game;
-  public $label = 'Play';
-  public $playOptions = ['class' => 'btn btn-primary btn-sm'];
 
-  public function run()
-  {
-  }
+  public Game $game;
+  public string $label = 'Play';
+  public array $playOptions = ['class' => 'btn btn-primary btn-sm'];
+
+  public function run() {}
+
 }

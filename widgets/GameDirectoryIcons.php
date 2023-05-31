@@ -14,15 +14,17 @@ use Yii;
  */
 class GameDirectoryIcons extends Widget
 {
+
   public Game $game;
 
   /**
    * @inheritdoc
+   * @noinspection PhpMissingParentCallCommonInspection
    */
   public function run()
   {
     /*
-    if ($this->gamw->getAdvancedSettings()->hideMembers) {
+    if ($this->game->getAdvancedSettings()->hideMembers) {
       return '';
     }
 
@@ -36,16 +38,17 @@ class GameDirectoryIcons extends Widget
 
 */
     $playerCountQuery = Play::getPlayedGamesQuery($this->game);
+    /** @var \humhub\components\i18n\Formatter $formatter */
     $formatter = Yii::$app->formatter;
 
     return $this->render(
-      'gameDirectoryIcons',
-      [
-        'game'           => $this->game,
-        'canViewPlayers' => false,
-        'playerCount'    => $formatter->asShortInteger($playerCountQuery->count())
-        //'canViewMembers' => $membership && $membership->isPrivileged(),
-      ]
+        'gameDirectoryIcons',
+        [
+            'game'           => $this->game,
+            'canViewPlayers' => false,
+            'playerCount'    => $formatter->asShortInteger($playerCountQuery->count())
+          //'canViewMembers' => $membership && $membership->isPrivileged(),
+        ]
     );
   }
 

@@ -1,7 +1,6 @@
 <?php
 
 /**
- * @package GameCenter
  * @author  Christian Seiler <christian@christianseiler.ch>
  * @since   1.0.0
  */
@@ -65,8 +64,7 @@ class ActiveQueryGame extends AbstractActiveQueryContentContainer
     if ($container === null) {
       $this->joinWith(['content', 'content.contentContainer', 'content.createdBy']);
       $this->andWhere(['IS', 'contentcontainer.pk', new Expression('NULL')]);
-    }
-    else {
+    } else {
       $this->joinWith(['content', 'content.contentContainer', 'content.createdBy']);
       $this->andWhere(['contentcontainer.pk' => $container->id, 'contentcontainer.class' => $container->className()]);
     }
@@ -100,8 +98,7 @@ class ActiveQueryGame extends AbstractActiveQueryContentContainer
     if ($user === null && !Yii::$app->user->isGuest) {
       try {
         $user = Yii::$app->user->getIdentity();
-      }
-      catch (Throwable $e) {
+      } catch (Throwable $e) {
         Yii::error($e, 'game');
       }
     }
@@ -113,8 +110,7 @@ class ActiveQueryGame extends AbstractActiveQueryContentContainer
       }
       */
       $this->andWhere(['=', 'game.status', Game::STATUS_ENABLED]);
-    }
-    else {
+    } else {
       $this->andWhere(['=', 'game.status', Game::STATUS_ENABLED]);
     }
 

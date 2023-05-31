@@ -4,52 +4,52 @@
                configVersion="3"
                xsi:schemaLocation="https://www.phpdoc.org https://raw.githubusercontent.com/phpDocumentor/phpDocumentor/master/data/xsd/phpdoc.xsd">
 
-    <title>GameCenter</title>
+  <title>GameCenter</title>
 
-    <paths>
-        <output>docs/api</output>
-        <cache>.build/cache</cache>
-    </paths>
+  <paths>
+    <output>docs/api</output>
+    <cache>.build/cache</cache>
+  </paths>
 
-    <version number="1.0">
-        <api>
-            <source>
-                <path>.</path>
-            </source>
+  <version number="1.0">
+    <api>
+      <source>
+        <path>.</path>
+      </source>
 
-            <ignore>
-                <path>docs/*</path>
-                <path>migrations/*</path>
-                <path>resources/*</path>
-                <path>tests/*</path>
-            </ignore>
+      <ignore>
+        <path>docs/*</path>
+        <path>migrations/*</path>
+        <path>resources/*</path>
+        <path>tests/*</path>
+      </ignore>
 
-            <visibility>api</visibility>
-            <visibility>public</visibility>
-            <visibility>protected</visibility>
+      <visibility>api</visibility>
+      <visibility>public</visibility>
+      <visibility>protected</visibility>
 
-            <default-package-name>GameCenter</default-package-name>
+      <default-package-name>GameCenter</default-package-name>
 
-            <markers>
-                <marker>TODO</marker>
-            </markers>
+      <markers>
+        <marker>TODO</marker>
+      </markers>
 
-            <ignore-tags>
-                <ignore-tag>noinspection</ignore-tag>
-            </ignore-tags>
-        </api>
-        <!-- <folder></folder>-->
-        <guide>
-            <source>
-                <path>guides</path>
-            </source>
-        </guide>
-    </version>
+      <ignore-tags>
+        <ignore-tag>noinspection</ignore-tag>
+      </ignore-tags>
+    </api>
+    <!-- <folder></folder>-->
+    <guide>
+      <source>
+        <path>guides</path>
+      </source>
+    </guide>
+  </version>
 
-    <setting name="template.color" value="light-green"/>
-    <setting name="guides.enabled" value="true"/>
-    <setting name="graphs.enabled" value="true"/>
+  <setting name="template.color" value="light-green"/>
+  <setting name="guides.enabled" value="true"/>
+  <setting name="graphs.enabled" value="true"/>
 
-    <template name="clean"/>
+  <template name="clean"/>
 
 </phpdocumentor>

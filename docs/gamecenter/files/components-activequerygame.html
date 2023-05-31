@@ -1,475 +1,533 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
-    <meta charset="utf-8"/>
-    <title>GameCenter</title>
-    <meta name="author" content=""/>
-    <meta name="description" content=""/>
-    <base href="../">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+  <meta charset="utf-8"/>
+  <title>GameCenter</title>
+  <meta content="" name="author"/>
+  <meta content="" name="description"/>
+  <base href="../">
 
-    <link href="css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
-    <link href="css/font-awesome.min.css" rel="stylesheet">
-    <link href="css/prism.css" rel="stylesheet" media="all"/>
-    <link href="css/template.css" rel="stylesheet" media="all"/>
-    
-    <!--[if lt IE 9]>
-    <script src="js/html5.js"></script>
-    <![endif]-->
-    <script src="js/jquery-1.11.0.min.js"></script>
-    <script src="js/ui/1.10.4/jquery-ui.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.smooth-scroll.js"></script>
-    <script src="js/prism.min.js"></script>
-    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
-        <script type="text/javascript">
-        function loadExternalCodeSnippets() {
-            Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
-                var src = pre.getAttribute('data-src').replace( /\\/g, '/');
-                var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
-                var language = 'php';
+  <link href="css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+  <link href="css/font-awesome.min.css" rel="stylesheet">
+  <link href="css/prism.css" media="all" rel="stylesheet"/>
+  <link href="css/template.css" media="all" rel="stylesheet"/>
 
-                var code = document.createElement('code');
-                code.className = 'language-' + language;
+  <!--[if lt IE 9]>
+  <script src="js/html5.js"></script>
+  <![endif]-->
+  <script src="js/jquery-1.11.0.min.js"></script>
+  <script src="js/ui/1.10.4/jquery-ui.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/jquery.smooth-scroll.js"></script>
+  <script src="js/prism.min.js"></script>
+  <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+  <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+      Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+        var src = pre.getAttribute('data-src').replace(/\\/g, '/')
+        var extension = (src.match(/\.(\w+)$/) || [, ''])[1]
+        var language = 'php'
 
-                pre.textContent = '';
+        var code = document.createElement('code')
+        code.className = 'language-' + language
 
-                code.textContent = 'Loading…';
+        pre.textContent = ''
 
-                pre.appendChild(code);
+        code.textContent = 'Loading…'
 
-                var xhr = new XMLHttpRequest();
+        pre.appendChild(code)
 
-                xhr.open('GET', src, true);
+        var xhr = new XMLHttpRequest()
 
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState == 4) {
+        xhr.open('GET', src, true)
 
-                        if (xhr.status < 400 && xhr.responseText) {
-                            code.textContent = xhr.responseText;
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState == 4) {
 
-                            Prism.highlightElement(code);
-                        }
-                        else if (xhr.status >= 400) {
-                            code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
-                        }
-                        else {
-                            code.textContent = '✖ Error: File does not exist, is empty or trying to view from localhost';
-                        }
-                    }
-                };
+            if (xhr.status < 400 && xhr.responseText) {
+              code.textContent = xhr.responseText
 
-                xhr.send(null);
-            });
+              Prism.highlightElement(code)
+            } else if (xhr.status >= 400) {
+              code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText
+            } else {
+              code.textContent = '✖ Error: File does not exist, is empty or trying to view from localhost'
+            }
+          }
         }
 
-        $(document).ready(function(){
-            loadExternalCodeSnippets();
-        });
-        $('#source-view').on('shown', function () {
-            loadExternalCodeSnippets();
-        })
-    </script>
+        xhr.send(null)
+      })
+    }
 
-    <link rel="shortcut icon" href="images/favicon.ico"/>
-    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
-    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png"/>
-    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png"/>
+    $(document).ready(function () {
+      loadExternalCodeSnippets()
+    })
+    $('#source-view').on('shown', function () {
+      loadExternalCodeSnippets()
+    })
+  </script>
+
+  <link href="images/favicon.ico" rel="shortcut icon"/>
+  <link href="images/apple-touch-icon.png" rel="apple-touch-icon"/>
+  <link href="images/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72"/>
+  <link href="images/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114"/>
 </head>
 <body>
 
 <div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <i class="icon-ellipsis-vertical"></i>
-            </a>
-            <a class="brand" href="index.html">GameCenter</a>
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
+        <i class="icon-ellipsis-vertical"></i>
+      </a>
+      <a class="brand" href="index.html">GameCenter</a>
 
-            <div class="nav-collapse">
-                <ul class="nav pull-right">
-                                        <li class="dropdown">
-                        <a href="index.html" class="dropdown-toggle" data-toggle="dropdown">
-                            API Documentation <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                                                        <li><a href="namespaces/fhnw.html"><abbr title="\fhnw">fhnw</abbr></a></li>
-                                                    </ul>
-                    </li>
-                                        <li class="dropdown" id="charts-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            Charts <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="graphs/class.html">
-                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="dropdown" id="reports-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            Reports <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="reports/errors.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">1</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="reports/markers.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">0</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="reports/deprecated.html">
-                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
+      <div class="nav-collapse">
+        <ul class="nav pull-right">
+          <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="index.html">
+              API Documentation <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="namespaces/fhnw.html"><abbr title="\fhnw">fhnw</abbr></a></li>
+            </ul>
+          </li>
+          <li class="dropdown" id="charts-menu">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+              Charts <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="graphs/class.html">
+                  <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="dropdown" id="reports-menu">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+              Reports <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="reports/errors.html">
+                  <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">1</span>
+                </a>
+              </li>
+              <li>
+                <a href="reports/markers.html">
+                  <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">0</span>
+                </a>
+              </li>
+              <li>
+                <a href="reports/deprecated.html">
+                  <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
-    <!--<div class="go_to_top">-->
-    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
-    <!--</div>-->
+  </div>
+  <!--<div class="go_to_top">-->
+  <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+  <!--</div>-->
 </div>
 
-<div id="___" class="container-fluid">
-        <section class="row-fluid">
-        <div class="span2 sidebar">
-                                <div class="accordion" style="margin-bottom: 0">
+<div class="container-fluid" id="___">
+  <section class="row-fluid">
+    <div class="span2 sidebar">
+      <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
-            <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1195419555"></a>
-                                <a href="namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
-            </div>
-            <div id="namespace-1195419555" class="accordion-body collapse in">
-                <div class="accordion-inner">
+          <div class="accordion-heading">
+            <a class="accordion-toggle " data-target="#namespace-1195419555" data-toggle="collapse"></a>
+            <a href="namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+          </div>
+          <div class="accordion-body collapse in" id="namespace-1195419555">
+            <div class="accordion-inner">
 
-                                                    <div class="accordion" style="margin-bottom: 0">
-        <div class="accordion-group">
-            <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-847267715"></a>
-                                <a href="namespaces/fhnw.html" style="margin-left: 30px; padding-left: 0">fhnw</a>
-            </div>
-            <div id="namespace-847267715" class="accordion-body collapse ">
-                <div class="accordion-inner">
+              <div class="accordion" style="margin-bottom: 0">
+                <div class="accordion-group">
+                  <div class="accordion-heading">
+                    <a class="accordion-toggle collapsed" data-target="#namespace-847267715" data-toggle="collapse"></a>
+                    <a href="namespaces/fhnw.html" style="margin-left: 30px; padding-left: 0">fhnw</a>
+                  </div>
+                  <div class="accordion-body collapse " id="namespace-847267715">
+                    <div class="accordion-inner">
 
-                                                    <div class="accordion" style="margin-bottom: 0">
-        <div class="accordion-group">
-            <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1278366594"></a>
-                                <a href="namespaces/fhnw-modules.html" style="margin-left: 30px; padding-left: 0">modules</a>
-            </div>
-            <div id="namespace-1278366594" class="accordion-body collapse ">
-                <div class="accordion-inner">
+                      <div class="accordion" style="margin-bottom: 0">
+                        <div class="accordion-group">
+                          <div class="accordion-heading">
+                            <a class="accordion-toggle collapsed" data-target="#namespace-1278366594" data-toggle="collapse"></a>
+                            <a href="namespaces/fhnw-modules.html" style="margin-left: 30px; padding-left: 0">modules</a>
+                          </div>
+                          <div class="accordion-body collapse " id="namespace-1278366594">
+                            <div class="accordion-inner">
 
-                                                    <div class="accordion" style="margin-bottom: 0">
-        <div class="accordion-group">
-            <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-2058703154"></a>
-                                <a href="namespaces/fhnw-modules-gamecenter.html" style="margin-left: 30px; padding-left: 0">gamecenter</a>
-            </div>
-            <div id="namespace-2058703154" class="accordion-body collapse ">
-                <div class="accordion-inner">
+                              <div class="accordion" style="margin-bottom: 0">
+                                <div class="accordion-group">
+                                  <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-target="#namespace-2058703154" data-toggle="collapse"></a>
+                                    <a href="namespaces/fhnw-modules-gamecenter.html"
+                                       style="margin-left: 30px; padding-left: 0">gamecenter</a>
+                                  </div>
+                                  <div class="accordion-body collapse " id="namespace-2058703154">
+                                    <div class="accordion-inner">
 
-                                                    <div class="accordion" style="margin-bottom: 0">
-        <div class="accordion-group">
-            <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-215905200"></a>
-                                <a href="namespaces/fhnw-modules-gamecenter-assets.html" style="margin-left: 30px; padding-left: 0">assets</a>
-            </div>
-            <div id="namespace-215905200" class="accordion-body collapse ">
-                <div class="accordion-inner">
+                                      <div class="accordion" style="margin-bottom: 0">
+                                        <div class="accordion-group">
+                                          <div class="accordion-heading">
+                                            <a class="accordion-toggle collapsed" data-target="#namespace-215905200"
+                                               data-toggle="collapse"></a>
+                                            <a href="namespaces/fhnw-modules-gamecenter-assets.html"
+                                               style="margin-left: 30px; padding-left: 0">assets</a>
+                                          </div>
+                                          <div class="accordion-body collapse " id="namespace-215905200">
+                                            <div class="accordion-inner">
 
-                    
-                    <ul>
-                                                                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-assets-Assets.html"><abbr title="\fhnw\modules\gamecenter\assets\Assets">Assets</abbr></a></li>
-                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-assets-GameFilterAssets.html"><abbr title="\fhnw\modules\gamecenter\assets\GameFilterAssets">GameFilterAssets</abbr></a></li>
-                                            </ul>
-                </div>
-            </div>
-        </div>
-    </div>
 
-                                                    <div class="accordion" style="margin-bottom: 0">
-        <div class="accordion-group">
-            <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1509068870"></a>
-                                <a href="namespaces/fhnw-modules-gamecenter-components.html" style="margin-left: 30px; padding-left: 0">components</a>
-            </div>
-            <div id="namespace-1509068870" class="accordion-body collapse ">
-                <div class="accordion-inner">
+                                              <ul>
+                                                <li class="class"><a href="classes/fhnw-modules-gamecenter-assets-Assets.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\assets\Assets">Assets</abbr></a></li>
+                                                <li class="class"><a
+                                                  href="classes/fhnw-modules-gamecenter-assets-GameFilterAssets.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\assets\GameFilterAssets">GameFilterAssets</abbr></a></li>
+                                              </ul>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
 
-                    
-                    <ul>
-                                                                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-components-ActiveQueryGame.html"><abbr title="\fhnw\modules\gamecenter\components\ActiveQueryGame">ActiveQueryGame</abbr></a></li>
-                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-components-GameCenter.html"><abbr title="\fhnw\modules\gamecenter\components\GameCenter">GameCenter</abbr></a></li>
-                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-components-GameModule.html"><abbr title="\fhnw\modules\gamecenter\components\GameModule">GameModule</abbr></a></li>
-                                            </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+                                      <div class="accordion" style="margin-bottom: 0">
+                                        <div class="accordion-group">
+                                          <div class="accordion-heading">
+                                            <a class="accordion-toggle collapsed" data-target="#namespace-1509068870"
+                                               data-toggle="collapse"></a>
+                                            <a href="namespaces/fhnw-modules-gamecenter-components.html"
+                                               style="margin-left: 30px; padding-left: 0">components</a>
+                                          </div>
+                                          <div class="accordion-body collapse " id="namespace-1509068870">
+                                            <div class="accordion-inner">
 
-                                                    <div class="accordion" style="margin-bottom: 0">
-        <div class="accordion-group">
-            <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1321064220"></a>
-                                <a href="namespaces/fhnw-modules-gamecenter-controllers.html" style="margin-left: 30px; padding-left: 0">controllers</a>
-            </div>
-            <div id="namespace-1321064220" class="accordion-body collapse ">
-                <div class="accordion-inner">
 
-                    
-                    <ul>
-                                                                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-controllers-AdminController.html"><abbr title="\fhnw\modules\gamecenter\controllers\AdminController">AdminController</abbr></a></li>
-                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-controllers-IndexController.html"><abbr title="\fhnw\modules\gamecenter\controllers\IndexController">IndexController</abbr></a></li>
-                                            </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+                                              <ul>
+                                                <li class="class"><a href="classes/fhnw-modules-gamecenter-components-ActiveQueryGame.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\components\ActiveQueryGame">ActiveQueryGame</abbr></a>
+                                                </li>
+                                                <li class="class"><a href="classes/fhnw-modules-gamecenter-components-GameCenter.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\components\GameCenter">GameCenter</abbr></a></li>
+                                                <li class="class"><a href="classes/fhnw-modules-gamecenter-components-GameModule.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\components\GameModule">GameModule</abbr></a></li>
+                                              </ul>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
 
-                                                    <div class="accordion" style="margin-bottom: 0">
-        <div class="accordion-group">
-            <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-124006218"></a>
-                                <a href="namespaces/fhnw-modules-gamecenter-events.html" style="margin-left: 30px; padding-left: 0">events</a>
-            </div>
-            <div id="namespace-124006218" class="accordion-body collapse ">
-                <div class="accordion-inner">
+                                      <div class="accordion" style="margin-bottom: 0">
+                                        <div class="accordion-group">
+                                          <div class="accordion-heading">
+                                            <a class="accordion-toggle collapsed" data-target="#namespace-1321064220"
+                                               data-toggle="collapse"></a>
+                                            <a href="namespaces/fhnw-modules-gamecenter-controllers.html"
+                                               style="margin-left: 30px; padding-left: 0">controllers</a>
+                                          </div>
+                                          <div class="accordion-body collapse " id="namespace-1321064220">
+                                            <div class="accordion-inner">
 
-                    
-                    <ul>
-                                                                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-events-GameEvent.html"><abbr title="\fhnw\modules\gamecenter\events\GameEvent">GameEvent</abbr></a></li>
-                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-events-GameModuleInitializeEvent.html"><abbr title="\fhnw\modules\gamecenter\events\GameModuleInitializeEvent">GameModuleInitializeEvent</abbr></a></li>
-                                            </ul>
-                </div>
-            </div>
-        </div>
-    </div>
 
-                                                    <div class="accordion" style="margin-bottom: 0">
-        <div class="accordion-group">
-            <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-250446430"></a>
-                                <a href="namespaces/fhnw-modules-gamecenter-models.html" style="margin-left: 30px; padding-left: 0">models</a>
-            </div>
-            <div id="namespace-250446430" class="accordion-body collapse ">
-                <div class="accordion-inner">
+                                              <ul>
+                                                <li class="class"><a
+                                                  href="classes/fhnw-modules-gamecenter-controllers-AdminController.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\controllers\AdminController">AdminController</abbr></a>
+                                                </li>
+                                                <li class="class"><a
+                                                  href="classes/fhnw-modules-gamecenter-controllers-IndexController.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\controllers\IndexController">IndexController</abbr></a>
+                                                </li>
+                                              </ul>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
 
-                    
-                    <ul>
-                                                                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-models-Achievement.html"><abbr title="\fhnw\modules\gamecenter\models\Achievement">Achievement</abbr></a></li>
-                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-models-Game.html"><abbr title="\fhnw\modules\gamecenter\models\Game">Game</abbr></a></li>
-                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-models-GameSearch.html"><abbr title="\fhnw\modules\gamecenter\models\GameSearch">GameSearch</abbr></a></li>
-                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-models-Genre.html"><abbr title="\fhnw\modules\gamecenter\models\Genre">Genre</abbr></a></li>
-                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-models-Score.html"><abbr title="\fhnw\modules\gamecenter\models\Score">Score</abbr></a></li>
-                                            </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+                                      <div class="accordion" style="margin-bottom: 0">
+                                        <div class="accordion-group">
+                                          <div class="accordion-heading">
+                                            <a class="accordion-toggle collapsed" data-target="#namespace-124006218"
+                                               data-toggle="collapse"></a>
+                                            <a href="namespaces/fhnw-modules-gamecenter-events.html"
+                                               style="margin-left: 30px; padding-left: 0">events</a>
+                                          </div>
+                                          <div class="accordion-body collapse " id="namespace-124006218">
+                                            <div class="accordion-inner">
 
-                                                    <div class="accordion" style="margin-bottom: 0">
-        <div class="accordion-group">
-            <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-802804182"></a>
-                                <a href="namespaces/fhnw-modules-gamecenter-permissions.html" style="margin-left: 30px; padding-left: 0">permissions</a>
-            </div>
-            <div id="namespace-802804182" class="accordion-body collapse ">
-                <div class="accordion-inner">
 
-                    
-                    <ul>
-                                                                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-permissions-CreateGameCenterDemo.html"><abbr title="\fhnw\modules\gamecenter\permissions\CreateGameCenterDemo">CreateGameCenterDemo</abbr></a></li>
-                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-permissions-ManageGameCenter.html"><abbr title="\fhnw\modules\gamecenter\permissions\ManageGameCenter">ManageGameCenter</abbr></a></li>
-                                            </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+                                              <ul>
+                                                <li class="class"><a href="classes/fhnw-modules-gamecenter-events-GameEvent.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\events\GameEvent">GameEvent</abbr></a></li>
+                                                <li class="class"><a
+                                                  href="classes/fhnw-modules-gamecenter-events-GameModuleInitializeEvent.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\events\GameModuleInitializeEvent">GameModuleInitializeEvent</abbr></a>
+                                                </li>
+                                              </ul>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
 
-                                                    <div class="accordion" style="margin-bottom: 0">
-        <div class="accordion-group">
-            <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1534640620"></a>
-                                <a href="namespaces/fhnw-modules-gamecenter-widgets.html" style="margin-left: 30px; padding-left: 0">widgets</a>
-            </div>
-            <div id="namespace-1534640620" class="accordion-body collapse ">
-                <div class="accordion-inner">
+                                      <div class="accordion" style="margin-bottom: 0">
+                                        <div class="accordion-group">
+                                          <div class="accordion-heading">
+                                            <a class="accordion-toggle collapsed" data-target="#namespace-250446430"
+                                               data-toggle="collapse"></a>
+                                            <a href="namespaces/fhnw-modules-gamecenter-models.html"
+                                               style="margin-left: 30px; padding-left: 0">models</a>
+                                          </div>
+                                          <div class="accordion-body collapse " id="namespace-250446430">
+                                            <div class="accordion-inner">
 
-                    
-                    <ul>
-                                                                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-widgets-GameActionColumn.html"><abbr title="\fhnw\modules\gamecenter\widgets\GameActionColumn">GameActionColumn</abbr></a></li>
-                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-widgets-GameBaseColumn.html"><abbr title="\fhnw\modules\gamecenter\widgets\GameBaseColumn">GameBaseColumn</abbr></a></li>
-                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-widgets-GameCenterMenu.html"><abbr title="\fhnw\modules\gamecenter\widgets\GameCenterMenu">GameCenterMenu</abbr></a></li>
-                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-widgets-GameFilter.html"><abbr title="\fhnw\modules\gamecenter\widgets\GameFilter">GameFilter</abbr></a></li>
-                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-widgets-GameGridView.html"><abbr title="\fhnw\modules\gamecenter\widgets\GameGridView">GameGridView</abbr></a></li>
-                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-widgets-GameImageColumn.html"><abbr title="\fhnw\modules\gamecenter\widgets\GameImageColumn">GameImageColumn</abbr></a></li>
-                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-widgets-GameTitleColumn.html"><abbr title="\fhnw\modules\gamecenter\widgets\GameTitleColumn">GameTitleColumn</abbr></a></li>
-                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-widgets-Image.html"><abbr title="\fhnw\modules\gamecenter\widgets\Image">Image</abbr></a></li>
-                                            </ul>
-                </div>
-            </div>
-        </div>
-    </div>
 
-                    
-                    <ul>
-                                                                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-Events.html"><abbr title="\fhnw\modules\gamecenter\Events">Events</abbr></a></li>
-                                                    <li class="class"><a href="classes/fhnw-modules-gamecenter-Module.html"><abbr title="\fhnw\modules\gamecenter\Module">Module</abbr></a></li>
-                                            </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+                                              <ul>
+                                                <li class="class"><a href="classes/fhnw-modules-gamecenter-models-Achievement.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\models\Achievement">Achievement</abbr></a></li>
+                                                <li class="class"><a href="classes/fhnw-modules-gamecenter-models-Game.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\models\Game">Game</abbr></a></li>
+                                                <li class="class"><a href="classes/fhnw-modules-gamecenter-models-GameSearch.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\models\GameSearch">GameSearch</abbr></a></li>
+                                                <li class="class"><a href="classes/fhnw-modules-gamecenter-models-Genre.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\models\Genre">Genre</abbr></a></li>
+                                                <li class="class"><a href="classes/fhnw-modules-gamecenter-models-Score.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\models\Score">Score</abbr></a></li>
+                                              </ul>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
 
-                    
-                    <ul>
-                                                                                            </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+                                      <div class="accordion" style="margin-bottom: 0">
+                                        <div class="accordion-group">
+                                          <div class="accordion-heading">
+                                            <a class="accordion-toggle collapsed" data-target="#namespace-802804182"
+                                               data-toggle="collapse"></a>
+                                            <a href="namespaces/fhnw-modules-gamecenter-permissions.html"
+                                               style="margin-left: 30px; padding-left: 0">permissions</a>
+                                          </div>
+                                          <div class="accordion-body collapse " id="namespace-802804182">
+                                            <div class="accordion-inner">
 
-                    
-                    <ul>
-                                                                                            </ul>
-                </div>
-            </div>
-        </div>
-    </div>
 
-                    
-                    <ul>
-                                                                                                    <li class="class"><a href="classes/m230103-171019-gamecenter-initial.html"><abbr title="\m230103_171019_gamecenter_initial">m230103_171019_gamecenter_initial</abbr></a></li>
-                                                    <li class="class"><a href="classes/m230106-023400-gamecenter-genre.html"><abbr title="\m230106_023400_gamecenter_genre">m230106_023400_gamecenter_genre</abbr></a></li>
-                                                    <li class="class"><a href="classes/uninstall.html"><abbr title="\uninstall">uninstall</abbr></a></li>
-                                            </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+                                              <ul>
+                                                <li class="class"><a
+                                                  href="classes/fhnw-modules-gamecenter-permissions-CreateGameCenterDemo.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\permissions\CreateGameCenterDemo">CreateGameCenterDemo</abbr></a>
+                                                </li>
+                                                <li class="class"><a
+                                                  href="classes/fhnw-modules-gamecenter-permissions-ManageGameCenter.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\permissions\ManageGameCenter">ManageGameCenter</abbr></a>
+                                                </li>
+                                              </ul>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
 
-        </div>
-    </section>
-    <section class="row-fluid">
-        <div class="span10 offset2">
-            <div class="row-fluid">
-                <div class="span8 content file">
-                    <nav>
-                                                                    </nav>
+                                      <div class="accordion" style="margin-bottom: 0">
+                                        <div class="accordion-group">
+                                          <div class="accordion-heading">
+                                            <a class="accordion-toggle collapsed" data-target="#namespace-1534640620"
+                                               data-toggle="collapse"></a>
+                                            <a href="namespaces/fhnw-modules-gamecenter-widgets.html"
+                                               style="margin-left: 30px; padding-left: 0">widgets</a>
+                                          </div>
+                                          <div class="accordion-body collapse " id="namespace-1534640620">
+                                            <div class="accordion-inner">
 
-                                        <h1><small>components</small>ActiveQueryGame.php</h1>
-                    <p><em></em></p>
-                    
 
-                    
-                    
-                                        <h2>Classes</h2>
-                    <table class="table table-hover">
-                                            <tr>
-                            <td><a href="classes/fhnw-modules-gamecenter-components-ActiveQueryGame.html"><abbr title="\fhnw\modules\gamecenter\components\ActiveQueryGame">ActiveQueryGame</abbr></a></td>
-                            <td><em>ActiveQueryGame</em></td>
-                        </tr>
-                                        </table>
+                                              <ul>
+                                                <li class="class"><a
+                                                  href="classes/fhnw-modules-gamecenter-widgets-GameActionColumn.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\widgets\GameActionColumn">GameActionColumn</abbr></a></li>
+                                                <li class="class"><a
+                                                  href="classes/fhnw-modules-gamecenter-widgets-GameBaseColumn.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\widgets\GameBaseColumn">GameBaseColumn</abbr></a></li>
+                                                <li class="class"><a
+                                                  href="classes/fhnw-modules-gamecenter-widgets-GameCenterMenu.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\widgets\GameCenterMenu">GameCenterMenu</abbr></a></li>
+                                                <li class="class"><a href="classes/fhnw-modules-gamecenter-widgets-GameFilter.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\widgets\GameFilter">GameFilter</abbr></a></li>
+                                                <li class="class"><a href="classes/fhnw-modules-gamecenter-widgets-GameGridView.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\widgets\GameGridView">GameGridView</abbr></a></li>
+                                                <li class="class"><a
+                                                  href="classes/fhnw-modules-gamecenter-widgets-GameImageColumn.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\widgets\GameImageColumn">GameImageColumn</abbr></a></li>
+                                                <li class="class"><a
+                                                  href="classes/fhnw-modules-gamecenter-widgets-GameTitleColumn.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\widgets\GameTitleColumn">GameTitleColumn</abbr></a></li>
+                                                <li class="class"><a href="classes/fhnw-modules-gamecenter-widgets-Image.html"><abbr
+                                                  title="\fhnw\modules\gamecenter\widgets\Image">Image</abbr></a></li>
+                                              </ul>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+
+
+                                      <ul>
+                                        <li class="class"><a href="classes/fhnw-modules-gamecenter-Events.html"><abbr
+                                          title="\fhnw\modules\gamecenter\Events">Events</abbr></a></li>
+                                        <li class="class"><a href="classes/fhnw-modules-gamecenter-Module.html"><abbr
+                                          title="\fhnw\modules\gamecenter\Module">Module</abbr></a></li>
+                                      </ul>
                                     </div>
+                                  </div>
+                                </div>
+                              </div>
 
-                <aside class="span4 detailsbar">
-                    <dl>
-                                                    <dt>Package</dt>
-                            <dd><div class="namespace-wrapper">\GameCenter</div></dd>
-                        
-                        
-                    </dl>
-                    <h2>Tags</h2>
-                    <table class="table table-condensed">
-                                                    <tr>
-                                <th>
-                                    author
-                                </th>
-                                <td>
-                                                                                                                    <p>Christian Seiler</p>
 
-                                                                    </td>
-                            </tr>
-                                                    <tr>
-                                <th>
-                                    since
-                                </th>
-                                <td>
-                                                                            1.0                                        
-                                                                    </td>
-                            </tr>
-                                            </table>
+                              <ul>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
-                </aside>
+
+                      <ul>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <ul>
+                <li class="class"><a href="classes/m230103-171019-gamecenter-initial.html"><abbr title="\m230103_171019_gamecenter_initial">m230103_171019_gamecenter_initial</abbr></a>
+                </li>
+                <li class="class"><a href="classes/m230106-023400-gamecenter-genre.html"><abbr title="\m230106_023400_gamecenter_genre">m230106_023400_gamecenter_genre</abbr></a>
+                </li>
+                <li class="class"><a href="classes/uninstall.html"><abbr title="\uninstall">uninstall</abbr></a></li>
+              </ul>
             </div>
+          </div>
+        </div>
+      </div>
 
-            
-            
-        </div>
-    </section>
-
-    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3 id="source-view-label"></h3>
-        </div>
-        <div class="modal-body">
-            <pre data-src="files/components/ActiveQueryGame.php.txt" class="language-php line-numbers"></pre>
-        </div>
     </div>
+  </section>
+  <section class="row-fluid">
+    <div class="span10 offset2">
+      <div class="row-fluid">
+        <div class="span8 content file">
+          <nav>
+          </nav>
 
-    <footer class="row-fluid">
-        <section class="span10 offset2">
-            <section class="row-fluid">
-                <section class="span10 offset1">
-                    <section class="row-fluid footer-sections">
-                        <section class="span4">
-                                                        <h1><i class="icon-code"></i></h1>
-                            <div>
-                                <ul>
-                                                                            <li><a href="namespaces/fhnw.html"><abbr title="\fhnw">fhnw</abbr></a></li>
-                                                                    </ul>
-                            </div>
-                        </section>
-                        <section class="span4">
-                                                        <h1><i class="icon-bar-chart"></i></h1>
-                            <div>
-                                <ul>
-                                    <li><a href="graphs/class.html">Class Hierarchy Diagram</a></li>
-                                </ul>
-                            </div>
-                        </section>
-                        <section class="span4">
-                                                        <h1><i class="icon-pushpin"></i></h1>
-                            <div>
-                                <ul>
-                                    <li><a href="reports/errors.html">Errors</a></li>
-                                    <li><a href="reports/markers.html">Markers</a></li>
-                                </ul>
-                            </div>
-                        </section>
-                    </section>
-                </section>
+          <h1><small>components</small>ActiveQueryGame.php</h1>
+          <p><em></em></p>
+
+
+          <h2>Classes</h2>
+          <table class="table table-hover">
+            <tr>
+              <td><a href="classes/fhnw-modules-gamecenter-components-ActiveQueryGame.html"><abbr
+                title="\fhnw\modules\gamecenter\components\ActiveQueryGame">ActiveQueryGame</abbr></a></td>
+              <td><em>ActiveQueryGame</em></td>
+            </tr>
+          </table>
+        </div>
+
+        <aside class="span4 detailsbar">
+          <dl>
+            <dt>Package</dt>
+            <dd>
+              <div class="namespace-wrapper">\GameCenter</div>
+            </dd>
+
+
+          </dl>
+          <h2>Tags</h2>
+          <table class="table table-condensed">
+            <tr>
+              <th>
+                author
+              </th>
+              <td>
+                <p>Christian Seiler</p>
+
+              </td>
+            </tr>
+            <tr>
+              <th>
+                since
+              </th>
+              <td>
+                1.0
+              </td>
+            </tr>
+          </table>
+
+        </aside>
+      </div>
+
+
+    </div>
+  </section>
+
+  <div aria-hidden="true" aria-labelledby="source-view-label" class="modal hide fade" id="source-view" role="dialog" tabindex="-1">
+    <div class="modal-header">
+      <button aria-hidden="true" class="close" data-dismiss="modal" type="button">×</button>
+      <h3 id="source-view-label"></h3>
+    </div>
+    <div class="modal-body">
+      <pre class="language-php line-numbers" data-src="files/components/ActiveQueryGame.php.txt"></pre>
+    </div>
+  </div>
+
+  <footer class="row-fluid">
+    <section class="span10 offset2">
+      <section class="row-fluid">
+        <section class="span10 offset1">
+          <section class="row-fluid footer-sections">
+            <section class="span4">
+              <h1><i class="icon-code"></i></h1>
+              <div>
+                <ul>
+                  <li><a href="namespaces/fhnw.html"><abbr title="\fhnw">fhnw</abbr></a></li>
+                </ul>
+              </div>
             </section>
-            <section class="row-fluid">
-                <section class="span10 offset1">
-                    <hr />
-                    Documentation is powered by <a href="https://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on January 30th, 2023 at 13:17.
-                </section>
+            <section class="span4">
+              <h1><i class="icon-bar-chart"></i></h1>
+              <div>
+                <ul>
+                  <li><a href="graphs/class.html">Class Hierarchy Diagram</a></li>
+                </ul>
+              </div>
             </section>
+            <section class="span4">
+              <h1><i class="icon-pushpin"></i></h1>
+              <div>
+                <ul>
+                  <li><a href="reports/errors.html">Errors</a></li>
+                  <li><a href="reports/markers.html">Markers</a></li>
+                </ul>
+              </div>
+            </section>
+          </section>
         </section>
-    </footer>
+      </section>
+      <section class="row-fluid">
+        <section class="span10 offset1">
+          <hr/>
+          Documentation is powered by <a href="https://www.phpdoc.org/">phpDocumentor </a> and authored
+          on January 30th, 2023 at 13:17.
+        </section>
+      </section>
+    </section>
+  </footer>
 </div>
 
 </body>

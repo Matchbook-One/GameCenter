@@ -1,5 +1,6 @@
 actor: Tester
 namespace: Tests
+actor_suffix: Tester
 
 settings:
   colors: true
@@ -18,7 +19,7 @@ paths:
   log: tests/_output
   helpers: tests/Support
   envs: ../../humhub/tests/config/env
-actor_suffix: Tester
+
 extensions:
   enabled:
     - Codeception\Extension\RunFailed
@@ -30,3 +31,6 @@ coverage:
   enabled: true
   exclude:
     - tests
+    - openapi
+    - resources
+    - docs

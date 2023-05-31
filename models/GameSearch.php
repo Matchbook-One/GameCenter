@@ -15,20 +15,15 @@ use function array_merge;
 /**
  * Game Search for Administration
  *
- * @package GameCenter
+ * @package GameCenter/Models
  */
 class GameSearch extends Game
 {
 
   /** @var string $freeText */
   public $freeText;
-  /**
-   * @var \yii\db\ActiveQuery query
-   */
+  /** @var \yii\db\ActiveQuery query */
   public $query;
-
-  /** @var string $freeText */
-  public $freeText;
 
   /**
    * Returns the list of all attribute names of the model.
@@ -47,8 +42,8 @@ class GameSearch extends Game
   public function rules(): array
   {
     return [
-      ['id', 'integer'],
-      [['module', 'title', 'description'], 'safe']
+        ['id', 'integer'],
+        [['module', 'title', 'description'], 'safe']
     ];
   }
 
@@ -79,8 +74,8 @@ class GameSearch extends Game
     $query->addSelect(['game.*', 'achievementCount' => $achievementCount]);
 
     $providerOptions = [
-      'query'      => $query,
-      'pagination' => ['pageSize' => 20]
+        'query'      => $query,
+        'pagination' => ['pageSize' => 20]
     ];
 
     $dataProvider = new ActiveDataProvider($providerOptions);
@@ -99,12 +94,12 @@ class GameSearch extends Game
     // Freetext filters
     if (!empty($this->freeText)) {
       $query->andWhere(
-        [
-          'OR',
-          ['like', 'game.module', $this->freeText],
-          ['like', 'game.title', $this->freeText],
-          ['like', 'game.description', $this->freeText]
-        ]
+          [
+              'OR',
+              ['like', 'game.module', $this->freeText],
+              ['like', 'game.title', $this->freeText],
+              ['like', 'game.description', $this->freeText]
+          ]
       );
       if (!empty($this->status)) {
         $query->andFilterWhere(['game.status' => $this->status]);
@@ -115,4 +110,5 @@ class GameSearch extends Game
 
     return $dataProvider;
   }
+
 }

@@ -6,11 +6,11 @@ use OpenApi\Attributes\Property;
 use OpenApi\Attributes\Schema;
 
 #[Schema]
-class AchievementResponse
+class AchievementResponse extends GameCenterResponse
 {
 
-  /** @var Achievement[] achievements */
+  /** @var Achievement achievement */
   #[Property]
-  public array $achievements;
+  public Achievement $achievement;
 
 }

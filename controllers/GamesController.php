@@ -8,11 +8,14 @@
 namespace fhnw\modules\gamecenter\controllers;
 
 use fhnw\modules\gamecenter\components\ActiveQueryGame;
+use fhnw\modules\gamecenter\components\ContentController;
 use fhnw\modules\gamecenter\GameCenterModule;
 use fhnw\modules\gamecenter\models\Achievement;
 use fhnw\modules\gamecenter\models\Game;
 use fhnw\modules\gamecenter\models\Leaderboard;
 use fhnw\modules\gamecenter\models\PlayerAchievement;
+use yii\base\Model;
+use yii\web\HttpException;
 
 /**
  * IndexController
@@ -25,7 +28,7 @@ class GamesController extends ContentController
   /**
    * @inheritdoc
    * @return void
-   * @throws \yii\web\HttpException
+   * @throws HttpException
    */
   public function init(): void
   {
@@ -33,22 +36,33 @@ class GamesController extends ContentController
     $this->setActionTitles(['gamecenter' => GameCenterModule::t('base', 'Games'),]);
   }
 
-  public function actionAchievements($gid, $pid): string
+  /**
+   * @param int $game
+   * @param int $player
+   *
+   * @return string
+   */
+  public function actionAchievements(int $game, int $player): string
   {
-    $game = Game::findOne(['id' => $gid]);
-    $join = sprintf("%s.id = %s.achievement_id", Achievement::tableName(), PlayerAchievement::tableName());
+    $g = Game::findOne(['id' => $game]);
+    $join = sprintf('%s.id = %s.achievement_id', Achievement::tableName(), PlayerAchievement::tableName());
     $achievements = PlayerAchievement::find()
                                      ->leftJoin(Achievement::tableName(), $join)
-                                     ->where([Achievement::tableName() . '.game_id' => $gid])
-                                     ->andWhere([PlayerAchievement::tableName() . '.player_id' => $pid])
+                                     ->where([Achievement::tableName() . '.game_id' => $game])
+                                     ->andWhere([PlayerAchievement::tableName() . '.player_id' => $player])
                                      ->all();
 
-    return $this->render('achievements', ['game' => $game, 'achievements' => $achievements]);
+    return $this->render('achievements', ['game' => $g, 'achievements' => $achievements]);
   }
 
-  public function actionLeaderboard($gid): string
+  /**
+   * @param int $game
+   *
+   * @return string
+   */
+  public function actionLeaderboard(int $game): string
   {
-    $game = Game::findOne(['id' => $gid]);
+    $game = Game::findOne(['id' => $game]);
     $leaderboards = Leaderboard::find()
                                ->where(['game_id' => $game->id])
                                ->all();
@@ -56,6 +70,9 @@ class GamesController extends ContentController
     return $this->render('leaderboards', ['game' => $game, 'leaderboards' => $leaderboards]);
   }
 
+  /**
+   * @return ActiveQueryGame
+   */
   protected function getPaginationQuery(): ActiveQueryGame
   {
     $pageQuery = Game::find();
@@ -66,18 +83,18 @@ class GamesController extends ContentController
   }
 
   /**
-   * @param \yii\base\Model[] $items
+   * @param Model[] $items
    *
    * @return string
    */
   protected function renderItems(array $items): string
   {
     return $this->render(
-      'index',
-      [
-        'games'    => $items,
-        'showMore' => !$this->isLastPage()
-      ]
+        'index',
+        [
+            'games'    => $items,
+            'showMore' => !$this->isLastPage()
+        ]
     );
   }
 

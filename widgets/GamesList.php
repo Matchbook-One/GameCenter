@@ -1,9 +1,17 @@
-<?php /** @noinspection PhpMissingParentCallCommonInspection */
+<?php
+/**
+ * @author       Christian Seiler <christian@christianseiler.ch>
+ * @since        1.0.0
+ * @noinspection PhpMissingParentCallCommonInspection
+ */
 
 namespace fhnw\modules\gamecenter\widgets;
 
 use yii\base\Widget;
 
+/**
+ * @package GameCenter/Widgets
+ */
 class GamesList extends Widget
 {
 

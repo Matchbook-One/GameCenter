@@ -12,7 +12,7 @@ GameCenterAssets::register($this);
 
 /**
  * @var \fhnw\modules\gamecenter\components\GameDirectoryQuery $games
- * @var bool $showMore
+ * @var bool                                                   $showMore
  */
 
 /* @var ContentContainerActiveRecord $container */

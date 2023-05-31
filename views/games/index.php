@@ -12,8 +12,8 @@ use humhub\assets\CardsAsset;
 
 /**
  * @var \humhub\modules\ui\view\components\View $this
- * @var $games
- * @var bool $showMore
+ * @var                                         $games
+ * @var bool                                    $showMore
  */
 
 CardsAsset::register($this);

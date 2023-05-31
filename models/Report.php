@@ -1,7 +1,6 @@
 <?php
 
 /**
- * @package GameCenter
  * @author  Christian Seiler <christian@christianseiler.ch>
  * @since   1.0.0
  */
@@ -14,23 +13,30 @@ use yii\db\ActiveQuery;
 /**
  * This is the model class for table "Report".
  *
- * @property int $id
- * @property int $game_id
- * @property int $player_id
- * @property string $option
- * @property string $value
+ * @package GameCenter/Models
+ * @property int         $id
+ * @property int         $game_id
+ * @property int         $player_id
+ * @property string      $option
+ * @property string      $value
  * @property-read string $timestamp
- * @property-read \fhnw\modules\gamecenter\models\Game $game
- * @property-read \fhnw\modules\gamecenter\models\Player $player
+ * @property-read Game   $game
+ * @property-read Player $player
  */
-class Report
-  extends ActiveRecord
+class Report extends ActiveRecord
 {
 
   public const TABLE = 'game_report';
 
-  /** @returns string */
-  public static function tableName(): string { return self::TABLE; }
+  /**
+   * @inheritDoc
+   * @returns string
+   * @noinspection PhpMissingParentCallCommonInspection
+   */
+  public static function tableName(): string
+  {
+    return self::TABLE;
+  }
 
   /**
    * @param bool $insert
@@ -47,13 +53,19 @@ class Report
   }
 
   /**
-   * @return \yii\db\ActiveQuery
+   * @return ActiveQuery
    */
-  public function getGame(): ActiveQuery { return $this->hasOne(Game::class, ['id' => 'game_id']); }
+  public function getGame(): ActiveQuery
+  {
+    return $this->hasOne(Game::class, ['id' => 'game_id']);
+  }
 
   /**
-   * @return \yii\db\ActiveQuery
+   * @return ActiveQuery
    */
-  public function getPlayer(): ActiveQuery { return $this->hasOne(Player::class, ['id' => 'player_id']); }
+  public function getPlayer(): ActiveQuery
+  {
+    return $this->hasOne(Player::class, ['id' => 'player_id']);
+  }
 
 }

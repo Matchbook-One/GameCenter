@@ -1,72 +1,77 @@
 <?php
 
+/**
+ * @author  Christian Seiler <christian@christianseiler.ch>
+ * @since   1.0.0
+ */
+
 namespace fhnw\modules\gamecenter\components;
 
+use humhub\components\Controller;
 use Yii;
-use yii\data\Pagination;
-use yii\db\ActiveQuery;
+use yii\base\Action;
+use yii\base\InvalidConfigException;
+use yii\rest\{Serializer};
+use yii\web\{BadRequestHttpException, JsonParser, Response};
+
+use function array_merge;
 
 /**
- * @package GameCenter/Components
+ * Class RestController
+ *
+ * @package GameCenter/Controllers
  */
-abstract class RestController extends Controller
+class RestController extends Controller
 {
-  /** @var string $moduleId */
-  public static $moduleId = '';
+
+  public string $collection = '';
+
+  /**
+   * @var bool enableCsrfValidation
+   * @inheritdoc
+   */
+  public $enableCsrfValidation = false;
+
+  private ?int $playerID;
+
+  /**
+   * @throws InvalidConfigException
+   */
+  public function init(): void
+  {
+    parent::init();
+    Yii::$app->response->format = 'json';
+    $this->playerID = Yii::$app->user->id;
+
+    $this->serializer = [
+        'class'              => Serializer::class,
+        'collectionEnvelope' => $this->collection
+    ];
+  }
 
   /**
    * @inheritdoc
    *
-   * @param \yii\rest\Action $action
+   * @param Action $action
    *
    * @return bool
-   * @throws \yii\web\BadRequestHttpException
+   * @see \yii\web\Controller::beforeAction()
+   * @throws BadRequestHttpException
    */
-  public function beforeAction($action)
+  public function beforeAction($action): bool
   {
     Yii::$app->response->format = 'json';
-
-    Yii::$app->request->setBodyParams([]);
-    Yii::$app->request->enableCsrfCookie = false;
     Yii::$app->request->parsers['application/json'] = JsonParser::class;
 
     return parent::beforeAction($action);
   }
 
   /**
-   * @return class-string returns the class name of the active record
-   * @abstract
+   * @return ?int
    */
-  abstract public function getContentActiveRecordClass();
-
-  /**
-   * Handles pagination
-   *
-   * @param ActiveQuery $query
-   * @param int         $limit
-   *
-   * @return \yii\data\Pagination
-   */
-  protected function handlePagination(ActiveQuery $query, int $limit = 100)
+  public function getPlayerID(): ?int
   {
-    $limit = (int)Yii::$app->request->get('limit', $limit);
-    $page = (int)Yii::$app->request->get('page', 1);
-
-    if ($limit > 100) {
-      $limit = 100;
-    }
-
-    $page--;
-
-    $countQuery = clone $query;
-    $pagination = new Pagination(['totalCount' => $countQuery->count()]);
-    $pagination->setPage($page);
-    $pagination->setPageSize($limit);
-
-    $query->offset($pagination->offset);
-    $query->limit($pagination->limit);
-
-    return $pagination;
+    return $this->playerID;
   }
 
   /**
@@ -76,33 +81,16 @@ abstract class RestController extends Controller
    * @param string $message
    * @param array  $additional
    *
-   * @return array
+   * @deprecated
+   * @return Response
    */
-  protected function returnError($statusCode = 400, $message = 'Invalid request', $additional = [])
+  protected function returnError(int $statusCode = 400, string $message = 'Invalid request', array $additional = []): Response
   {
-    Yii::$app->response->statusCode = $statusCode;
+    $response = Yii::$app->getResponse();
+    $response->statusCode = $statusCode;
+    $response->data = array_merge(['message' => $message], $additional);
 
-    return array_merge(['code' => $statusCode, 'message' => $message], $additional);
-  }
-
-  /**
-   * Generates pagination response
-   *
-   * @param ActiveQuery $query
-   * @param Pagination  $pagination
-   * @param array       $data
-   *
-   * @return array
-   */
-  protected function returnPagination(ActiveQuery $query, Pagination $pagination, $data)
-  {
-    return [
-      'total'   => $pagination->totalCount,
-      'page'    => $pagination->getPage() + 1,
-      'pages'   => $pagination->getPageCount(),
-      'links'   => $pagination->getLinks(),
-      'results' => $data
-    ];
+    return $response;
   }
 
   /**
@@ -112,12 +100,16 @@ abstract class RestController extends Controller
    * @param int    $statusCode
    * @param array  $additional
    *
-   * @return array
+   * @return Response
    */
-  protected function returnSuccess($message = 'Request successful', $statusCode = 200, $additional = [])
+  protected function returnSuccess(string $message = 'Request successful', int $statusCode = 200, array $additional = []): Response
   {
-    Yii::$app->response->statusCode = $statusCode;
+    $response = Yii::$app->getResponse();
+    $response->format = Response::FORMAT_JSON;
+    $response->statusCode = $statusCode;
+    $response->data = array_merge(['message' => $message], $additional);
 
-    return array_merge(['code' => $statusCode, 'message' => $message], $additional);
+    return $response;
   }
+
 }

@@ -1,32 +1,34 @@
 // noinspection JSUnusedLocalSymbols,JSUnusedGlobalSymbols
 
 /** @namespace humhub */
-humhub.module('gamecenter', function (module, requireModule, $) {
+humhub.module('gamecenter', (module, getModule, $) => {
 
-  const client = requireModule('client')
-  const uiStatus = requireModule('ui.status')
+  /** @type {humhub.Module<humhub.ClientModule>} */
+  const client = getModule('client')
+
+  /** @type {humhub.Module<humhub.UiStatusModule>} */
+  const uiStatus = getModule('ui.status')
+
 
   class GameCenter {
-    /**
-     * @private
-     * @type {RegExp}
-     */
-    moduleRegex = /humhub\.modules\.(.*)/
     /**
      *  @private
      *  @type {string}
      */
     module
 
+    /**
+     * @param {string} module
+     */
     constructor(module) {
-      this.module = module.match(this.moduleRegex)[1]
+      this.module = module.match(moduleRegex)[1]
     }
 
     /**
      * @returns {Promise<{achievements: Array<Achievement>}>}
      */
     loadAchievements() {
-      const url = '/gamecenter/achievements/load'
+      const url = '/gamecenter/achievement/load'
       const payload = {
         module: this.module
       }
@@ -38,7 +40,7 @@ humhub.module('gamecenter', function (module, requireModule, $) {
      * @returns {Promise<Achievement>}
      */
     updateAchievement(achievement) {
-      const url = '/gamecenter/achievements/update'
+      const url = '/gamecenter/achievement/update'
       achievement.percentCompleted = clamp(achievement.percentCompleted, 0, 100)
 
       const payload = {
@@ -101,7 +103,7 @@ humhub.module('gamecenter', function (module, requireModule, $) {
     }
 
     getHighScore() {
-      const url = '/gamecenter/score/highscore'
+      const url = '/gamecenter/api/highscore'
       const payload = {
         module: this.module
       }
@@ -110,19 +112,28 @@ humhub.module('gamecenter', function (module, requireModule, $) {
     }
 
     /**
-     * @param {string} text
+     * @param {string} message
      * @returns {Promise<void>}
      */
-    share(text) {
+    async share(message) {
       const url = '/gamecenter/share'
       const payload = {
-        module: moduleId.match(this.moduleRegex)[1],
-        message: text
+        message: message
       }
-      return client.post(url, { data: payload })
-                   .then(() => {uiStatus.success(module.text('saved'))})
+      await client.post(url, { data: payload })
+                  .then(() => {
+                    uiStatus.success(module.text('saved'))
+                  })
     }
 
+    loadLeaderboards() {
+      const url = '/gamecenter/api/leaderboard'
+      const payload = {
+        module: this.module
+      }
+
+      return client.post(url, { data: payload })
+    }
   }
 
   /**
@@ -138,8 +149,25 @@ humhub.module('gamecenter', function (module, requireModule, $) {
     return Math.max(smaller, Math.min(value), bigger)
   }
 
-  module.export = GameCenter
+  /** @var {GameCenter} instance */
+  let instance
 
+  /**
+   *
+   * @param {string} moduleId
+   * @returns {GameCenter}
+   */
+
+  module.export({
+                  shared: (moduleId) => {
+                    if (!instance) {
+                      const moduleRegex = /humhub\.modules\.(.*)/
+                      instance = new GameCenter(moduleId.match(moduleRegex)[1])
+                    }
+
+                    return instance
+                  }
+                })
 })
 /**
  * @typedef {object} Achievement

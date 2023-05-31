@@ -1,17 +1,19 @@
 includes:
-  - .neon/phpstan.includes.neon
+  - .stubs/phpstan.includes.neon
 parameters:
-  level: 6
+  errorFormat:
+    table
+  level: 1
   paths:
+    - activities
     - assets
     - components
     - controllers
     - events
     - helpers
-    - messages
     - models
     - notifications
-    - permissions
+    - openapi
     # - tests
     - views
     - widgets
@@ -21,3 +23,4 @@ parameters:
     - translate.php
   editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'
   editorUrlTitle: '%%relFile%%:%%line%%'
+  tmpDir: .cache/phpstan

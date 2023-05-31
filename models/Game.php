@@ -1,7 +1,6 @@
 <?php
 
 /**
- * @package GameCenter
  * @author  Christian Seiler <christian@christianseiler.ch>
  * @since   1.0.0
  */
@@ -12,43 +11,59 @@ use fhnw\modules\gamecenter\components\ActiveQueryGame;
 use fhnw\modules\gamecenter\components\GameModule;
 use fhnw\modules\gamecenter\events\GameEvent;
 use fhnw\modules\gamecenter\GameCenterModule;
+use fhnw\modules\gamecenter\helpers\Url;
+use humhub\components\ActiveRecord;
 use humhub\components\behaviors\GUID;
-use humhub\modules\content\components\{ContentContainerActiveRecord, ContentContainerPermissionManager, ContentContainerSettingsManager};
+use humhub\modules\content\components\{ContentContainerPermissionManager, ContentContainerSettingsManager};
 use humhub\modules\search\events\SearchAddEvent;
 use humhub\modules\search\interfaces\Searchable;
 use humhub\modules\search\jobs\DeleteDocument;
 use humhub\modules\space\widgets\Wall;
 use humhub\modules\user\models\User;
+use JetBrains\PhpStorm\ArrayShape;
+use OpenApi\Attributes\Items;
+use OpenApi\Attributes\Property;
+use OpenApi\Attributes\Schema;
+use Throwable;
 use Yii;
 use Yii\db\ActiveQuery;
+use yii\web\Link;
+use yii\web\Linkable;
 
 use const SORT_ASC;
 
 /**
  * This is the model class for the table “game”.
  *
- * @property int $id
- * @property string $guid
- * @property string $module
- * @property string $title
- * @property string $description
- * @property int $status
- * @property string $created_at
- * @property int $created_by
- * @property User $createdBy
- * @property User $updatedBy
- * @property-read GameTag[] $gameTags
- * @property-read Score[] $scores
- * @property-read Achievement[] $achievements
- * @property int $contentcontainer_id
+ * @package GameCenter/Models
+ * @property int                               $id
+ * @property string                            $guid
+ * @property string                            $module
+ * @property string                            $title
+ * @property string                            $description
+ * @property int                               $status
+ * @property string                            $created_at
+ * @property int                               $created_by
+ * @property User                              $createdBy
+ * @property User                              $updatedBy
+ * @property-read GameTag[]                    $gameTags
+ * @property-read Score[]                      $scores
+ * @property-read Achievement[]                $achievements
+ * @property int                               $contentcontainer_id
  * @property ContentContainerPermissionManager $permissionManager
- * @property ContentContainerSettingsManager $settings
+ * @property ContentContainerSettingsManager   $settings
  * @method ActiveQuery hasMany($class, array $link) See [[BaseActiveRecord::hasMany()]] for more info.
  * @method ActiveQuery hasOne($class, array $link) See [[BaseActiveRecord::hasOne()]] for more info.
  * @mixin    GUID
  * @package GameCenter/Models
  */
-class Game extends ContentContainerActiveRecord implements Searchable
+#[Schema(properties: [
+    new Property('id', type: 'integer'),
+    new Property('guid', type: 'string', format: 'guid'),
+    new Property('module', type: 'string'),
+    new Property('tags', type: 'array', items: new Items(type: 'string'))
+])]
+class Game extends ActiveRecord implements Searchable, Linkable
 {
 
   /** @var int STATUS_DISABLED */
@@ -69,21 +84,25 @@ class Game extends ContentContainerActiveRecord implements Searchable
    */
   public const EVENT_BEFORE_SOFT_DELETE = 'beforeSoftDelete';
 
-  public const TABLE = 'game';
-
   /**
    * @return ActiveQueryGame
    * @static
    * @noinspection PhpMissingParentCallCommonInspection
    */
-  public static function find(): ActiveQueryGame { return new ActiveQueryGame(get_called_class()); }
+  public static function find(): ActiveQueryGame
+  {
+    return new ActiveQueryGame(get_called_class());
+  }
 
   /**
    * @inheritdoc
    * @return       string
    * @noinspection PhpMissingParentCallCommonInspection
    */
-  public static function tableName(): string { return 'game'; }
+  public static function tableName(): string
+  {
+    return 'game';
+  }
 
   /**
    * Archive this Game
@@ -104,16 +123,16 @@ class Game extends ContentContainerActiveRecord implements Searchable
   public function attributeLabels(): array
   {
     return [
-      'id'          => 'ID',
-      'module'      => GameCenterModule::t('base', 'Module'),
-      'title'       => GameCenterModule::t('base', 'Title'),
-      'description' => GameCenterModule::t('base', 'Description'),
-      'tags'        => GameCenterModule::t('base', 'Tags'),
-      'status'      => GameCenterModule::t('base', 'Status'),
-      'created_at'  => GameCenterModule::t('base', 'Created at'),
-      'created_by'  => GameCenterModule::t('base', 'Created by'),
-      'updated_at'  => GameCenterModule::t('base', 'Updated at'),
-      'updated_by'  => GameCenterModule::t('base', 'Updated by')
+        'id'          => 'ID',
+        'module'      => GameCenterModule::t('base', 'Module'),
+        'title'       => GameCenterModule::t('base', 'Title'),
+        'description' => GameCenterModule::t('base', 'Description'),
+        'tags'        => GameCenterModule::t('base', 'Tags'),
+        'status'      => GameCenterModule::t('base', 'Status'),
+        'created_at'  => GameCenterModule::t('base', 'Created at'),
+        'created_by'  => GameCenterModule::t('base', 'Created by'),
+        'updated_at'  => GameCenterModule::t('base', 'Updated at'),
+        'updated_by'  => GameCenterModule::t('base', 'Updated by')
     ];
   }
 
@@ -155,8 +174,16 @@ class Game extends ContentContainerActiveRecord implements Searchable
     return [GUID::class];
   }
 
+  public function fields(): array
+  {
+    $fields = parent::fields();
+    $extraFields = ['gameTags'];
+
+    return array_merge($fields, $extraFields);
+  }
+
   /**
-   * @return \Yii\db\ActiveQuery
+   * @return ActiveQuery
    */
   public function getAchievement(): ActiveQuery
   {
@@ -192,7 +219,7 @@ class Game extends ContentContainerActiveRecord implements Searchable
   }
 
   /**
-   * @param ?\fhnw\modules\gamecenter\models\Player $player
+   * @param ?Player $player
    *
    * @return ?Score
    */
@@ -211,18 +238,36 @@ class Game extends ContentContainerActiveRecord implements Searchable
   }
 
   /**
-   * @return \fhnw\modules\gamecenter\components\GameModule
+   * @return int
+   */
+  public function getId(): int
+  {
+    return $this->id;
+  }
+
+  #[ArrayShape([Link::REL_SELF => 'string', 'leaderboard' => 'string'])]
+  public function getLinks(): array
+  {
+    return [
+        Link::REL_SELF => $this->getModule()
+                               ->getGameUrl(),
+        'leaderboard'  => Url::toLeaderboards($this->id)
+    ];
+  }
+
+  /**
+   * @return GameModule
    */
   public function getModule(): GameModule
   {
-    /** @var \fhnw\modules\gamecenter\components\GameModule $module */
+    /** @var GameModule $module */
     $module = Yii::$app->getModule($this->module);
 
     return $module;
   }
 
   /**
-   * @return \yii\db\ActiveQuery
+   * @return ActiveQuery
    */
   public function getPlayers(): ActiveQuery
   {
@@ -230,7 +275,7 @@ class Game extends ContentContainerActiveRecord implements Searchable
   }
 
   /**
-   * @return \Yii\db\ActiveQuery
+   * @return ActiveQuery
    */
   public function getScores(): ActiveQuery
   {
@@ -247,8 +292,8 @@ class Game extends ContentContainerActiveRecord implements Searchable
   public function getSearchAttributes(): array
   {
     $attributes = [
-      'title'       => $this->title,
-      'description' => $this->description,
+        'title'       => $this->title,
+        'description' => $this->description,
     ];
 
     $this->trigger(self::EVENT_SEARCH_ADD, new SearchAddEvent($attributes));
@@ -256,14 +301,9 @@ class Game extends ContentContainerActiveRecord implements Searchable
     return $attributes;
   }
 
-  public function getSettings(): ContentContainerSettingsManager
-  {
-    return GameCenterModule::$settings->contentContainer($this);
-  }
-
   /**
    * @noinspection PhpMissingParentCallCommonInspection
-   * @throws \Throwable
+   * @throws Throwable
    */
   public function getWallOut(): string
   {
@@ -296,10 +336,10 @@ class Game extends ContentContainerActiveRecord implements Searchable
   public function rules(): array
   {
     return [
-      [['module', 'title', 'description'], 'required'],
-      [['description'], 'string', 'max' => 255],
-      [['status'], 'in', 'range' => [0, 1]],
-      [['guid', 'title'], 'string', 'max' => 45, 'min' => 2],
+        [['module', 'title', 'description'], 'required'],
+        [['description'], 'string', 'max' => 255],
+        [['status'], 'in', 'range' => [0, 1]],
+        [['guid', 'title'], 'string', 'max' => 45, 'min' => 2]
     ];
   }
 
@@ -311,8 +351,8 @@ class Game extends ContentContainerActiveRecord implements Searchable
     $this->trigger(self::EVENT_BEFORE_SOFT_DELETE, new GameEvent(['user' => $this]));
 
     $config = [
-      'activeRecordClass' => get_class($this),
-      'primaryKey'        => $this->id,
+        'activeRecordClass' => get_class($this),
+        'primaryKey'        => $this->id,
     ];
     Yii::$app->queue->push(new DeleteDocument($config));
 

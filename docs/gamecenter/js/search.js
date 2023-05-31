@@ -106,7 +106,7 @@ var Search = (function () {
 
     form.classList.toggle('phpdocumentor-search--has-results', true)
     searchResults.classList.remove('phpdocumentor-search-results--hidden')
-    var results = fuse.search(event.target.value, {limit: 25})
+    var results = fuse.search(event.target.value, { limit: 25 })
 
     results.forEach(function (result) {
       var entry = document.createElement('li')
@@ -134,10 +134,14 @@ var Search = (function () {
     var searchField = document.querySelector('[data-search-form] input[type="search"]')
 
     var closeButton = document.querySelector('.phpdocumentor-search-results__close')
-    closeButton.addEventListener('click', function () { close() }.bind(this))
+    closeButton.addEventListener('click', function () {
+      close()
+    }.bind(this))
 
     var searchResults = document.querySelector('[data-search-results]')
-    searchResults.addEventListener('click', function () { close() }.bind(this))
+    searchResults.addEventListener('click', function () {
+      close()
+    }.bind(this))
 
     form.classList.add('phpdocumentor-search--active')
 

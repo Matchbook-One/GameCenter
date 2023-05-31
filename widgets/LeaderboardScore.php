@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author Christian Seiler <christian@christianseiler.ch>
+ * @since  1.0.0
+ */
 
 namespace fhnw\modules\gamecenter\widgets;
 
@@ -17,8 +21,8 @@ class LeaderboardScore extends Widget
   public function run()
   {
     return $this->render(
-      'leaderboardScore',
-      ['rank' => $this->rank, 'score' => $this->score, 'player' => $this->player, 'date' => $this->date]
+        'leaderboardScore',
+        ['rank' => $this->rank, 'score' => $this->score, 'player' => $this->player, 'date' => $this->date]
     );
   }
 

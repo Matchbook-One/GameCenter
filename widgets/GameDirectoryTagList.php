@@ -1,8 +1,7 @@
 <?php
 /**
- * @link      https://www.humhub.org/
- * @copyright Copyright (c) 2021 HumHub GmbH & Co. KG
- * @license   https://www.humhub.com/licences
+ * @author Christian Seiler <christian@christianseiler.ch>
+ * @since  1.0.0
  */
 
 namespace fhnw\modules\gamecenter\widgets;
@@ -50,7 +49,7 @@ class GameDirectoryTagList extends Widget
     foreach ($tags as $tag) {
       if (trim($tag) !== '') {
         $html .= Html::a(Html::encode($tag), Url::to(['/gamecenter/games', 'keyword' => trim($tag)]), ['class' => 'label label-default']) .
-                 "&nbsp";
+            "&nbsp";
       }
     }
 

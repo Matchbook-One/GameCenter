@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author Christian Seiler <christian@christianseiler.ch>
+ * @since  1.0.0
+ */
 
 namespace fhnw\modules\gamecenter\models;
 
@@ -6,8 +10,9 @@ use humhub\components\ActiveRecord;
 use yii\db\ActiveQuery;
 
 /**
- * @property int $game_id
- * @property string $tag
+ * @package GameCenter/Models
+ * @property int                                       $game_id
+ * @property string                                    $tag
  * @property-read \fhnw\modules\gamecenter\models\Game $game
  */
 class GameTag extends ActiveRecord
@@ -33,9 +38,9 @@ class GameTag extends ActiveRecord
   public function rules(): array
   {
     return [
-      [['game_id', 'tag'], 'required'],
-      [['game_id'], 'integer'],
-      [['tag'], 'safe']
+        [['game_id', 'tag'], 'required'],
+        [['game_id'], 'integer'],
+        [['tag'], 'safe']
     ];
   }
 
